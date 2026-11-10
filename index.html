@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>Красивые номера — Идеальный гарант</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overscroll-behavior: none; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: radial-gradient(circle at 20% 0%, #2b3350 0%, #0f1320 65%);
+    color: #fff; overflow: hidden;
+    display: flex; justify-content: center; align-items: center;
+    padding: calc(10px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));
+  }
+  .app { width: 100%; max-width: 480px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+  .tab-content { display: none; flex: 1; flex-direction: column; justify-content: flex-start; overflow-y: auto; overflow-x: hidden; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+  .tab-content.active { display: flex; }
+  .header { text-align: center; flex-shrink: 0; margin-bottom: 4px; }
+  .header h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+  .header p { font-size: 10px; color: #8b94a8; margin-top: 1px; }
+  .money-box {
+    background: linear-gradient(135deg, #1f2a4a 0%, #2a1f4a 100%);
+    border: 1px solid #3a3a5c; border-radius: 12px; padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px; flex-shrink: 0;
+  }
+  .money-label { font-size: 10px; color: #8b94a8; text-transform: uppercase; letter-spacing: 0.8px; }
+  .money-value { font-size: 22px; font-weight: 800; color: #ffd166; transition: transform 0.2s; font-variant-numeric: tabular-nums; }
+  .money-value.up { animation: moneyUp 0.5s ease; }
+  .money-value.down { animation: moneyDown 0.5s ease; }
+  @keyframes moneyUp { 50% { transform: scale(1.15); color: #4ade80; } }
+  @keyframes moneyDown { 50% { transform: scale(1.1); color: #f87171; } }
+  .header-btns { display: flex; gap: 6px; }
+  .icon-btn {
+    background: #1a1f2e; border: 1px solid #2b3346; color: #8b94a8;
+    font-size: 14px; cursor: pointer; padding: 6px 9px; border-radius: 8px;
+    transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  }
+  .icon-btn:hover { color: #fff; border-color: #4a6ffa; background: #232a3d; }
+
+  .event-banner {
+    padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+    transition: all 0.3s; flex-shrink: 0; min-height: 32px;
+  }
+  .event-banner.idle { background: rgba(139,148,168,0.08); color: #8b94a8; border: 1px solid rgba(139,148,168,0.15); }
+  .event-banner.active { animation: eventPulse 1.5s ease infinite; }
+  @keyframes eventPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.015); } }
+  .event-banner-icon { font-size: 15px; flex-shrink: 0; }
+  .event-banner-name { flex: 1; text-align: left; }
+  .event-banner-desc { font-size: 9px; opacity: 0.75; font-weight: 600; }
+  .event-banner-timer { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 12px; padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,0.3); flex-shrink: 0; }
+
+  .plate-wrapper {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; min-height: 140px; margin-bottom: 6px; padding: 4px 0;
+    position: relative; flex-shrink: 0;
+  }
+  .plate-wrapper.empty { color: #5a6580; font-size: 12px; text-align: center; padding: 12px; border: 2px dashed #313a52; border-radius: 12px; min-height: 140px; }
+  .plate-wrapper.sold .plate { opacity: 0.55; filter: grayscale(0.7); }
+  .plate-wrapper.sold .plate::after {
+    content: 'ПРОДАНО'; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg); font-size: 24px; font-weight: 900;
+    font-family: 'Roboto Condensed', sans-serif; color: #ef4444;
+    border: 3px solid #ef4444; padding: 1px 10px; border-radius: 6px;
+    background: rgba(255,255,255,0.85); z-index: 10; letter-spacing: 2px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2); pointer-events: none;
+  }
+  .roll-target { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 2px; animation: pulseTarget 1s ease infinite alternate; }
+  @keyframes pulseTarget { from { opacity: 0.7; } to { opacity: 1; } }
+  .rarity-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 100px;
+    font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    animation: chipPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes chipPop { 0% { transform: scale(0.4) translateY(6px); opacity: 0; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+  .rarity-chip--common    { background: rgba(156,163,175,0.16); color: #cbd5e1; border: 1px solid rgba(156,163,175,0.4); }
+  .rarity-chip--uncommon  { background: rgba(74,222,128,0.14);  color: #4ade80; border: 1px solid rgba(74,222,128,0.5); }
+  .rarity-chip--rare      { background: rgba(96,165,250,0.14);  color: #60a5fa; border: 1px solid rgba(96,165,250,0.5); }
+  .rarity-chip--epic      { background: rgba(192,132,252,0.14); color: #c084fc; border: 1px solid rgba(192,132,252,0.5); }
+  .rarity-chip--legendary { background: rgba(255,209,102,0.16); color: #ffd166; border: 1px solid rgba(255,209,102,0.6); }
+  .rarity-chip--mythic    { background: linear-gradient(90deg, rgba(255,107,255,0.2), rgba(255,209,102,0.2), rgba(96,165,250,0.2)); color: #ffd1ff; border: 1px solid rgba(255,107,255,0.7); }
+
+  .plate {
+    display: inline-flex; align-items: stretch;
+    background: linear-gradient(180deg, #f8f8f8 0%, #ffffff 45%, #e8e8e8 100%);
+    color: #0a0a0a; border: 2px solid #111; border-radius: 5px; overflow: hidden;
+    font-family: 'Roboto Condensed', 'Arial Narrow', 'Arial', sans-serif;
+    font-weight: 700; font-size: 30px; letter-spacing: 2px;
+    user-select: none; position: relative;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 4px rgba(0,0,0,0.08), 0 6px 20px rgba(0,0,0,0.5);
+  }
+  .plate::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent); pointer-events: none; z-index: 1; }
+  .plate.small { font-size: 15px; letter-spacing: 1px; }
+  .plate.small .plate-main { gap: 3px; padding: 2px 5px; }
+  .plate.small .plate-side { min-width: 26px; }
+  .plate.small .plate-region { font-size: 8px; padding: 1px; letter-spacing: 0; }
+  .plate.small .flag { width: 9px; height: 6px; }
+  .plate.small .flag-label { font-size: 4px; }
+  .plate.small .plate-flag-block { padding: 1px; gap: 0; }
+  .plate-main { display: flex; align-items: center; gap: 5px; padding: 3px 8px 3px 10px; white-space: nowrap; text-shadow: 0 1px 0 #fff, 0 2px 1px rgba(0,0,0,0.12); position: relative; z-index: 2; }
+  .plate-side { display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-left: 2px solid #111; min-width: 46px; background: linear-gradient(180deg, #f2f2f2 0%, #eaeaea 100%); position: relative; z-index: 2; }
+  .plate-region { font-size: 13px; line-height: 1; padding: 2px 2px 1px; letter-spacing: 1px; font-weight: 700; }
+  .plate-flag-block { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 1px 2px 2px; }
+  .flag { width: 16px; height: 10px; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.3); }
+  .flag-w { background: #fff; flex: 1; }
+  .flag-b { background: #0039a6; flex: 1; }
+  .flag-r { background: #d52b1e; flex: 1; }
+  .flag-label { font-size: 6px; font-weight: 700; letter-spacing: 0.5px; color: #111; }
+
+  .value-area { margin-bottom: 6px; min-height: 22px; flex-shrink: 0; }
+  .value-reveal { text-align: center; animation: fadeUp 0.4s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .value-big { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 2px; font-variant-numeric: tabular-nums; }
+  .value-details { display: flex; flex-direction: column; gap: 1px; font-size: 10px; color: #8b94a8; background: #1a1f2e; border-radius: 6px; padding: 6px 8px; border: 1px solid #2b3346; }
+  .value-detail-row { display: flex; justify-content: space-between; }
+  .value-detail-row .plus { color: #4ade80; font-weight: 700; }
+  .value-detail-row.special .plus { color: #ffd166; }
+  .sold-msg, .kept-msg { text-align: center; font-size: 12px; font-weight: 700; padding: 6px; border-radius: 6px; }
+  .sold-msg { background: #142a1e; color: #4ade80; border: 1px solid #2ea35c; }
+  .kept-msg { background: #2a2414; color: #ffd166; border: 1px solid #b89330; }
+
+  .actions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
+  .btn {
+    border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit; transition: transform 0.1s, background 0.15s;
+    display: flex; flex-direction: column; align-items: center; gap: 1px; position: relative;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-generate { background: linear-gradient(135deg, #4a6ffa 0%, #7c4aff 100%); color: #fff; box-shadow: 0 4px 16px rgba(74,111,250,0.4); }
+  .btn-generate.discounted { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 4px 16px rgba(34,197,94,0.5); animation: eventPulse 1.5s ease infinite; }
+  .btn-cost { font-size: 10px; opacity: 0.85; font-weight: 600; }
+  .btn-cost-old { text-decoration: line-through; opacity: 0.6; margin-right: 4px; }
+  .btn-sell { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; box-shadow: 0 4px 16px rgba(34,197,94,0.35); }
+  .btn-sell.boosted { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); box-shadow: 0 4px 16px rgba(245,158,11,0.55); animation: eventPulse 1.5s ease infinite; }
+  .btn-keep { background: #2e3546; color: #cfd6e6; border: 1px solid #3a4255; font-size: 12px; padding: 9px; }
+  .btn-guarantee { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: #fff; box-shadow: 0 4px 16px rgba(236,72,153,0.4); flex-direction: row; justify-content: center; gap: 6px; font-size: 12px; padding: 10px; }
+  .btn-guarantee.open { background: #2e3546; box-shadow: none; }
+  .guarantee-panel { margin-top: 2px; background: #1a1f2e; border: 1px solid #2b3346; border-radius: 10px; padding: 6px; display: flex; flex-direction: column; gap: 4px; max-height: 170px; overflow-y: auto; }
+  .guarantee-title { font-size: 9px; color: #8b94a8; text-transform: uppercase; letter-spacing: 0.8px; text-align: center; padding: 2px 0; border-bottom: 1px solid #2b3346; margin-bottom: 2px; }
+  .guarantee-btn { display: flex; align-items: center; gap: 6px; background: #232a3d; border: 1px solid #2b3346; border-radius: 6px; padding: 6px 8px; cursor: pointer; font-family: inherit; color: #fff; text-align: left; font-size: 11px; }
+  .guarantee-btn:hover:not(:disabled) { background: #2d3550; }
+  .guarantee-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .guarantee-btn.active { background: #2d3550; box-shadow: 0 0 0 2px #4a6ffa; }
+  .g-icon { font-size: 14px; flex-shrink: 0; }
+  .g-info { flex: 1; display: flex; flex-direction: column; }
+  .g-name { font-weight: 800; font-size: 11px; }
+  .g-hint { font-size: 8px; color: #8b94a8; text-transform: uppercase; }
+  .g-price { font-weight: 800; font-size: 11px; }
+
+  .best-box { background: #1a1f2e; border: 1px solid #2b3346; border-left-width: 4px; border-radius: 10px; padding: 6px 10px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-shrink: 0; }
+  .best-label { font-size: 9px; color: #8b94a8; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+  .best-value { font-size: 12px; font-weight: 800; color: #ffd166; }
+  .best-box:empty { display: none; }
+
+  .inventory-screen-title { font-size: 14px; font-weight: 800; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .inventory-screen-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; padding-bottom: 10px; }
+  .inventory-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: #1a1f2e; border: 1px solid #2b3346; border-left-width: 4px; border-radius: 10px; padding: 8px 10px; }
+  .inventory-item-info { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .inventory-item-price { font-size: 12px; font-weight: 800; color: #ffd166; }
+  .inventory-actions { display: flex; gap: 4px; }
+  .inv-btn { background: #232a3d; border: 1px solid #3a4255; color: #cfd6e6; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-family: inherit; }
+  .inv-btn.sell { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.4); color: #4ade80; }
+  .empty-inventory { font-size: 12px; color: #5a6580; text-align: center; padding: 32px 0; }
+
+  .menu-screen-title { font-size: 14px; font-weight: 800; margin-bottom: 10px; }
+  .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .menu-item-card { background: #1a1f2e; border-radius: 16px; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; font-family: inherit; color: #fff; text-align: center; border: none; }
+  .menu-item-card:hover { background: #232a3d; }
+  .menu-item-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .menu-item-label { font-size: 11px; font-weight: 700; color: #cfd6e6; }
+
+  .settings-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+  .setting-item { display: flex; justify-content: space-between; align-items: center; background: #1a1f2e; border: 1px solid #2b3346; border-radius: 8px; padding: 8px 10px; }
+  .setting-label { font-size: 11px; font-weight: 700; color: #cfd6e6; display: flex; flex-direction: column; gap: 1px; }
+  .setting-desc { font-size: 8px; color: #8b94a8; text-transform: uppercase; }
+  .switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; inset: 0; background-color: #2b3346; transition: .2s; border-radius: 20px; }
+  .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; }
+  input:checked + .slider { background-color: #4a6ffa; }
+  input:checked + .slider:before { transform: translateX(16px); }
+  .modal-reset-btn { width: 100%; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.4); color: #f87171; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+  .bottom-nav { display: flex; background: #131722; border-top: 1px solid #2b3346; padding: 6px 8px 10px; gap: 6px; flex-shrink: 0; border-radius: 16px 16px 0 0; }
+  .nav-item { flex: 1; background: transparent; border: none; color: #8b94a8; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .nav-item.active { color: #fff; background: #1f283d; border: 1px solid #3a4a75; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(10,13,22,0.85); backdrop-filter: blur(4px); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 14px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal-content { background: #161b28; border: 1px solid #2b3346; border-radius: 16px; width: 100%; max-width: 360px; padding: 16px; box-shadow: 0 16px 40px rgba(0,0,0,0.6); max-height: 85vh; overflow-y: auto; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #2b3346; }
+  .modal-title { font-size: 14px; font-weight: 800; color: #fff; }
+  .modal-close { background: transparent; border: none; color: #8b94a8; font-size: 16px; cursor: pointer; padding: 2px 6px; }
+  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .admin-btn { background: #232a3d; border: 1px solid #3a4255; color: #fff; padding: 8px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; text-align: center; }
+  .admin-section-title { font-size: 9px; color: #8b94a8; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+  .admin-input { width: 100%; padding: 10px 12px; background: #0f1420; border: 1px solid #2b3346; color: #fff; border-radius: 8px; font-size: 13px; font-family: inherit; margin-bottom: 8px; outline: none; }
+  .admin-input:focus { border-color: #4a6ffa; }
+  .admin-error { color: #f87171; font-size: 11px; margin-bottom: 8px; display: none; }
+
+  .flash { position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: 0; }
+  .flash.show { animation: flashAnim 0.9s ease-out; }
+  @keyframes flashAnim { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+  .load-toast { position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4a6ffa, #7c4aff); color: #fff; padding: 6px 14px; border-radius: 16px; font-size: 11px; font-weight: 700; box-shadow: 0 6px 20px rgba(74,111,250,0.5); opacity: 0; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 200; pointer-events: none; }
+  .load-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .suits-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px; font-weight: 700; margin-top: 4px; }
+  .suit-row { display: flex; align-items: center; gap: 4px; }
+  .suit-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="tab-content active" id="tabPlates">
+    <div class="header">
+      <h1>💎 Красивые номера</h1>
+      <p>Идеальный гарант редкости</p>
+    </div>
+    <div class="money-box">
+      <div>
+        <div class="money-label">Баланс</div>
+        <div class="money-value" id="moneyEl">50 000 ₽</div>
+      </div>
+      <div class="header-btns">
+        <button class="icon-btn" id="adminBtn" title="Админ-панель">🔑</button>
+      </div>
+    </div>
+    <div class="event-banner idle" id="eventBanner">
+      <span class="event-banner-icon">⏳</span>
+      <span class="event-banner-name">Следующее событие</span>
+      <span class="event-banner-timer">—</span>
+    </div>
+    <div id="plateArea" class="plate-wrapper empty">
+      <div class="empty-text">Нажмите «Сгенерировать», чтобы получить номер</div>
+    </div>
+    <div class="value-area" id="valueArea"></div>
+    <div class="actions" id="actionsArea"></div>
+    <div class="best-box" id="bestBox"></div>
+  </div>
+  <div class="tab-content" id="tabInventory">
+    <div class="inventory-screen-title">
+      <span>🎒 Ваш инвентарь</span>
+      <span id="inventoryBadgeCount" style="font-size:11px; color:#8b94a8;">0 шт.</span>
+    </div>
+    <div class="inventory-screen-list" id="inventoryScreenList"></div>
+  </div>
+  <div class="tab-content" id="tabMenu">
+    <div class="menu-screen-title">📂 Меню игры</div>
+    <div class="menu-grid">
+      <button class="menu-item-card" id="openSettingsBtn">
+        <div class="menu-item-icon" style="background:#2f3640; color:#f5f6fa;">⚙️</div>
+        <span class="menu-item-label">Настройки</span>
+      </button>
+      <button class="menu-item-card" id="openSuitsBtn">
+        <div class="menu-item-icon" style="background:linear-gradient(135deg, #ef4444, #3b82f6); color:#fff;">🎨</div>
+        <span class="menu-item-label">Масти</span>
+      </button>
+    </div>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-item active" data-tab="tabPlates"><span class="nav-icon">🔢</span><span>Номера</span></button>
+    <button class="nav-item" data-tab="tabInventory"><span class="nav-icon">🎒</span><span>Инвентарь</span></button>
+    <button class="nav-item" data-tab="tabMenu"><span class="nav-icon">⋯</span><span>Меню</span></button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">⚙️ Настройки игры</span>
+      <button class="modal-close" data-close="settingsModal">✕</button>
+    </div>
+    <div class="settings-list">
+      <div class="setting-item">
+        <div class="setting-label"><span>Звуковые эффекты</span><span class="setting-desc">Звуки кликов и побед</span></div>
+        <label class="switch"><input type="checkbox" id="settingSound"><span class="slider"></span></label>
+      </div>
+      <div class="setting-item">
+        <div class="setting-label"><span>Вспышки при редких номерах</span><span class="setting-desc">Эффекты подсветки экрана</span></div>
+        <label class="switch"><input type="checkbox" id="settingFlash"><span class="slider"></span></label>
+      </div>
+      <div class="setting-item">
+        <div class="setting-label"><span>Автосохранение</span><span class="setting-desc">Сохранение прогресса в облако</span></div>
+        <label class="switch"><input type="checkbox" id="settingAutoSave"><span class="slider"></span></label>
+      </div>
+    </div>
+    <button class="modal-reset-btn" id="modalResetBtn">🔄 Сбросить весь прогресс</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="suitsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">🎨 Масти букв</span>
+      <button class="modal-close" data-close="suitsModal">✕</button>
+    </div>
+    <p style="font-size:11px; color:#8b94a8; margin-bottom:10px; line-height:1.5;">
+      Бонус <b style="color:#ffd166;">+15 000 ₽</b>, если все три буквы номера — из одной масти.
+    </p>
+    <div class="suits-legend" style="grid-template-columns:1fr;">
+      <div class="suit-row"><span class="suit-dot" style="background:#ef4444;"></span><b style="color:#ef4444;">Красная:</b>&nbsp;А · В · Е</div>
+      <div class="suit-row"><span class="suit-dot" style="background:#22c55e;"></span><b style="color:#22c55e;">Зелёная:</b>&nbsp;К · М · Н</div>
+      <div class="suit-row"><span class="suit-dot" style="background:#3b82f6;"></span><b style="color:#3b82f6;">Синяя:</b>&nbsp;О · Р · С</div>
+      <div class="suit-row"><span class="suit-dot" style="background:#eab308;"></span><b style="color:#eab308;">Жёлтая:</b>&nbsp;Т · У · Х</div>
+    </div>
+    <p style="font-size:11px; color:#8b94a8; margin-top:12px; line-height:1.5;">
+      <b style="color:#ffd166;">🪞 Зеркалка</b> (+50 000 ₽): первая и последняя цифры равны, и первая буква совпадает с последней.<br>Пример: <b>А121ВА</b>
+    </p>
+    <p style="font-size:11px; color:#8b94a8; margin-top:12px; line-height:1.5;">
+      <b style="color:#ffd166;">🌟 События</b> — периодические бафы. Следи за баннером сверху: скидки, двойные продажи, бонусы к цене.
+    </p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">🔑 Админ-панель</span>
+      <button class="modal-close" data-close="adminModal">✕</button>
+    </div>
+    <div id="adminAuthBlock">
+      <div class="admin-section-title">Введите код</div>
+      <input type="password" inputmode="numeric" class="admin-input" id="adminCodeInput" placeholder="Код администратора" autocomplete="off" />
+      <div class="admin-error" id="adminError">Неверный код</div>
+      <button class="admin-btn" id="adminLoginBtn" style="width:100%; padding:10px;">Войти</button>
+    </div>
+    <div id="adminPanelBlock" style="display:none;">
+      <div class="admin-section-title">Финансы</div>
+      <div class="admin-grid">
+        <button class="admin-btn" id="adminAdd100k">+100 000 ₽</button>
+        <button class="admin-btn" id="adminAdd1m">+1 000 000 ₽</button>
+      </div>
+      <div class="admin-section-title" style="margin-top:6px;">Спавн редкости</div>
+      <div class="admin-grid">
+        <button class="admin-btn" data-spawn="uncommon">🟢 Необычный</button>
+        <button class="admin-btn" data-spawn="rare">🔵 Редкий</button>
+        <button class="admin-btn" data-spawn="epic">🟣 Эпический</button>
+        <button class="admin-btn" data-spawn="legendary">🟡 Легендарный</button>
+        <button class="admin-btn" data-spawn="mythic" style="grid-column:span 2;">🔴 Мифический</button>
+      </div>
+      <div class="admin-section-title" style="margin-top:6px;">События</div>
+      <div class="admin-grid">
+        <button class="admin-btn" id="adminTriggerEventBtn" style="grid-column:span 2;">⚡ Запустить событие</button>
+        <button class="admin-btn" id="adminStopEventBtn" style="grid-column:span 2;">🛑 Остановить событие</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flash" id="flashEl"></div>
+<div class="load-toast" id="loadToast">▶ Продолжаем сохранённую игру</div>
+
+<script>
+/* =========================================================
+   TELEGRAM MINI APP — инициализация
+   ========================================================= */
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+  try {
+    tg.setHeaderColor('#0f1320');
+    tg.setBackgroundColor('#0f1320');
+  } catch (e) {}
+}
+
+function haptic(type = 'light') {
+  try { tg?.HapticFeedback?.impactOccurred(type); } catch (e) {}
+}
+function notify(type = 'success') {
+  try { tg?.HapticFeedback?.notificationOccurred(type); } catch (e) {}
+}
+
+/* =========================================================
+   КОНСТАНТЫ
+   ========================================================= */
+const SAVE_KEY = 'plates_game_v3';
+const ADMIN_CODE = '777';
+
+const LETTERS = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
+const REGIONS = ['01','02','03','04','05','07','23','50','77','78','99','177','199','777'];
+const TOP_REGIONS  = new Set(['77','99','177','199','777']);
+const HIGH_REGIONS = new Set(['78','50']);
+const TRIPLE_HI    = new Set(['777','888','999']);
+const TRIPLE_MID   = new Set(['111','222','333','444','555','666']);
+
+const LETTER_GROUPS = [
+  { name: 'Красная', color: '#ef4444', letters: new Set(['А','В','Е']) },
+  { name: 'Зелёная', color: '#22c55e', letters: new Set(['К','М','Н']) },
+  { name: 'Синяя',   color: '#3b82f6', letters: new Set(['О','Р','С']) },
+  { name: 'Жёлтая',  color: '#eab308', letters: new Set(['Т','У','Х']) },
+];
+function getLetterGroup(l) { return LETTER_GROUPS.find(g => g.letters.has(l)); }
+function isSameSuit(l1, l2a, l2b) {
+  const g = getLetterGroup(l1);
+  return !!g && g.letters.has(l2a) && g.letters.has(l2b);
+}
+
+const RARITIES = {
+  common:    { name: 'Обычный',     icon: '⚪', color: '#9ca3af', min: 0 },
+  uncommon:  { name: 'Необычный',   icon: '🟢', color: '#4ade80', min: 3000 },
+  rare:      { name: 'Редкий',      icon: '🔵', color: '#60a5fa', min: 10000 },
+  epic:      { name: 'Эпический',   icon: '🟣', color: '#c084fc', min: 30000 },
+  legendary: { name: 'Легендарный', icon: '🟡', color: '#ffd166', min: 80000 },
+  mythic:    { name: 'Мифический',  icon: '🔴', color: '#ff6bff', min: 110000 },
+};
+const GUARANTEE_PRICES = { uncommon: 5000, rare: 15000, epic: 45000, legendary: 90000, mythic: 120000 };
+const GUARANTEE_ORDER = ['uncommon','rare','epic','legendary','mythic'];
+
+const EVENT_IDLE_MS = 90000;
+const EVENT_ACTIVE_MS = 45000;
+const EVENT_FIRST_DELAY_MS = 30000;
+const EVENTS = [
+  { id: 'discount',    icon: '⚡', name: 'Скидка на генерацию', desc: 'Генерация −50%', color: '#22c55e' },
+  { id: 'double_sale', icon: '🔥', name: 'Двойные продажи',    desc: 'Все продажи ×2', color: '#ef4444' },
+  { id: 'value_boost', icon: '💎', name: 'Бонус к цене',       desc: 'Продажа +50%',   color: '#c084fc' },
+  { id: 'golden_hour', icon: '🌟', name: 'Золотой час',        desc: 'Эпик+ ×2',       color: '#ffd166' },
+];
+
+function getRarity(value) {
+  if (value >= RARITIES.mythic.min)    return 'mythic';
+  if (value >= RARITIES.legendary.min) return 'legendary';
+  if (value >= RARITIES.epic.min)      return 'epic';
+  if (value >= RARITIES.rare.min)      return 'rare';
+  if (value >= RARITIES.uncommon.min)  return 'uncommon';
+  return 'common';
+}
+
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const randInt = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const formatMoney = n => n.toLocaleString('ru-RU') + ' ₽';
+
+function calculateValue(plate) {
+  const details = [];
+  let total = 2400;
+  if (TOP_REGIONS.has(plate.regionCode)) {
+    total += 24000;
+    details.push({ text: `Регион ${plate.regionCode} — топ`, val: '+24 000 ₽' });
+  } else if (HIGH_REGIONS.has(plate.regionCode)) {
+    total += 10000;
+    details.push({ text: `Регион ${plate.regionCode} — престижный`, val: '+10 000 ₽' });
+  }
+  if (TRIPLE_HI.has(plate.digits)) {
+    total += 120000;
+    details.push({ text: `Красивые цифры (${plate.digits})`, val: '+120 000 ₽', special: true });
+  } else if (TRIPLE_MID.has(plate.digits)) {
+    total += 40000;
+    details.push({ text: `Красивые цифры (${plate.digits})`, val: '+40 000 ₽' });
+  }
+  const l1 = plate.l1, l2a = plate.l2[0], l2b = plate.l2[1];
+  const allEqual = (l1 === l2a && l2a === l2b);
+  const sameSuit = !allEqual && isSameSuit(l1, l2a, l2b);
+  if (allEqual) {
+    total += 80000;
+    details.push({ text: `Все буквы одинаковые`, val: '+80 000 ₽', special: true });
+  } else if (sameSuit) {
+    total += 15000;
+    const g = getLetterGroup(l1);
+    details.push({ text: `🎨 Масть (${g.name.toLowerCase()})`, val: '+15 000 ₽', special: true });
+  } else if (l1 === l2a || l2a === l2b) {
+    total += 6000;
+    details.push({ text: `Повтор букв`, val: '+6 000 ₽' });
+  }
+  if (plate.digits[0] === plate.digits[2] && l1 === l2b) {
+    total += 50000;
+    details.push({ text: `🪞 Зеркалка`, val: '+50 000 ₽', special: true });
+  }
+  return { value: total, details };
+}
+
+function generateRandomPlate() {
+  return {
+    l1: pick(LETTERS),
+    digits: String(randInt(1, 999)).padStart(3, '0'),
+    l2: pick(LETTERS) + pick(LETTERS),
+    regionCode: pick(REGIONS),
+  };
+}
+
+function buildPlateForRarity(rarity) {
+  const rInfo = RARITIES[rarity];
+  const minVal = rInfo.min;
+  let maxVal = Infinity;
+  if (rarity === 'uncommon')       maxVal = RARITIES.rare.min - 1;
+  else if (rarity === 'rare')      maxVal = RARITIES.epic.min - 1;
+  else if (rarity === 'epic')      maxVal = RARITIES.legendary.min - 1;
+  else if (rarity === 'legendary') maxVal = RARITIES.mythic.min - 1;
+  for (let i = 0; i < 10000; i++) {
+    const p = generateRandomPlate();
+    const val = calculateValue(p).value;
+    if (val >= minVal && val <= maxVal) return p;
+  }
+  switch (rarity) {
+    case 'mythic':    return { l1: 'Х', digits: '777', l2: 'ХХ', regionCode: '777' };
+    case 'legendary': return { l1: 'А', digits: '111', l2: 'ВЕ', regionCode: '77' };
+    case 'epic':      return { l1: 'А', digits: '111', l2: 'ВМ', regionCode: '77' };
+    case 'rare':      return { l1: 'А', digits: '050', l2: 'ВМ', regionCode: '77' };
+    case 'uncommon':  return { l1: 'А', digits: '050', l2: 'АК', regionCode: '01' };
+    default:          return { l1: 'А', digits: '050', l2: 'ВМ', regionCode: '01' };
+  }
+}
+
+function renderPlateHTML(plate, size = '', rarity = null) {
+  const rc = rarity ? ` rarity-${rarity}` : '';
+  return `
+    <div class="plate ${size}${rc}">
+      <div class="plate-main">
+        <span class="slot">${plate.l1}</span>
+        <span class="slot">${plate.digits}</span>
+        <span class="slot">${plate.l2}</span>
+      </div>
+      <div class="plate-side">
+        <div class="plate-region">${plate.regionCode}</div>
+        <div class="plate-flag-block">
+          <div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div>
+          <div class="flag-label">RUS</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function renderRarityChip(rarity, isGuaranteed = false) {
+  const r = RARITIES[rarity];
+  return `<div class="rarity-chip rarity-chip--${rarity}"><span>${isGuaranteed ? '🎯' : r.icon}</span><span>${r.name}${isGuaranteed ? ' · гарантия' : ''}</span></div>`;
+}
+
+/* =========================================================
+   ЗВУК
+   ========================================================= */
+let audioCtx = null;
+function ensureAudio() {
+  if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  if (audioCtx?.state === 'suspended') audioCtx.resume().catch(()=>{});
+}
+function playTone(freq, duration) {
+  if (!settings.sound || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.frequency.value = freq;
+  g.gain.setValueAtTime(0.05, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(t); osc.stop(t + duration);
+}
+function playWinChord(rarity) {
+  const chords = {
+    uncommon: [523], rare: [523, 659], epic: [523, 659, 784],
+    legendary: [523, 659, 784, 1047], mythic: [523, 659, 784, 1047, 1319],
+  };
+  const notes = chords[rarity];
+  if (!notes) return;
+  notes.forEach((f, i) => setTimeout(() => playTone(f, 0.22), i * 80));
+}
+
+/* =========================================================
+   СОСТОЯНИЕ
+   ========================================================= */
+const settings = { sound: true, flash: true, autoSave: true };
+const state = {
+  money: 50000, best: null, collection: [],
+  lastPlate: null, lastValue: 0, lastDetails: [], lastStatus: 'none',
+  lastGuaranteedRarity: null, activeGuarantee: null,
+  isGenerating: false, guaranteeOpen: false,
+  activeEvent: null, nextEventAt: Date.now() + EVENT_FIRST_DELAY_MS,
+};
+
+/* =========================================================
+   ХРАНЕНИЕ — CloudStorage + localStorage fallback
+   ========================================================= */
+function getSaveData() {
+  return {
+    settings,
+    money: state.money,
+    best: state.best,
+    collection: state.collection.slice(-50),
+    activeGuarantee: state.activeGuarantee,
+    activeEvent: state.activeEvent,
+    nextEventAt: state.nextEventAt,
+    v: 3,
+  };
+}
+
+function saveState() {
+  if (!settings.autoSave) return;
+  const data = JSON.stringify(getSaveData());
+  // Всегда пишем локально (быстро)
+  try { localStorage.setItem(SAVE_KEY, data); } catch (e) {}
+  // И в облако Telegram
+  if (tg?.CloudStorage) {
+    tg.CloudStorage.setItem(SAVE_KEY, data, (err) => {
+      if (err) console.warn('CloudStorage save error:', err);
+    });
+  }
+}
+
+function applySaveData(data) {
+  state.money = data.money ?? 50000;
+  state.best = data.best ?? null;
+  state.collection = Array.isArray(data.collection) ? data.collection : [];
+  state.activeGuarantee = data.activeGuarantee ?? null;
+  if (data.settings) {
+    settings.sound    = data.settings.sound    ?? true;
+    settings.flash    = data.settings.flash    ?? true;
+    settings.autoSave = data.settings.autoSave ?? true;
+  }
+  const now = Date.now();
+  if (data.activeEvent && data.activeEvent.endsAt > now) state.activeEvent = data.activeEvent;
+  else state.activeEvent = null;
+  if (!state.activeEvent) {
+    if (data.nextEventAt && data.nextEventAt > now - 5*60*1000 && data.nextEventAt < now + 24*3600*1000) {
+      state.nextEventAt = data.nextEventAt;
+    } else {
+      state.nextEventAt = now + EVENT_FIRST_DELAY_MS;
+    }
+  }
+}
+
+async function loadState() {
+  return new Promise((resolve) => {
+    // Сначала пробуем облако
+    if (tg?.CloudStorage) {
+      tg.CloudStorage.getItem(SAVE_KEY, (err, value) => {
+        if (!err && value) {
+          try { applySaveData(JSON.parse(value)); return resolve(true); } catch (e) {}
+        }
+        // Fallback на локальное
+        resolve(loadLocal());
+      });
+    } else {
+      resolve(loadLocal());
+    }
+  });
+}
+
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    applySaveData(JSON.parse(raw));
+    return true;
+  } catch (e) { return false; }
+}
+
+/* =========================================================
+   DOM
+   ========================================================= */
+const moneyEl = document.getElementById('moneyEl');
+const plateArea = document.getElementById('plateArea');
+const valueArea = document.getElementById('valueArea');
+const actionsArea = document.getElementById('actionsArea');
+const bestBox = document.getElementById('bestBox');
+const inventoryScreenList = document.getElementById('inventoryScreenList');
+const inventoryBadgeCount = document.getElementById('inventoryBadgeCount');
+const flashEl = document.getElementById('flashEl');
+const loadToast = document.getElementById('loadToast');
+const adminBtn = document.getElementById('adminBtn');
+
+function animateMoney(dir) {
+  moneyEl.classList.remove('up','down');
+  void moneyEl.offsetWidth;
+  moneyEl.classList.add(dir);
+  setTimeout(() => moneyEl.classList.remove(dir), 500);
+}
+function triggerFlash(rarity) {
+  if (!settings.flash) return;
+  flashEl.style.background = `radial-gradient(circle, ${RARITIES[rarity].color}aa 0%, transparent 70%)`;
+  flashEl.classList.add('show');
+  setTimeout(() => flashEl.classList.remove('show'), 900);
+}
+
+/* Навигация */
+let currentTab = 'tabPlates';
+function setTab(tabId) {
+  currentTab = tabId;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.tab === tabId));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === tabId));
+  // Кнопка "Назад" в Telegram — только вне главной
+  if (tg?.BackButton) {
+    if (tabId === 'tabPlates') tg.BackButton.hide();
+    else tg.BackButton.show();
+  }
+}
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    haptic('light');
+    setTab(item.dataset.tab);
+  });
+});
+if (tg?.BackButton) {
+  tg.BackButton.onClick(() => { haptic('light'); setTab('tabPlates'); });
+  tg.BackButton.hide();
+}
+
+/* =========================================================
+   СОБЫТИЯ / ГАРАНТИЯ
+   ========================================================= */
+function getEventDef(id) { return EVENTS.find(e => e.id === id); }
+
+function getGenerateCost(forcedRarity) {
+  let cost = forcedRarity ? GUARANTEE_PRICES[forcedRarity] : 2000;
+  if (state.activeEvent && state.activeEvent.id === 'discount') cost = Math.round(cost / 2);
+  return cost;
+}
+function getSaleBonusMultiplier(rarity) {
+  if (!state.activeEvent) return 1;
+  const ev = state.activeEvent.id;
+  if (ev === 'double_sale') return 2;
+  if (ev === 'value_boost') return 1.5;
+  if (ev === 'golden_hour' && ['epic','legendary','mythic'].includes(rarity)) return 2;
+  return 1;
+}
+
+function renderEventBanner() {
+  const el = document.getElementById('eventBanner');
+  if (!el) return;
+  const now = Date.now();
+  if (state.activeEvent) {
+    const ev = getEventDef(state.activeEvent.id);
+    if (!ev) return;
+    const left = Math.max(0, Math.ceil((state.activeEvent.endsAt - now) / 1000));
+    el.className = 'event-banner active';
+    el.style.background = ev.color + '25';
+    el.style.border = `1px solid ${ev.color}90`;
+    el.style.color = ev.color;
+    el.innerHTML = `
+      <span class="event-banner-icon">${ev.icon}</span>
+      <span class="event-banner-name">${ev.name}<br><span class="event-banner-desc">${ev.desc}</span></span>
+      <span class="event-banner-timer">${left}с</span>
+    `;
+  } else {
+    const left = Math.max(0, Math.ceil((state.nextEventAt - now) / 1000));
+    el.className = 'event-banner idle';
+    el.style.background = ''; el.style.border = ''; el.style.color = '';
+    el.innerHTML = `
+      <span class="event-banner-icon">⏳</span>
+      <span class="event-banner-name">Следующее событие</span>
+      <span class="event-banner-timer">${left}с</span>
+    `;
+  }
+}
+
+function tickEvents() {
+  if (state.isGenerating) {
+    // Обновляем только таймер, не трогая рулетку
+    const t = document.querySelector('.event-banner-timer');
+    if (t) {
+      const now = Date.now();
+      const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt;
+      t.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
+    }
+    return;
+  }
+  const now = Date.now();
+  let changed = false;
+  if (state.activeEvent) {
+    if (now >= state.activeEvent.endsAt) {
+      state.activeEvent = null;
+      state.nextEventAt = now + EVENT_IDLE_MS;
+      changed = true; saveState();
+    }
+  } else if (now >= state.nextEventAt) {
+    const ev = pick(EVENTS);
+    state.activeEvent = { id: ev.id, endsAt: now + EVENT_ACTIVE_MS };
+    changed = true; saveState();
+    ensureAudio(); playWinChord('rare'); triggerFlash('epic');
+    notify('success');
+  }
+  if (changed) render();
+  else {
+    const t = document.querySelector('.event-banner-timer');
+    if (t) {
+      const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt;
+      t.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
+    }
+  }
+}
+
+/* =========================================================
+   РУЛЕТКА
+   ========================================================= */
+async function rollAnimation(targetRarity) {
+  plateArea.className = 'plate-wrapper';
+  const targetLabel = targetRarity
+    ? `<div class="roll-target" style="color:${RARITIES[targetRarity].color}">🎯 Цель: ${RARITIES[targetRarity].name}</div>`
+    : '';
+  plateArea.innerHTML = targetLabel + `
+    <div class="plate">
+      <div class="plate-main">
+        <span class="slot" id="s1">А</span>
+        <span class="slot" id="s2">000</span>
+        <span class="slot" id="s3">АА</span>
+      </div>
+      <div class="plate-side">
+        <div class="plate-region" id="s4">77</div>
+        <div class="plate-flag-block">
+          <div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div>
+          <div class="flag-label">RUS</div>
+        </div>
+      </div>
+    </div>
+  `;
+  const s1 = document.getElementById('s1');
+  const s2 = document.getElementById('s2');
+  const s3 = document.getElementById('s3');
+  const s4 = document.getElementById('s4');
+  const start = performance.now();
+  while (performance.now() - start < 700) {
+    if (s1) s1.textContent = pick(LETTERS);
+    if (s2) s2.textContent = String(randInt(1,999)).padStart(3,'0');
+    if (s3) s3.textContent = pick(LETTERS) + pick(LETTERS);
+    if (s4) s4.textContent = pick(REGIONS);
+    playTone(900 + Math.random()*300, 0.03);
+    await sleep(50);
+  }
+}
+
+/* =========================================================
+   РЕНДЕР
+   ========================================================= */
+function renderGuaranteePanel() {
+  return `
+    <div class="guarantee-panel">
+      <div class="guarantee-title">Нажмите повторно, чтобы отменить</div>
+      ${GUARANTEE_ORDER.map(rarity => {
+        const r = RARITIES[rarity];
+        const basePrice = GUARANTEE_PRICES[rarity];
+        const price = getGenerateCost(rarity);
+        const discounted = price < basePrice;
+        const disabled = state.money < price;
+        const isActive = state.activeGuarantee === rarity;
+        return `
+          <button class="guarantee-btn ${isActive ? 'active' : ''}" data-rarity="${rarity}" ${disabled ? 'disabled' : ''}>
+            <span class="g-icon">${r.icon}</span>
+            <span class="g-info">
+              <span class="g-name">${r.name}</span>
+              <span class="g-hint">${isActive ? 'активна (нажмите для отмены)' : 'гарантия'}</span>
+            </span>
+            <span class="g-price">${discounted ? `<s style="opacity:.5">${formatMoney(basePrice)}</s> ` : ''}${formatMoney(price)}</span>
+          </button>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function render() {
+  moneyEl.textContent = formatMoney(state.money);
+  renderEventBanner();
+
+  if (state.lastPlate && state.lastStatus !== 'none') {
+    const rarity = getRarity(state.lastValue);
+    plateArea.className = 'plate-wrapper' + (state.lastStatus === 'sold' ? ' sold' : '');
+    plateArea.innerHTML = `${renderRarityChip(rarity, state.lastGuaranteedRarity === rarity)}${renderPlateHTML(state.lastPlate, '', rarity)}`;
+  } else {
+    plateArea.className = 'plate-wrapper empty';
+    plateArea.innerHTML = '<div class="empty-text">Нажмите «Сгенерировать», чтобы получить номер</div>';
+  }
+
+  valueArea.innerHTML = '';
+  if (state.lastStatus === 'pending') {
+    const rarity = getRarity(state.lastValue);
+    valueArea.innerHTML = `
+      <div class="value-reveal">
+        <div class="value-big" style="color:${RARITIES[rarity].color}">${formatMoney(state.lastValue)}</div>
+        <div class="value-details">
+          ${state.lastDetails.map(d => `<div class="value-detail-row${d.special ? ' special' : ''}"><span>${d.text}</span><span class="plus">${d.val}</span></div>`).join('')}
+        </div>
+      </div>
+    `;
+  } else if (state.lastStatus === 'sold') {
+    const soldVal = state.lastSoldValue ?? state.lastValue;
+    const bonusText = state.lastSoldBonus > 1 ? ` <span style="color:#ffd166">(×${state.lastSoldBonus})</span>` : '';
+    valueArea.innerHTML = `<div class="sold-msg">✅ Продано за ${formatMoney(soldVal)}${bonusText}</div>`;
+  } else if (state.lastStatus === 'kept') {
+    valueArea.innerHTML = `<div class="kept-msg">🎒 Добавлено в инвентарь</div>`;
+  }
+
+  if (state.lastStatus === 'pending') {
+    const rarity = getRarity(state.lastValue);
+    const bonus = getSaleBonusMultiplier(rarity);
+    const effectiveValue = Math.round(state.lastValue * bonus);
+    const boosted = bonus > 1;
+    const bonusText = boosted ? ` <span style="color:#0a0a0a;background:#ffd166;padding:1px 6px;border-radius:4px;font-size:11px;">×${bonus}</span>` : '';
+    actionsArea.innerHTML = `
+      <button class="btn btn-sell${boosted ? ' boosted' : ''}" id="sellBtn">💰 Продать за ${formatMoney(effectiveValue)}${bonusText}</button>
+      <button class="btn btn-keep" id="keepBtn">🎒 В инвентарь</button>
+    `;
+    document.getElementById('sellBtn').onclick = handleSell;
+    document.getElementById('keepBtn').onclick = handleKeep;
+  } else {
+    const active = state.activeGuarantee;
+    const cost = getGenerateCost(active);
+    const baseCost = active ? GUARANTEE_PRICES[active] : 2000;
+    const discounted = cost < baseCost;
+    const open = state.guaranteeOpen;
+    actionsArea.innerHTML = `
+      <button class="btn btn-generate${discounted ? ' discounted' : ''}" id="generateBtn" ${state.money < cost ? 'disabled' : ''}>
+        <span>${active ? '🎲 Купить (' + RARITIES[active].name + ')' : 'Сгенерировать номер'}${discounted ? ' ⚡' : ''}</span>
+        <span class="btn-cost">${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}</span>
+      </button>
+      <button class="btn btn-guarantee ${open ? 'open' : ''}" id="guaranteeToggle">
+        <span>🎲 ${active ? 'Гарант: ' + RARITIES[active].name : 'Выбрать гарантию'}</span>
+      </button>
+      ${open ? renderGuaranteePanel() : ''}
+    `;
+    document.getElementById('generateBtn').onclick = () => handleGenerate(active);
+    document.getElementById('guaranteeToggle').onclick = () => { haptic('light'); state.guaranteeOpen = !state.guaranteeOpen; render(); };
+    if (open) {
+      actionsArea.querySelectorAll('.guarantee-btn').forEach(btn => {
+        btn.onclick = () => {
+          haptic('light');
+          const chosen = btn.dataset.rarity;
+          state.activeGuarantee = (state.activeGuarantee === chosen) ? null : chosen;
+          state.guaranteeOpen = false;
+          render(); saveState();
+        };
+      });
+    }
+  }
+
+  if (state.best) {
+    const rarity = getRarity(state.best.value);
+    bestBox.innerHTML = `<span class="best-label">🏆 Рекорд</span>${renderPlateHTML(state.best.plate, 'small', rarity)}<span class="best-value">${formatMoney(state.best.value)}</span>`;
+  } else bestBox.innerHTML = '';
+
+  inventoryBadgeCount.textContent = `${state.collection.length} шт.`;
+  inventoryScreenList.innerHTML = state.collection.map((item, idx) => `
+    <div class="inventory-item">
+      ${renderPlateHTML(item.plate, 'small', getRarity(item.value))}
+      <div class="inventory-item-info">
+        <span class="inventory-item-price">${formatMoney(item.value)}</span>
+        <div class="inventory-actions">
+          <button class="inv-btn sell" data-sell="${idx}">Продать</button>
+        </div>
+      </div>
+    </div>
+  `).join('') || '<div class="empty-inventory">Инвентарь пуст</div>';
+  inventoryScreenList.querySelectorAll('[data-sell]').forEach(b => {
+    b.onclick = () => sellFromInv(Number(b.dataset.sell));
+  });
+}
+
+/* =========================================================
+   ДЕЙСТВИЯ
+   ========================================================= */
+async function handleGenerate(forcedRarity) {
+  if (state.isGenerating) return;
+  const cost = getGenerateCost(forcedRarity);
+  if (state.money < cost) { notify('error'); return; }
+
+  ensureAudio();
+  state.isGenerating = true;
+  state.money -= cost;
+  state.lastStatus = 'none';
+  state.lastGuaranteedRarity = forcedRarity;
+  state.guaranteeOpen = false;
+  animateMoney('down');
+  render();
+
+  await rollAnimation(forcedRarity);
+
+  const plate = forcedRarity ? buildPlateForRarity(forcedRarity) : generateRandomPlate();
+  const { value, details } = calculateValue(plate);
+
+  state.lastPlate = plate;
+  state.lastValue = value;
+  state.lastDetails = details;
+  state.lastStatus = 'pending';
+  if (!state.best || value > state.best.value) state.best = { plate, value };
+
+  state.isGenerating = false;
+  render(); saveState();
+
+  const rarity = getRarity(value);
+  haptic(['legendary','mythic'].includes(rarity) ? 'heavy' : 'light');
+  if (['rare','epic','legendary','mythic'].includes(rarity)) {
+    triggerFlash(rarity);
+    playWinChord(rarity);
+    notify(rarity === 'mythic' || rarity === 'legendary' ? 'success' : 'warning');
+  }
+}
+
+function handleSell() {
+  const rarity = getRarity(state.lastValue);
+  const bonus = getSaleBonusMultiplier(rarity);
+  const finalValue = Math.round(state.lastValue * bonus);
+  state.money += finalValue;
+  state.lastSoldValue = finalValue;
+  state.lastSoldBonus = bonus;
+  state.lastStatus = 'sold';
+  animateMoney('up');
+  haptic('medium'); notify('success');
+  render(); saveState();
+}
+
+function handleKeep() {
+  state.collection.push({ plate: state.lastPlate, value: state.lastValue });
+  state.lastStatus = 'kept';
+  haptic('light');
+  render(); saveState();
+}
+
+function sellFromInv(idx) {
+  if (!state.collection[idx]) return;
+  const item = state.collection[idx];
+  const rarity = getRarity(item.value);
+  const bonus = getSaleBonusMultiplier(rarity);
+  const finalValue = Math.round(item.value * bonus);
+  state.money += finalValue;
+  state.collection.splice(idx, 1);
+  animateMoney('up');
+  haptic('medium'); notify('success');
+  render(); saveState();
+}
+
+/* =========================================================
+   АДМИНКА
+   ========================================================= */
+const adminModal = document.getElementById('adminModal');
+const adminAuthBlock = document.getElementById('adminAuthBlock');
+const adminPanelBlock = document.getElementById('adminPanelBlock');
+const adminCodeInput = document.getElementById('adminCodeInput');
+const adminError = document.getElementById('adminError');
+let adminAuthorized = false;
+
+adminBtn.onclick = () => {
+  haptic('light');
+  adminModal.classList.add('open');
+  if (adminAuthorized) {
+    adminAuthBlock.style.display = 'none';
+    adminPanelBlock.style.display = 'block';
+  } else {
+    adminAuthBlock.style.display = 'block';
+    adminPanelBlock.style.display = 'none';
+    adminCodeInput.value = '';
+    adminError.style.display = 'none';
+    setTimeout(() => adminCodeInput.focus(), 100);
+  }
+};
+
+document.getElementById('adminLoginBtn').onclick = () => {
+  if (adminCodeInput.value.trim() === ADMIN_CODE) {
+    adminAuthorized = true;
+    adminError.style.display = 'none';
+    adminAuthBlock.style.display = 'none';
+    adminPanelBlock.style.display = 'block';
+    haptic('medium'); notify('success');
+  } else {
+    adminError.style.display = 'block';
+    haptic('heavy'); notify('error');
+  }
+};
+adminCodeInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('adminLoginBtn').click();
+});
+
+document.getElementById('adminAdd100k').onclick = () => { state.money += 100000; animateMoney('up'); haptic('medium'); render(); saveState(); };
+document.getElementById('adminAdd1m').onclick  = () => { state.money += 1000000; animateMoney('up'); haptic('medium'); render(); saveState(); };
+
+document.querySelectorAll('[data-spawn]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const rarity = btn.dataset.spawn;
+    const plate = buildPlateForRarity(rarity);
+    const { value, details } = calculateValue(plate);
+    state.lastPlate = plate;
+    state.lastValue = value;
+    state.lastDetails = details;
+    state.lastStatus = 'pending';
+    state.lastGuaranteedRarity = rarity;
+    if (!state.best || value > state.best.value) state.best = { plate, value };
+    adminModal.classList.remove('open');
+    render(); saveState();
+    haptic('medium');
+    if (rarity !== 'common') { triggerFlash(rarity); playWinChord(rarity); }
+  });
+});
+
+document.getElementById('adminTriggerEventBtn').onclick = () => {
+  const ev = pick(EVENTS);
+  state.activeEvent = { id: ev.id, endsAt: Date.now() + EVENT_ACTIVE_MS };
+  adminModal.classList.remove('open');
+  render(); saveState();
+  ensureAudio(); playWinChord('rare'); notify('success');
+};
+document.getElementById('adminStopEventBtn').onclick = () => {
+  state.activeEvent = null;
+  state.nextEventAt = Date.now() + EVENT_IDLE_MS;
+  adminModal.classList.remove('open');
+  render(); saveState();
+};
+
+/* =========================================================
+   МОДАЛКИ (универсальное закрытие)
+   ========================================================= */
+document.querySelectorAll('[data-close]').forEach(btn => {
+  btn.onclick = () => {
+    haptic('light');
+    document.getElementById(btn.dataset.close).classList.remove('open');
+  };
+});
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', (e) => {
+    if (e.target === m) m.classList.remove('open');
+  });
+});
+
+/* =========================================================
+   НАСТРОЙКИ
+   ========================================================= */
+const soundToggle = document.getElementById('settingSound');
+const flashToggle = document.getElementById('settingFlash');
+const autoSaveToggle = document.getElementById('settingAutoSave');
+
+soundToggle.addEventListener('change', e => {
+  settings.sound = e.target.checked;
+  if (settings.sound) { ensureAudio(); playTone(800, 0.08); }
+  saveState();
+});
+flashToggle.addEventListener('change', e => {
+  settings.flash = e.target.checked;
+  if (settings.flash) triggerFlash('uncommon');
+  saveState();
+});
+autoSaveToggle.addEventListener('change', e => {
+  settings.autoSave = e.target.checked;
+  if (settings.autoSave) saveState();
+});
+
+document.getElementById('openSettingsBtn').onclick = () => document.getElementById('settingsModal').classList.add('open');
+document.getElementById('openSuitsBtn').onclick = () => document.getElementById('suitsModal').classList.add('open');
+
+document.getElementById('modalResetBtn').onclick = () => {
+  const doReset = () => {
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+    if (tg?.CloudStorage) {
+      tg.CloudStorage.removeItem(SAVE_KEY, () => {});
+    }
+    setTimeout(() => location.reload(), 100);
+  };
+  if (tg?.showConfirm) {
+    tg.showConfirm('Сбросить весь прогресс? Это необратимо.', (ok) => { if (ok) doReset(); });
+  } else if (confirm('Сбросить весь прогресс?')) {
+    doReset();
+  }
+};
+
+/* =========================================================
+   ЗАПУСК
+   ========================================================= */
+(async function init() {
+  const loaded = await loadState();
+  if (loaded) {
+    loadToast.classList.add('show');
+    setTimeout(() => loadToast.classList.remove('show'), 2000);
+  }
+  soundToggle.checked    = settings.sound;
+  flashToggle.checked    = settings.flash;
+  autoSaveToggle.checked = settings.autoSave;
+
+  render();
+  setInterval(tickEvents, 250);
+
+  // Периодическое сохранение (на случай пропажи событий)
+  setInterval(() => { if (settings.autoSave) saveState(); }, 15000);
+
+  // Сохраняем при сворачивании приложения
+  if (tg) tg.onEvent('viewportChanged', () => {});
+  window.addEventListener('pagehide', saveState);
+  window.addEventListener('beforeunload', saveState);
+})();
+</script>
+</body>
+</html>
