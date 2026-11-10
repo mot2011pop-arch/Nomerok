@@ -37,18 +37,10 @@
   @keyframes moneyUp { 50% { transform: scale(1.15); color: #4ade80; } }
   @keyframes moneyDown { 50% { transform: scale(1.1); color: #f87171; } }
   .header-btns { display: flex; gap: 6px; }
-  .icon-btn {
-    background: #1a1f2e; border: 1px solid #2b3346; color: #8b94a8;
-    font-size: 14px; cursor: pointer; padding: 6px 9px; border-radius: 8px;
-    transition: all 0.15s; display: flex; align-items: center; justify-content: center;
-  }
+  .icon-btn { background: #1a1f2e; border: 1px solid #2b3346; color: #8b94a8; font-size: 14px; cursor: pointer; padding: 6px 9px; border-radius: 8px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
   .icon-btn:hover { color: #fff; border-color: #4a6ffa; background: #232a3d; }
 
-  .event-banner {
-    padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
-    transition: all 0.3s; flex-shrink: 0; min-height: 32px;
-  }
+  .event-banner { padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; transition: all 0.3s; flex-shrink: 0; min-height: 32px; }
   .event-banner.idle { background: rgba(139,148,168,0.08); color: #8b94a8; border: 1px solid rgba(139,148,168,0.15); }
   .event-banner.active { animation: eventPulse 1.5s ease infinite; }
   @keyframes eventPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.015); } }
@@ -57,28 +49,17 @@
   .event-banner-desc { font-size: 9px; opacity: 0.75; font-weight: 600; }
   .event-banner-timer { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 12px; padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,0.3); flex-shrink: 0; }
 
-  .plate-wrapper {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 8px; min-height: 140px; margin-bottom: 6px; padding: 4px 0;
-    position: relative; flex-shrink: 0;
-  }
+  .booster-indicator { display: none; padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; margin-bottom: 6px; flex-shrink: 0; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.5); color: #4ade80; align-items: center; gap: 8px; }
+  .booster-indicator.show { display: flex; }
+  .booster-indicator .booster-timer { margin-left: auto; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; }
+
+  .plate-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 140px; margin-bottom: 6px; padding: 4px 0; position: relative; flex-shrink: 0; }
   .plate-wrapper.empty { color: #5a6580; font-size: 12px; text-align: center; padding: 12px; border: 2px dashed #313a52; border-radius: 12px; min-height: 140px; }
   .plate-wrapper.sold .plate { opacity: 0.55; filter: grayscale(0.7); }
-  .plate-wrapper.sold .plate::after {
-    content: 'ПРОДАНО'; position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-12deg); font-size: 24px; font-weight: 900;
-    font-family: 'Roboto Condensed', sans-serif; color: #ef4444;
-    border: 3px solid #ef4444; padding: 1px 10px; border-radius: 6px;
-    background: rgba(255,255,255,0.85); z-index: 10; letter-spacing: 2px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2); pointer-events: none;
-  }
+  .plate-wrapper.sold .plate::after { content: 'ПРОДАНО'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-12deg); font-size: 24px; font-weight: 900; font-family: 'Roboto Condensed', sans-serif; color: #ef4444; border: 3px solid #ef4444; padding: 1px 10px; border-radius: 6px; background: rgba(255,255,255,0.85); z-index: 10; letter-spacing: 2px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); pointer-events: none; }
   .roll-target { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 2px; animation: pulseTarget 1s ease infinite alternate; }
   @keyframes pulseTarget { from { opacity: 0.7; } to { opacity: 1; } }
-  .rarity-chip {
-    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 100px;
-    font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
-    animation: chipPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
+  .rarity-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; animation: chipPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
   @keyframes chipPop { 0% { transform: scale(0.4) translateY(6px); opacity: 0; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
   .rarity-chip--common    { background: rgba(156,163,175,0.16); color: #cbd5e1; border: 1px solid rgba(156,163,175,0.4); }
   .rarity-chip--uncommon  { background: rgba(74,222,128,0.14);  color: #4ade80; border: 1px solid rgba(74,222,128,0.5); }
@@ -87,15 +68,7 @@
   .rarity-chip--legendary { background: rgba(255,209,102,0.16); color: #ffd166; border: 1px solid rgba(255,209,102,0.6); }
   .rarity-chip--mythic    { background: linear-gradient(90deg, rgba(255,107,255,0.2), rgba(255,209,102,0.2), rgba(96,165,250,0.2)); color: #ffd1ff; border: 1px solid rgba(255,107,255,0.7); }
 
-  .plate {
-    display: inline-flex; align-items: stretch;
-    background: linear-gradient(180deg, #f8f8f8 0%, #ffffff 45%, #e8e8e8 100%);
-    color: #0a0a0a; border: 2px solid #111; border-radius: 5px; overflow: hidden;
-    font-family: 'Roboto Condensed', 'Arial Narrow', 'Arial', sans-serif;
-    font-weight: 700; font-size: 30px; letter-spacing: 2px;
-    user-select: none; position: relative;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 4px rgba(0,0,0,0.08), 0 6px 20px rgba(0,0,0,0.5);
-  }
+  .plate { display: inline-flex; align-items: stretch; background: linear-gradient(180deg, #f8f8f8 0%, #ffffff 45%, #e8e8e8 100%); color: #0a0a0a; border: 2px solid #111; border-radius: 5px; overflow: hidden; font-family: 'Roboto Condensed', 'Arial Narrow', 'Arial', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: 2px; user-select: none; position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 4px rgba(0,0,0,0.08), 0 6px 20px rgba(0,0,0,0.5); }
   .plate::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent); pointer-events: none; z-index: 1; }
   .plate.small { font-size: 15px; letter-spacing: 1px; }
   .plate.small .plate-main { gap: 3px; padding: 2px 5px; }
@@ -127,15 +100,12 @@
   .kept-msg { background: #2a2414; color: #ffd166; border: 1px solid #b89330; }
 
   .actions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
-  .btn {
-    border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 700;
-    cursor: pointer; font-family: inherit; transition: transform 0.1s, background 0.15s;
-    display: flex; flex-direction: column; align-items: center; gap: 1px; position: relative;
-  }
+  .btn { border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: transform 0.1s, background 0.15s; display: flex; flex-direction: column; align-items: center; gap: 1px; position: relative; }
   .btn:active { transform: scale(0.97); }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .btn-generate { background: linear-gradient(135deg, #4a6ffa 0%, #7c4aff 100%); color: #fff; box-shadow: 0 4px 16px rgba(74,111,250,0.4); }
   .btn-generate.discounted { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 4px 16px rgba(34,197,94,0.5); animation: eventPulse 1.5s ease infinite; }
+  .btn-generate.bonus-free { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); box-shadow: 0 4px 16px rgba(245,158,11,0.55); animation: eventPulse 1.5s ease infinite; }
   .btn-cost { font-size: 10px; opacity: 0.85; font-weight: 600; }
   .btn-cost-old { text-decoration: line-through; opacity: 0.6; margin-right: 4px; }
   .btn-sell { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; box-shadow: 0 4px 16px rgba(34,197,94,0.35); }
@@ -237,6 +207,10 @@
       <span class="event-banner-name">Следующее событие</span>
       <span class="event-banner-timer">—</span>
     </div>
+    <div class="booster-indicator" id="boosterIndicator">
+      <span>🚀 Бустер продаж</span>
+      <span class="booster-timer" id="boosterTimer">—</span>
+    </div>
     <div id="plateArea" class="plate-wrapper empty">
       <div class="empty-text">Нажмите «Сгенерировать», чтобы получить номер</div>
     </div>
@@ -261,6 +235,10 @@
       <button class="menu-item-card" id="openSuitsBtn">
         <div class="menu-item-icon" style="background:linear-gradient(135deg, #ef4444, #3b82f6); color:#fff;">🎨</div>
         <span class="menu-item-label">Масти</span>
+      </button>
+      <button class="menu-item-card" id="openPromoBtn">
+        <div class="menu-item-icon" style="background:linear-gradient(135deg, #22c55e, #16a34a); color:#fff;">🎁</div>
+        <span class="menu-item-label">Промокод</span>
       </button>
     </div>
   </div>
@@ -319,6 +297,25 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="promoModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">🎁 Промокод</span>
+      <button class="modal-close" data-close="promoModal">✕</button>
+    </div>
+    <p style="font-size:11px; color:#8b94a8; margin-bottom:10px; line-height:1.5;">
+      Введи код и получи награду. Каждый код — один раз на игрока.
+    </p>
+    <input type="text" class="admin-input" id="promoCodeInput"
+           placeholder="НАПРИМЕР: WELCOME" autocomplete="off"
+           style="text-transform:uppercase; letter-spacing:2px; font-weight:700; text-align:center;" />
+    <div id="promoResult" style="display:none; margin-bottom:8px; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-align:center;"></div>
+    <button class="btn btn-generate" id="promoActivateBtn" style="width:100%;">
+      <span>✅ Активировать</span>
+    </button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="adminModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -359,29 +356,22 @@
 
 <script>
 /* =========================================================
-   TELEGRAM MINI APP — инициализация
+   TELEGRAM MINI APP
    ========================================================= */
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
-  try {
-    tg.setHeaderColor('#0f1320');
-    tg.setBackgroundColor('#0f1320');
-  } catch (e) {}
+  try { tg.setHeaderColor('#0f1320'); tg.setBackgroundColor('#0f1320'); } catch (e) {}
 }
-
-function haptic(type = 'light') {
-  try { tg?.HapticFeedback?.impactOccurred(type); } catch (e) {}
-}
-function notify(type = 'success') {
-  try { tg?.HapticFeedback?.notificationOccurred(type); } catch (e) {}
-}
+function haptic(type = 'light') { try { tg?.HapticFeedback?.impactOccurred(type); } catch (e) {} }
+function notify(type = 'success') { try { tg?.HapticFeedback?.notificationOccurred(type); } catch (e) {} }
 
 /* =========================================================
    КОНСТАНТЫ
    ========================================================= */
 const SAVE_KEY = 'plates_game_v3';
+const PROMO_KEY = 'plates_promo_used_v1';
 const ADMIN_CODE = '777';
 
 const LETTERS = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
@@ -423,6 +413,16 @@ const EVENTS = [
   { id: 'value_boost', icon: '💎', name: 'Бонус к цене',       desc: 'Продажа +50%',   color: '#c084fc' },
   { id: 'golden_hour', icon: '🌟', name: 'Золотой час',        desc: 'Эпик+ ×2',       color: '#ffd166' },
 ];
+
+/* Промокоды — клиентская версия */
+const PROMO_CODES = {
+  'WELCOME':   { type: 'money',    amount: 25000,  desc: '+25 000 ₽' },
+  'TG2025':    { type: 'money',    amount: 50000,  desc: '+50 000 ₽' },
+  'LUCKY777':  { type: 'money',    amount: 77777,  desc: '+77 777 ₽' },
+  'BOOST':     { type: 'booster',  mult: 2, durationMs: 5 * 60 * 1000, desc: '×2 продажи на 5 минут' },
+  'EPICGIFT':  { type: 'guarantee', rarity: 'epic', count: 1, desc: '1 эпический номер бесплатно' },
+  'MYTHICGOD': { type: 'money',    amount: 500000, desc: '+500 000 ₽ (секретный)' },
+};
 
 function getRarity(value) {
   if (value >= RARITIES.mythic.min)    return 'mythic';
@@ -484,7 +484,6 @@ function generateRandomPlate() {
     regionCode: pick(REGIONS),
   };
 }
-
 function buildPlateForRarity(rarity) {
   const rInfo = RARITIES[rarity];
   const minVal = rInfo.min;
@@ -495,8 +494,7 @@ function buildPlateForRarity(rarity) {
   else if (rarity === 'legendary') maxVal = RARITIES.mythic.min - 1;
   for (let i = 0; i < 10000; i++) {
     const p = generateRandomPlate();
-    const val = calculateValue(p).value;
-    if (val >= minVal && val <= maxVal) return p;
+    if (calculateValue(p).value >= minVal && calculateValue(p).value <= maxVal) return p;
   }
   switch (rarity) {
     case 'mythic':    return { l1: 'Х', digits: '777', l2: 'ХХ', regionCode: '777' };
@@ -571,10 +569,12 @@ const state = {
   lastGuaranteedRarity: null, activeGuarantee: null,
   isGenerating: false, guaranteeOpen: false,
   activeEvent: null, nextEventAt: Date.now() + EVENT_FIRST_DELAY_MS,
+  activeBooster: null,
+  bonusGuarantees: { uncommon: 0, rare: 0, epic: 0, legendary: 0, mythic: 0 },
 };
 
 /* =========================================================
-   ХРАНЕНИЕ — CloudStorage + localStorage fallback
+   ХРАНЕНИЕ
    ========================================================= */
 function getSaveData() {
   return {
@@ -585,28 +585,22 @@ function getSaveData() {
     activeGuarantee: state.activeGuarantee,
     activeEvent: state.activeEvent,
     nextEventAt: state.nextEventAt,
-    v: 3,
+    activeBooster: state.activeBooster,
+    bonusGuarantees: state.bonusGuarantees,
+    v: 4,
   };
 }
-
-function saveState() {
-  if (!settings.autoSave) return;
-  const data = JSON.stringify(getSaveData());
-  // Всегда пишем локально (быстро)
-  try { localStorage.setItem(SAVE_KEY, data); } catch (e) {}
-  // И в облако Telegram
-  if (tg?.CloudStorage) {
-    tg.CloudStorage.setItem(SAVE_KEY, data, (err) => {
-      if (err) console.warn('CloudStorage save error:', err);
-    });
-  }
-}
-
 function applySaveData(data) {
   state.money = data.money ?? 50000;
   state.best = data.best ?? null;
   state.collection = Array.isArray(data.collection) ? data.collection : [];
   state.activeGuarantee = data.activeGuarantee ?? null;
+
+  state.activeBooster = data.activeBooster ?? null;
+  if (state.activeBooster && Date.now() >= state.activeBooster.endsAt) state.activeBooster = null;
+
+  state.bonusGuarantees = data.bonusGuarantees ?? { uncommon: 0, rare: 0, epic: 0, legendary: 0, mythic: 0 };
+
   if (data.settings) {
     settings.sound    = data.settings.sound    ?? true;
     settings.flash    = data.settings.flash    ?? true;
@@ -623,24 +617,22 @@ function applySaveData(data) {
     }
   }
 }
-
+function saveState() {
+  if (!settings.autoSave) return;
+  const data = JSON.stringify(getSaveData());
+  try { localStorage.setItem(SAVE_KEY, data); } catch (e) {}
+  if (tg?.CloudStorage) tg.CloudStorage.setItem(SAVE_KEY, data, () => {});
+}
 async function loadState() {
   return new Promise((resolve) => {
-    // Сначала пробуем облако
     if (tg?.CloudStorage) {
       tg.CloudStorage.getItem(SAVE_KEY, (err, value) => {
-        if (!err && value) {
-          try { applySaveData(JSON.parse(value)); return resolve(true); } catch (e) {}
-        }
-        // Fallback на локальное
+        if (!err && value) { try { applySaveData(JSON.parse(value)); return resolve(true); } catch (e) {} }
         resolve(loadLocal());
       });
-    } else {
-      resolve(loadLocal());
-    }
+    } else resolve(loadLocal());
   });
 }
-
 function loadLocal() {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
@@ -677,23 +669,15 @@ function triggerFlash(rarity) {
   setTimeout(() => flashEl.classList.remove('show'), 900);
 }
 
-/* Навигация */
 let currentTab = 'tabPlates';
 function setTab(tabId) {
   currentTab = tabId;
   document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.tab === tabId));
   document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === tabId));
-  // Кнопка "Назад" в Telegram — только вне главной
-  if (tg?.BackButton) {
-    if (tabId === 'tabPlates') tg.BackButton.hide();
-    else tg.BackButton.show();
-  }
+  if (tg?.BackButton) { if (tabId === 'tabPlates') tg.BackButton.hide(); else tg.BackButton.show(); }
 }
 document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    haptic('light');
-    setTab(item.dataset.tab);
-  });
+  item.addEventListener('click', () => { haptic('light'); setTab(item.dataset.tab); });
 });
 if (tg?.BackButton) {
   tg.BackButton.onClick(() => { haptic('light'); setTab('tabPlates'); });
@@ -701,7 +685,7 @@ if (tg?.BackButton) {
 }
 
 /* =========================================================
-   СОБЫТИЯ / ГАРАНТИЯ
+   СОБЫТИЯ / ГАРАНТИЯ / БУСТЕР
    ========================================================= */
 function getEventDef(id) { return EVENTS.find(e => e.id === id); }
 
@@ -710,13 +694,20 @@ function getGenerateCost(forcedRarity) {
   if (state.activeEvent && state.activeEvent.id === 'discount') cost = Math.round(cost / 2);
   return cost;
 }
+function getBoosterBonus() {
+  if (!state.activeBooster) return 1;
+  if (Date.now() >= state.activeBooster.endsAt) { state.activeBooster = null; return 1; }
+  return state.activeBooster.mult;
+}
 function getSaleBonusMultiplier(rarity) {
-  if (!state.activeEvent) return 1;
-  const ev = state.activeEvent.id;
-  if (ev === 'double_sale') return 2;
-  if (ev === 'value_boost') return 1.5;
-  if (ev === 'golden_hour' && ['epic','legendary','mythic'].includes(rarity)) return 2;
-  return 1;
+  let mult = 1;
+  if (state.activeEvent) {
+    const ev = state.activeEvent.id;
+    if (ev === 'double_sale') mult = 2;
+    else if (ev === 'value_boost') mult = 1.5;
+    else if (ev === 'golden_hour' && ['epic','legendary','mythic'].includes(rarity)) mult = 2;
+  }
+  return mult * getBoosterBonus();
 }
 
 function renderEventBanner() {
@@ -747,19 +738,31 @@ function renderEventBanner() {
     `;
   }
 }
+function renderBoosterIndicator() {
+  const el = document.getElementById('boosterIndicator');
+  const timerEl = document.getElementById('boosterTimer');
+  if (!el || !timerEl) return;
+  if (getBoosterBonus() > 1 && state.activeBooster) {
+    el.classList.add('show');
+    const left = Math.max(0, Math.ceil((state.activeBooster.endsAt - Date.now()) / 1000));
+    el.innerHTML = `<span>🚀 Бустер продаж ×${state.activeBooster.mult}</span><span class="booster-timer">${left}с</span>`;
+  } else {
+    el.classList.remove('show');
+  }
+}
 
 function tickEvents() {
+  const now = Date.now();
+  // Если идёт генерация — обновляем только таймеры
   if (state.isGenerating) {
-    // Обновляем только таймер, не трогая рулетку
-    const t = document.querySelector('.event-banner-timer');
-    if (t) {
-      const now = Date.now();
+    const evT = document.querySelector('.event-banner-timer');
+    if (evT) {
       const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt;
-      t.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
+      evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
     }
+    renderBoosterIndicator();
     return;
   }
-  const now = Date.now();
   let changed = false;
   if (state.activeEvent) {
     if (now >= state.activeEvent.endsAt) {
@@ -771,16 +774,16 @@ function tickEvents() {
     const ev = pick(EVENTS);
     state.activeEvent = { id: ev.id, endsAt: now + EVENT_ACTIVE_MS };
     changed = true; saveState();
-    ensureAudio(); playWinChord('rare'); triggerFlash('epic');
-    notify('success');
+    ensureAudio(); playWinChord('rare'); triggerFlash('epic'); notify('success');
   }
   if (changed) render();
   else {
-    const t = document.querySelector('.event-banner-timer');
-    if (t) {
+    const evT = document.querySelector('.event-banner-timer');
+    if (evT) {
       const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt;
-      t.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
+      evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
     }
+    renderBoosterIndicator();
   }
 }
 
@@ -837,12 +840,13 @@ function renderGuaranteePanel() {
         const discounted = price < basePrice;
         const disabled = state.money < price;
         const isActive = state.activeGuarantee === rarity;
+        const bonusCount = state.bonusGuarantees[rarity] || 0;
         return `
           <button class="guarantee-btn ${isActive ? 'active' : ''}" data-rarity="${rarity}" ${disabled ? 'disabled' : ''}>
             <span class="g-icon">${r.icon}</span>
             <span class="g-info">
-              <span class="g-name">${r.name}</span>
-              <span class="g-hint">${isActive ? 'активна (нажмите для отмены)' : 'гарантия'}</span>
+              <span class="g-name">${r.name}${bonusCount > 0 ? ` <span style="color:#4ade80;">+${bonusCount}🎁</span>` : ''}</span>
+              <span class="g-hint">${isActive ? 'активна' : 'гарантия'}</span>
             </span>
             <span class="g-price">${discounted ? `<s style="opacity:.5">${formatMoney(basePrice)}</s> ` : ''}${formatMoney(price)}</span>
           </button>
@@ -855,6 +859,7 @@ function renderGuaranteePanel() {
 function render() {
   moneyEl.textContent = formatMoney(state.money);
   renderEventBanner();
+  renderBoosterIndicator();
 
   if (state.lastPlate && state.lastStatus !== 'none') {
     const rarity = getRarity(state.lastValue);
@@ -889,7 +894,7 @@ function render() {
     const bonus = getSaleBonusMultiplier(rarity);
     const effectiveValue = Math.round(state.lastValue * bonus);
     const boosted = bonus > 1;
-    const bonusText = boosted ? ` <span style="color:#0a0a0a;background:#ffd166;padding:1px 6px;border-radius:4px;font-size:11px;">×${bonus}</span>` : '';
+    const bonusText = boosted ? ` <span style="color:#0a0a0a;background:#ffd166;padding:1px 6px;border-radius:4px;font-size:11px;">×${bonus.toFixed(2).replace(/\.00$/,'')}</span>` : '';
     actionsArea.innerHTML = `
       <button class="btn btn-sell${boosted ? ' boosted' : ''}" id="sellBtn">💰 Продать за ${formatMoney(effectiveValue)}${bonusText}</button>
       <button class="btn btn-keep" id="keepBtn">🎒 В инвентарь</button>
@@ -902,10 +907,30 @@ function render() {
     const baseCost = active ? GUARANTEE_PRICES[active] : 2000;
     const discounted = cost < baseCost;
     const open = state.guaranteeOpen;
+
+    // Проверка бонусного гаранта
+    let bonusRarity = null;
+    for (const r of ['mythic','legendary','epic','rare','uncommon']) {
+      if ((state.bonusGuarantees[r] || 0) > 0) { bonusRarity = r; break; }
+    }
+    const hasBonus = !!bonusRarity;
+
+    let genLabel, genCost;
+    if (hasBonus) {
+      genLabel = `🎁 Бонус: ${RARITIES[bonusRarity].name} (${state.bonusGuarantees[bonusRarity]} шт.)`;
+      genCost = 'бесплатно';
+    } else if (active) {
+      genLabel = `🎲 Купить (${RARITIES[active].name})${discounted ? ' ⚡' : ''}`;
+      genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`;
+    } else {
+      genLabel = `Сгенерировать номер${discounted ? ' ⚡' : ''}`;
+      genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`;
+    }
+
     actionsArea.innerHTML = `
-      <button class="btn btn-generate${discounted ? ' discounted' : ''}" id="generateBtn" ${state.money < cost ? 'disabled' : ''}>
-        <span>${active ? '🎲 Купить (' + RARITIES[active].name + ')' : 'Сгенерировать номер'}${discounted ? ' ⚡' : ''}</span>
-        <span class="btn-cost">${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}</span>
+      <button class="btn btn-generate${hasBonus ? ' bonus-free' : (discounted ? ' discounted' : '')}" id="generateBtn" ${(!hasBonus && state.money < cost) ? 'disabled' : ''}>
+        <span>${genLabel}</span>
+        <span class="btn-cost">${genCost}</span>
       </button>
       <button class="btn btn-guarantee ${open ? 'open' : ''}" id="guaranteeToggle">
         <span>🎲 ${active ? 'Гарант: ' + RARITIES[active].name : 'Выбрать гарантию'}</span>
@@ -954,21 +979,32 @@ function render() {
    ========================================================= */
 async function handleGenerate(forcedRarity) {
   if (state.isGenerating) return;
-  const cost = getGenerateCost(forcedRarity);
+
+  // Приоритет бонусного гаранта, если платный гарант не выбран
+  let effectiveRarity = forcedRarity;
+  let usingBonus = false;
+  if (!forcedRarity) {
+    for (const r of ['mythic','legendary','epic','rare','uncommon']) {
+      if ((state.bonusGuarantees[r] || 0) > 0) { effectiveRarity = r; usingBonus = true; break; }
+    }
+  }
+
+  const cost = usingBonus ? 0 : getGenerateCost(effectiveRarity);
   if (state.money < cost) { notify('error'); return; }
 
   ensureAudio();
   state.isGenerating = true;
-  state.money -= cost;
+  if (usingBonus) state.bonusGuarantees[effectiveRarity] -= 1;
+  else state.money -= cost;
   state.lastStatus = 'none';
-  state.lastGuaranteedRarity = forcedRarity;
+  state.lastGuaranteedRarity = effectiveRarity;
   state.guaranteeOpen = false;
-  animateMoney('down');
+  if (!usingBonus) animateMoney('down');
   render();
 
-  await rollAnimation(forcedRarity);
+  await rollAnimation(effectiveRarity);
 
-  const plate = forcedRarity ? buildPlateForRarity(forcedRarity) : generateRandomPlate();
+  const plate = effectiveRarity ? buildPlateForRarity(effectiveRarity) : generateRandomPlate();
   const { value, details } = calculateValue(plate);
 
   state.lastPlate = plate;
@@ -1023,6 +1059,73 @@ function sellFromInv(idx) {
 }
 
 /* =========================================================
+   ПРОМОКОДЫ
+   ========================================================= */
+async function loadUsedPromos() {
+  return new Promise((resolve) => {
+    if (tg?.CloudStorage) {
+      tg.CloudStorage.getItem(PROMO_KEY, (err, value) => {
+        if (!err && value) { try { return resolve(JSON.parse(value)); } catch (e) {} }
+        resolve(loadLocalPromos());
+      });
+    } else resolve(loadLocalPromos());
+  });
+}
+function loadLocalPromos() {
+  try {
+    const raw = localStorage.getItem(PROMO_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+function saveUsedPromos(list) {
+  const str = JSON.stringify(list);
+  try { localStorage.setItem(PROMO_KEY, str); } catch (e) {}
+  if (tg?.CloudStorage) tg.CloudStorage.setItem(PROMO_KEY, str, () => {});
+}
+function showPromoResult(text, ok) {
+  const el = document.getElementById('promoResult');
+  el.style.display = 'block';
+  el.textContent = text;
+  el.style.background = ok ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)';
+  el.style.color = ok ? '#4ade80' : '#f87171';
+  el.style.border = ok ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(239,68,68,0.4)';
+}
+async function activatePromo() {
+  const input = document.getElementById('promoCodeInput');
+  const code = input.value.trim().toUpperCase();
+  if (!code) { showPromoResult('Введи код', false); haptic('heavy'); return; }
+
+  const promo = PROMO_CODES[code];
+  if (!promo) { showPromoResult('❌ Код не найден', false); haptic('heavy'); notify('error'); return; }
+
+  const used = await loadUsedPromos();
+  if (used.includes(code)) { showPromoResult('⚠️ Ты уже использовал этот код', false); haptic('heavy'); notify('error'); return; }
+
+  let resultText = '';
+  if (promo.type === 'money') {
+    state.money += promo.amount;
+    animateMoney('up');
+    resultText = `✅ Получено: ${promo.desc}`;
+  } else if (promo.type === 'booster') {
+    state.activeBooster = { mult: promo.mult, endsAt: Date.now() + promo.durationMs };
+    resultText = `✅ Активировано: ${promo.desc}`;
+  } else if (promo.type === 'guarantee') {
+    state.bonusGuarantees[promo.rarity] = (state.bonusGuarantees[promo.rarity] || 0) + promo.count;
+    resultText = `✅ Получено: ${promo.desc}`;
+  } else {
+    showPromoResult('Ошибка активации', false); return;
+  }
+
+  used.push(code);
+  saveUsedPromos(used);
+  showPromoResult(resultText, true);
+  haptic('heavy'); notify('success'); playWinChord('epic'); triggerFlash('epic');
+  render(); saveState();
+
+  setTimeout(() => { document.getElementById('promoCodeInput').value = ''; }, 1500);
+}
+
+/* =========================================================
    АДМИНКА
    ========================================================= */
 const adminModal = document.getElementById('adminModal');
@@ -1046,7 +1149,6 @@ adminBtn.onclick = () => {
     setTimeout(() => adminCodeInput.focus(), 100);
   }
 };
-
 document.getElementById('adminLoginBtn').onclick = () => {
   if (adminCodeInput.value.trim() === ADMIN_CODE) {
     adminAuthorized = true;
@@ -1062,34 +1164,26 @@ document.getElementById('adminLoginBtn').onclick = () => {
 adminCodeInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('adminLoginBtn').click();
 });
-
 document.getElementById('adminAdd100k').onclick = () => { state.money += 100000; animateMoney('up'); haptic('medium'); render(); saveState(); };
 document.getElementById('adminAdd1m').onclick  = () => { state.money += 1000000; animateMoney('up'); haptic('medium'); render(); saveState(); };
-
 document.querySelectorAll('[data-spawn]').forEach(btn => {
   btn.addEventListener('click', () => {
     const rarity = btn.dataset.spawn;
     const plate = buildPlateForRarity(rarity);
     const { value, details } = calculateValue(plate);
-    state.lastPlate = plate;
-    state.lastValue = value;
-    state.lastDetails = details;
-    state.lastStatus = 'pending';
-    state.lastGuaranteedRarity = rarity;
+    state.lastPlate = plate; state.lastValue = value; state.lastDetails = details;
+    state.lastStatus = 'pending'; state.lastGuaranteedRarity = rarity;
     if (!state.best || value > state.best.value) state.best = { plate, value };
     adminModal.classList.remove('open');
-    render(); saveState();
-    haptic('medium');
+    render(); saveState(); haptic('medium');
     if (rarity !== 'common') { triggerFlash(rarity); playWinChord(rarity); }
   });
 });
-
 document.getElementById('adminTriggerEventBtn').onclick = () => {
   const ev = pick(EVENTS);
   state.activeEvent = { id: ev.id, endsAt: Date.now() + EVENT_ACTIVE_MS };
   adminModal.classList.remove('open');
-  render(); saveState();
-  ensureAudio(); playWinChord('rare'); notify('success');
+  render(); saveState(); ensureAudio(); playWinChord('rare'); notify('success');
 };
 document.getElementById('adminStopEventBtn').onclick = () => {
   state.activeEvent = null;
@@ -1099,18 +1193,13 @@ document.getElementById('adminStopEventBtn').onclick = () => {
 };
 
 /* =========================================================
-   МОДАЛКИ (универсальное закрытие)
+   МОДАЛКИ
    ========================================================= */
 document.querySelectorAll('[data-close]').forEach(btn => {
-  btn.onclick = () => {
-    haptic('light');
-    document.getElementById(btn.dataset.close).classList.remove('open');
-  };
+  btn.onclick = () => { haptic('light'); document.getElementById(btn.dataset.close).classList.remove('open'); };
 });
 document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', (e) => {
-    if (e.target === m) m.classList.remove('open');
-  });
+  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
 });
 
 /* =========================================================
@@ -1119,38 +1208,34 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
 const soundToggle = document.getElementById('settingSound');
 const flashToggle = document.getElementById('settingFlash');
 const autoSaveToggle = document.getElementById('settingAutoSave');
-
-soundToggle.addEventListener('change', e => {
-  settings.sound = e.target.checked;
-  if (settings.sound) { ensureAudio(); playTone(800, 0.08); }
-  saveState();
-});
-flashToggle.addEventListener('change', e => {
-  settings.flash = e.target.checked;
-  if (settings.flash) triggerFlash('uncommon');
-  saveState();
-});
-autoSaveToggle.addEventListener('change', e => {
-  settings.autoSave = e.target.checked;
-  if (settings.autoSave) saveState();
-});
+soundToggle.addEventListener('change', e => { settings.sound = e.target.checked; if (settings.sound) { ensureAudio(); playTone(800, 0.08); } saveState(); });
+flashToggle.addEventListener('change', e => { settings.flash = e.target.checked; if (settings.flash) triggerFlash('uncommon'); saveState(); });
+autoSaveToggle.addEventListener('change', e => { settings.autoSave = e.target.checked; if (settings.autoSave) saveState(); });
 
 document.getElementById('openSettingsBtn').onclick = () => document.getElementById('settingsModal').classList.add('open');
 document.getElementById('openSuitsBtn').onclick = () => document.getElementById('suitsModal').classList.add('open');
+document.getElementById('openPromoBtn').onclick = () => {
+  haptic('light');
+  document.getElementById('promoModal').classList.add('open');
+  document.getElementById('promoResult').style.display = 'none';
+  document.getElementById('promoCodeInput').value = '';
+  setTimeout(() => document.getElementById('promoCodeInput').focus(), 150);
+};
+document.getElementById('promoActivateBtn').onclick = activatePromo;
+document.getElementById('promoCodeInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') activatePromo(); });
+document.getElementById('promoCodeInput').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase(); });
 
 document.getElementById('modalResetBtn').onclick = () => {
   const doReset = () => {
-    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+    try { localStorage.removeItem(SAVE_KEY); localStorage.removeItem(PROMO_KEY); } catch (e) {}
     if (tg?.CloudStorage) {
       tg.CloudStorage.removeItem(SAVE_KEY, () => {});
+      tg.CloudStorage.removeItem(PROMO_KEY, () => {});
     }
     setTimeout(() => location.reload(), 100);
   };
-  if (tg?.showConfirm) {
-    tg.showConfirm('Сбросить весь прогресс? Это необратимо.', (ok) => { if (ok) doReset(); });
-  } else if (confirm('Сбросить весь прогресс?')) {
-    doReset();
-  }
+  if (tg?.showConfirm) tg.showConfirm('Сбросить весь прогресс? Это необратимо.', (ok) => { if (ok) doReset(); });
+  else if (confirm('Сбросить весь прогресс?')) doReset();
 };
 
 /* =========================================================
@@ -1168,12 +1253,7 @@ document.getElementById('modalResetBtn').onclick = () => {
 
   render();
   setInterval(tickEvents, 250);
-
-  // Периодическое сохранение (на случай пропажи событий)
   setInterval(() => { if (settings.autoSave) saveState(); }, 15000);
-
-  // Сохраняем при сворачивании приложения
-  if (tg) tg.onEvent('viewportChanged', () => {});
   window.addEventListener('pagehide', saveState);
   window.addEventListener('beforeunload', saveState);
 })();
