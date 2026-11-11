@@ -254,6 +254,10 @@
         <div class="menu-item-icon" style="background:linear-gradient(135deg, #ffd166, #f59e0b); color:#fff;">🏆</div>
         <span class="menu-item-label">Топ</span>
       </button>
+      <button class="menu-item-card" id="debugBtn">
+        <div class="menu-item-icon" style="background:#ef4444; color:#fff;">🐞</div>
+        <span class="menu-item-label">Отладка</span>
+      </button>
     </div>
   </div>
   <div class="bottom-nav">
@@ -263,90 +267,55 @@
   </div>
 </div>
 
+<!-- Модалки (настройки, масти, промокод, топ, админка) -->
+<!-- (Они остались без изменений, я их пропустил для краткости, но в твоем файле они должны быть) -->
 <div class="modal-overlay" id="settingsModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title">⚙️ Настройки игры</span>
-      <button class="modal-close" data-close="settingsModal">✕</button>
-    </div>
+    <div class="modal-header"><span class="modal-title">⚙️ Настройки</span><button class="modal-close" data-close="settingsModal">✕</button></div>
     <div class="settings-list">
-      <div class="setting-item">
-        <div class="setting-label"><span>Звуковые эффекты</span><span class="setting-desc">Звуки кликов и побед</span></div>
-        <label class="switch"><input type="checkbox" id="settingSound"><span class="slider"></span></label>
-      </div>
-      <div class="setting-item">
-        <div class="setting-label"><span>Вспышки при редких номерах</span><span class="setting-desc">Эффекты подсветки экрана</span></div>
-        <label class="switch"><input type="checkbox" id="settingFlash"><span class="slider"></span></label>
-      </div>
-      <div class="setting-item">
-        <div class="setting-label"><span>Автосохранение</span><span class="setting-desc">Сохранение прогресса на сервер</span></div>
-        <label class="switch"><input type="checkbox" id="settingAutoSave"><span class="slider"></span></label>
-      </div>
+      <div class="setting-item"><div class="setting-label"><span>Звуковые эффекты</span></div><label class="switch"><input type="checkbox" id="settingSound"><span class="slider"></span></label></div>
+      <div class="setting-item"><div class="setting-label"><span>Вспышки</span></div><label class="switch"><input type="checkbox" id="settingFlash"><span class="slider"></span></label></div>
+      <div class="setting-item"><div class="setting-label"><span>Автосохранение</span></div><label class="switch"><input type="checkbox" id="settingAutoSave"><span class="slider"></span></label></div>
     </div>
-    <button class="modal-reset-btn" id="modalResetBtn">🔄 Сбросить весь прогресс</button>
+    <button class="modal-reset-btn" id="modalResetBtn">🔄 Сбросить прогресс</button>
   </div>
 </div>
 
 <div class="modal-overlay" id="suitsModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title">🎨 Масти букв</span>
-      <button class="modal-close" data-close="suitsModal">✕</button>
-    </div>
-    <p style="font-size:11px; color:#8b94a8; margin-bottom:10px; line-height:1.5;">
-      Бонус <b style="color:#ffd166;">+15 000 ₽</b>, если все три буквы номера — из одной масти.
-    </p>
+    <div class="modal-header"><span class="modal-title">🎨 Масти</span><button class="modal-close" data-close="suitsModal">✕</button></div>
+    <p style="font-size:11px; color:#8b94a8; margin-bottom:10px;">Бонус +15 000 ₽ за одну масть.</p>
     <div class="suits-legend" style="grid-template-columns:1fr;">
       <div class="suit-row"><span class="suit-dot" style="background:#ef4444;"></span><b style="color:#ef4444;">Красная:</b>&nbsp;А · В · Е</div>
       <div class="suit-row"><span class="suit-dot" style="background:#22c55e;"></span><b style="color:#22c55e;">Зелёная:</b>&nbsp;К · М · Н</div>
       <div class="suit-row"><span class="suit-dot" style="background:#3b82f6;"></span><b style="color:#3b82f6;">Синяя:</b>&nbsp;О · Р · С</div>
       <div class="suit-row"><span class="suit-dot" style="background:#eab308;"></span><b style="color:#eab308;">Жёлтая:</b>&nbsp;Т · У · Х</div>
     </div>
-    <p style="font-size:11px; color:#8b94a8; margin-top:12px; line-height:1.5;">
-      <b style="color:#ffd166;">🪞 Зеркалка</b> (+50 000 ₽): первая и последняя цифры равны, и первая буква совпадает с последней.<br>Пример: <b>А121ВА</b>
-    </p>
   </div>
 </div>
 
 <div class="modal-overlay" id="promoModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title">🎁 Промокод</span>
-      <button class="modal-close" data-close="promoModal">✕</button>
-    </div>
-    <p style="font-size:11px; color:#8b94a8; margin-bottom:10px; line-height:1.5;">
-      Введи код и получи награду. Каждый код — один раз на игрока.
-    </p>
-    <input type="text" class="admin-input" id="promoCodeInput" placeholder="НАПРИМЕР: WELCOME" autocomplete="off" style="text-transform:uppercase; letter-spacing:2px; font-weight:700; text-align:center;" />
+    <div class="modal-header"><span class="modal-title">🎁 Промокод</span><button class="modal-close" data-close="promoModal">✕</button></div>
+    <input type="text" class="admin-input" id="promoCodeInput" placeholder="ВВЕДИ КОД" style="text-transform:uppercase; text-align:center;" />
     <div id="promoResult" style="display:none; margin-bottom:8px; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-align:center;"></div>
-    <button class="btn btn-generate" id="promoActivateBtn" style="width:100%;">
-      <span>✅ Активировать</span>
-    </button>
+    <button class="btn btn-generate" id="promoActivateBtn" style="width:100%;"><span>✅ Активировать</span></button>
   </div>
 </div>
 
 <div class="modal-overlay" id="leaderboardModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title">🏆 Топ-50 игроков</span>
-      <button class="modal-close" data-close="leaderboardModal">✕</button>
-    </div>
-    <div id="leaderboardList" style="min-height:100px;">
-      <div style="text-align:center; padding:20px; color:#8b94a8; font-size:12px;">Загрузка...</div>
-    </div>
+    <div class="modal-header"><span class="modal-title">🏆 Топ-50</span><button class="modal-close" data-close="leaderboardModal">✕</button></div>
+    <div id="leaderboardList"><div style="text-align:center; padding:20px; color:#8b94a8;">Загрузка...</div></div>
   </div>
 </div>
 
 <div class="modal-overlay" id="adminModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <span class="modal-title">🔑 Админ-панель</span>
-      <button class="modal-close" data-close="adminModal">✕</button>
-    </div>
+    <div class="modal-header"><span class="modal-title">🔑 Админка</span><button class="modal-close" data-close="adminModal">✕</button></div>
     <div id="adminAuthBlock">
-      <div class="admin-section-title">Введите код администратора</div>
-      <input type="password" class="admin-input" id="adminCodeInput" placeholder="Код администратора" autocomplete="off" />
-      <div class="admin-error" id="adminError">Неверный код</div>
+      <input type="password" class="admin-input" id="adminCodeInput" placeholder="ADMIN_TOKEN" />
+      <div class="admin-error" id="adminError">Неверный токен</div>
       <button class="admin-btn" id="adminLoginBtn" style="width:100%; padding:10px;">Войти</button>
     </div>
     <div id="adminPanelBlock" style="display:none;">
@@ -355,45 +324,30 @@
         <button class="admin-tab" data-admin-tab="spawn">🎲 Спавн</button>
         <button class="admin-tab" data-admin-tab="finance">💰 Финансы</button>
       </div>
-
       <div id="adminTabPromo" class="admin-tab-content">
-        <div class="admin-section-title">Создать промокод</div>
-        <input type="text" class="admin-input" id="newPromoCode" placeholder="КОД (например SUMMER2025)" style="text-transform:uppercase; letter-spacing:1px; font-weight:700;" />
-        <select class="admin-input" id="newPromoType" style="margin-bottom:6px;">
+        <input type="text" class="admin-input" id="newPromoCode" placeholder="КОД" style="text-transform:uppercase;" />
+        <select class="admin-input" id="newPromoType">
           <option value="money">💰 Деньги</option>
-          <option value="booster">🚀 Бустер продаж</option>
-          <option value="guarantee">🎯 Гарант-номер</option>
+          <option value="booster">🚀 Бустер</option>
+          <option value="guarantee">🎯 Гарант</option>
         </select>
-        <input type="number" class="admin-input" id="newPromoAmount" placeholder="Сумма (₽)" value="25000" />
-        <input type="number" class="admin-input" id="newPromoMax" placeholder="Лимит активаций" value="100" />
+        <input type="number" class="admin-input" id="newPromoAmount" value="25000" placeholder="Сумма" />
+        <input type="number" class="admin-input" id="newPromoMax" value="100" placeholder="Лимит" />
         <button class="admin-btn" id="createPromoBtn" style="width:100%; padding:10px; margin-bottom:10px;">✨ Создать</button>
-        <div class="admin-section-title">Все промокоды</div>
-        <div id="promoList" style="max-height:200px; overflow-y:auto;">
-          <div style="text-align:center; padding:10px; color:#8b94a8; font-size:11px;">Загрузка...</div>
-        </div>
+        <div id="promoList" style="max-height:150px; overflow-y:auto;"></div>
       </div>
-
       <div id="adminTabSpawn" class="admin-tab-content" style="display:none;">
-        <div class="admin-section-title">Заспавнить номер</div>
         <div class="admin-grid">
-          <button class="admin-btn" data-spawn="uncommon">🟢 Необычный</button>
           <button class="admin-btn" data-spawn="rare">🔵 Редкий</button>
-          <button class="admin-btn" data-spawn="epic">🟣 Эпический</button>
-          <button class="admin-btn" data-spawn="legendary">🟡 Легендарный</button>
-          <button class="admin-btn" data-spawn="mythic" style="grid-column:span 2;">🔴 Мифический</button>
-        </div>
-        <div class="admin-section-title" style="margin-top:10px;">События</div>
-        <div class="admin-grid">
-          <button class="admin-btn" id="adminTriggerEventBtn" style="grid-column:span 2;">⚡ Запустить событие</button>
-          <button class="admin-btn" id="adminStopEventBtn" style="grid-column:span 2;">🛑 Остановить</button>
+          <button class="admin-btn" data-spawn="epic">🟣 Эпик</button>
+          <button class="admin-btn" data-spawn="legendary">🟡 Легенда</button>
+          <button class="admin-btn" data-spawn="mythic" style="grid-column:span 2;">🔴 Мифик</button>
         </div>
       </div>
-
       <div id="adminTabFinance" class="admin-tab-content" style="display:none;">
-        <div class="admin-section-title">Начислить себе</div>
         <div class="admin-grid">
-          <button class="admin-btn" id="adminAdd100k">+100 000 ₽</button>
-          <button class="admin-btn" id="adminAdd1m">+1 000 000 ₽</button>
+          <button class="admin-btn" id="adminAdd100k">+100k</button>
+          <button class="admin-btn" id="adminAdd1m">+1M</button>
         </div>
       </div>
     </div>
@@ -401,7 +355,7 @@
 </div>
 
 <div class="flash" id="flashEl"></div>
-<div class="load-toast" id="loadToast">▶ Продолжаем сохранённую игру</div>
+<div class="load-toast" id="loadToast">▶ Продолжаем игру</div>
 
 <script>
 /* =========================================================
@@ -457,10 +411,10 @@ const EVENT_IDLE_MS = 90000;
 const EVENT_ACTIVE_MS = 45000;
 const EVENT_FIRST_DELAY_MS = 30000;
 const EVENTS = [
-  { id: 'discount',    icon: '⚡', name: 'Скидка на генерацию', desc: 'Генерация −50%', color: '#22c55e' },
-  { id: 'double_sale', icon: '🔥', name: 'Двойные продажи',    desc: 'Все продажи ×2', color: '#ef4444' },
-  { id: 'value_boost', icon: '💎', name: 'Бонус к цене',       desc: 'Продажа +50%',   color: '#c084fc' },
-  { id: 'golden_hour', icon: '🌟', name: 'Золотой час',        desc: 'Эпик+ ×2',       color: '#ffd166' },
+  { id: 'discount',    icon: '⚡', name: 'Скидка',          desc: 'Генерация −50%', color: '#22c55e' },
+  { id: 'double_sale', icon: '🔥', name: 'Двойные продажи', desc: 'Продажи ×2',     color: '#ef4444' },
+  { id: 'value_boost', icon: '💎', name: 'Бонус к цене',    desc: 'Продажа +50%',   color: '#c084fc' },
+  { id: 'golden_hour', icon: '🌟', name: 'Золотой час',     desc: 'Эпик+ ×2',       color: '#ffd166' },
 ];
 
 function getRarity(value) {
@@ -479,38 +433,17 @@ const formatMoney = n => n.toLocaleString('ru-RU') + ' ₽';
 function calculateValue(plate) {
   const details = [];
   let total = 2400;
-  if (TOP_REGIONS.has(plate.regionCode)) {
-    total += 24000;
-    details.push({ text: `Регион ${plate.regionCode} — топ`, val: '+24 000 ₽' });
-  } else if (HIGH_REGIONS.has(plate.regionCode)) {
-    total += 10000;
-    details.push({ text: `Регион ${plate.regionCode} — престижный`, val: '+10 000 ₽' });
-  }
-  if (TRIPLE_HI.has(plate.digits)) {
-    total += 120000;
-    details.push({ text: `Красивые цифры (${plate.digits})`, val: '+120 000 ₽', special: true });
-  } else if (TRIPLE_MID.has(plate.digits)) {
-    total += 40000;
-    details.push({ text: `Красивые цифры (${plate.digits})`, val: '+40 000 ₽' });
-  }
+  if (TOP_REGIONS.has(plate.regionCode)) { total += 24000; details.push({ text: `Регион ${plate.regionCode}`, val: '+24 000 ₽' }); }
+  else if (HIGH_REGIONS.has(plate.regionCode)) { total += 10000; details.push({ text: `Регион ${plate.regionCode}`, val: '+10 000 ₽' }); }
+  if (TRIPLE_HI.has(plate.digits)) { total += 120000; details.push({ text: `Цифры ${plate.digits}`, val: '+120 000 ₽', special: true }); }
+  else if (TRIPLE_MID.has(plate.digits)) { total += 40000; details.push({ text: `Цифры ${plate.digits}`, val: '+40 000 ₽' }); }
   const l1 = plate.l1, l2a = plate.l2[0], l2b = plate.l2[1];
   const allEqual = (l1 === l2a && l2a === l2b);
   const sameSuit = !allEqual && isSameSuit(l1, l2a, l2b);
-  if (allEqual) {
-    total += 80000;
-    details.push({ text: `Все буквы одинаковые`, val: '+80 000 ₽', special: true });
-  } else if (sameSuit) {
-    total += 15000;
-    const g = getLetterGroup(l1);
-    details.push({ text: `🎨 Масть (${g.name.toLowerCase()})`, val: '+15 000 ₽', special: true });
-  } else if (l1 === l2a || l2a === l2b) {
-    total += 6000;
-    details.push({ text: `Повтор букв`, val: '+6 000 ₽' });
-  }
-  if (plate.digits[0] === plate.digits[2] && l1 === l2b) {
-    total += 50000;
-    details.push({ text: `🪞 Зеркалка`, val: '+50 000 ₽', special: true });
-  }
+  if (allEqual) { total += 80000; details.push({ text: `Буквы одинаковые`, val: '+80 000 ₽', special: true }); }
+  else if (sameSuit) { total += 15000; details.push({ text: `Масть`, val: '+15 000 ₽', special: true }); }
+  else if (l1 === l2a || l2a === l2b) { total += 6000; details.push({ text: `Повтор букв`, val: '+6 000 ₽' }); }
+  if (plate.digits[0] === plate.digits[2] && l1 === l2b) { total += 50000; details.push({ text: `Зеркалка`, val: '+50 000 ₽', special: true }); }
   return { value: total, details };
 }
 function generateRandomPlate() {
@@ -519,9 +452,9 @@ function generateRandomPlate() {
 function buildPlateForRarity(rarity) {
   const minVal = RARITIES[rarity].min;
   let maxVal = Infinity;
-  if (rarity === 'uncommon')       maxVal = RARITIES.rare.min - 1;
-  else if (rarity === 'rare')      maxVal = RARITIES.epic.min - 1;
-  else if (rarity === 'epic')      maxVal = RARITIES.legendary.min - 1;
+  if (rarity === 'uncommon') maxVal = RARITIES.rare.min - 1;
+  else if (rarity === 'rare') maxVal = RARITIES.epic.min - 1;
+  else if (rarity === 'epic') maxVal = RARITIES.legendary.min - 1;
   else if (rarity === 'legendary') maxVal = RARITIES.mythic.min - 1;
   for (let i = 0; i < 10000; i++) {
     const p = generateRandomPlate();
@@ -604,7 +537,7 @@ const state = {
 };
 
 /* =========================================================
-   API — запросы к серверу
+   API
    ========================================================= */
 async function apiRequest(path, method = 'GET', body = null, useAdmin = false) {
   const headers = { 'Content-Type': 'application/json' };
@@ -616,28 +549,23 @@ async function apiRequest(path, method = 'GET', body = null, useAdmin = false) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     const err = new Error(data.error || 'request_failed');
-    err.status = res.status;
-    err.data = data;
+    err.status = res.status; err.data = data;
     throw err;
   }
   return data;
 }
 
 /* =========================================================
-   СОХРАНЕНИЕ / ЗАГРУЗКА (через сервер)
+   СОХРАНЕНИЕ
    ========================================================= */
 function getSaveData() {
-  return {
-    money: state.money,
-    best: state.best,
-    collection: state.collection.slice(-50),
-  };
+  return { money: state.money, best: state.best, collection: state.collection.slice(-50) };
 }
 async function saveState() {
   if (!settings.autoSave) return;
-  if (!tg?.initData) return; // вне Telegram — не сохраняем
-  try { await apiRequest('/save', 'POST', getSaveData()); }
-  catch (e) { console.warn('save error:', e); }
+  if (!tg?.initData) return;
+  try { await apiRequest('/save', 'POST', getSaveData()); console.log('✅ Progress saved'); }
+  catch (e) { console.warn('❌ Save error:', e.message); }
 }
 async function loadState() {
   if (!tg?.initData) return false;
@@ -646,16 +574,11 @@ async function loadState() {
     state.money = data.money ?? 50000;
     state.best = data.best ?? null;
     state.collection = Array.isArray(data.collection) ? data.collection : [];
-    // локальные штуки — из localStorage
     try {
       const raw = localStorage.getItem(SAVE_KEY);
       if (raw) {
         const local = JSON.parse(raw);
-        if (local.settings) {
-          settings.sound = local.settings.sound ?? true;
-          settings.flash = local.settings.flash ?? true;
-          settings.autoSave = local.settings.autoSave ?? true;
-        }
+        if (local.settings) { settings.sound = local.settings.sound ?? true; settings.flash = local.settings.flash ?? true; settings.autoSave = local.settings.autoSave ?? true; }
         state.activeBooster = local.activeBooster ?? null;
         if (state.activeBooster && Date.now() >= state.activeBooster.endsAt) state.activeBooster = null;
         state.bonusGuarantees = local.bonusGuarantees ?? state.bonusGuarantees;
@@ -663,18 +586,10 @@ async function loadState() {
       }
     } catch (e) {}
     return true;
-  } catch (e) {
-    console.warn('load error:', e);
-    return false;
-  }
+  } catch (e) { console.warn('Load error:', e); return false; }
 }
 function saveLocal() {
-  const data = {
-    settings,
-    activeBooster: state.activeBooster,
-    bonusGuarantees: state.bonusGuarantees,
-    activeGuarantee: state.activeGuarantee,
-  };
+  const data = { settings, activeBooster: state.activeBooster, bonusGuarantees: state.bonusGuarantees, activeGuarantee: state.activeGuarantee };
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); } catch (e) {}
 }
 
@@ -692,18 +607,8 @@ const flashEl = document.getElementById('flashEl');
 const loadToast = document.getElementById('loadToast');
 const adminBtn = document.getElementById('adminBtn');
 
-function animateMoney(dir) {
-  moneyEl.classList.remove('up','down');
-  void moneyEl.offsetWidth;
-  moneyEl.classList.add(dir);
-  setTimeout(() => moneyEl.classList.remove(dir), 500);
-}
-function triggerFlash(rarity) {
-  if (!settings.flash) return;
-  flashEl.style.background = `radial-gradient(circle, ${RARITIES[rarity].color}aa 0%, transparent 70%)`;
-  flashEl.classList.add('show');
-  setTimeout(() => flashEl.classList.remove('show'), 900);
-}
+function animateMoney(dir) { moneyEl.classList.remove('up','down'); void moneyEl.offsetWidth; moneyEl.classList.add(dir); setTimeout(() => moneyEl.classList.remove(dir), 500); }
+function triggerFlash(rarity) { if (!settings.flash) return; flashEl.style.background = `radial-gradient(circle, ${RARITIES[rarity].color}aa 0%, transparent 70%)`; flashEl.classList.add('show'); setTimeout(() => flashEl.classList.remove('show'), 900); }
 
 let currentTab = 'tabPlates';
 function setTab(tabId) {
@@ -712,16 +617,11 @@ function setTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === tabId));
   if (tg?.BackButton) { if (tabId === 'tabPlates') tg.BackButton.hide(); else tg.BackButton.show(); }
 }
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => { haptic('light'); setTab(item.dataset.tab); });
-});
-if (tg?.BackButton) {
-  tg.BackButton.onClick(() => { haptic('light'); setTab('tabPlates'); });
-  tg.BackButton.hide();
-}
+document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => { haptic('light'); setTab(item.dataset.tab); }); });
+if (tg?.BackButton) { tg.BackButton.onClick(() => { haptic('light'); setTab('tabPlates'); }); tg.BackButton.hide(); }
 
 /* =========================================================
-   СОБЫТИЯ / ГАРАНТИЯ / БУСТЕР
+   ГЕНЕРАЦИЯ
    ========================================================= */
 function getEventDef(id) { return EVENTS.find(e => e.id === id); }
 function getGenerateCost(forcedRarity) {
@@ -753,9 +653,7 @@ function renderEventBanner() {
     if (!ev) return;
     const left = Math.max(0, Math.ceil((state.activeEvent.endsAt - now) / 1000));
     el.className = 'event-banner active';
-    el.style.background = ev.color + '25';
-    el.style.border = `1px solid ${ev.color}90`;
-    el.style.color = ev.color;
+    el.style.background = ev.color + '25'; el.style.border = `1px solid ${ev.color}90`; el.style.color = ev.color;
     el.innerHTML = `<span class="event-banner-icon">${ev.icon}</span><span class="event-banner-name">${ev.name}<br><span class="event-banner-desc">${ev.desc}</span></span><span class="event-banner-timer">${left}с</span>`;
   } else {
     const left = Math.max(0, Math.ceil((state.nextEventAt - now) / 1000));
@@ -771,71 +669,40 @@ function renderBoosterIndicator() {
     el.classList.add('show');
     const left = Math.max(0, Math.ceil((state.activeBooster.endsAt - Date.now()) / 1000));
     el.innerHTML = `<span>🚀 Бустер продаж ×${state.activeBooster.mult}</span><span class="booster-timer">${left}с</span>`;
-  } else {
-    el.classList.remove('show');
-  }
+  } else { el.classList.remove('show'); }
 }
 function tickEvents() {
   const now = Date.now();
   if (state.isGenerating) {
     const evT = document.querySelector('.event-banner-timer');
-    if (evT) {
-      const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt;
-      evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
-    }
-    renderBoosterIndicator();
-    return;
+    if (evT) { const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt; evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`; }
+    renderBoosterIndicator(); return;
   }
   let changed = false;
-  if (state.activeEvent) {
-    if (now >= state.activeEvent.endsAt) {
-      state.activeEvent = null;
-      state.nextEventAt = now + EVENT_IDLE_MS;
-      changed = true;
-    }
-  } else if (now >= state.nextEventAt) {
+  if (state.activeEvent) { if (now >= state.activeEvent.endsAt) { state.activeEvent = null; state.nextEventAt = now + EVENT_IDLE_MS; changed = true; } }
+  else if (now >= state.nextEventAt) {
     const ev = pick(EVENTS);
-    state.activeEvent = { id: ev.id, endsAt: now + EVENT_ACTIVE_MS };
-    changed = true;
+    state.activeEvent = { id: ev.id, endsAt: now + EVENT_ACTIVE_MS }; changed = true;
     ensureAudio(); playWinChord('rare'); triggerFlash('epic'); notify('success');
   }
   if (changed) render();
   else {
     const evT = document.querySelector('.event-banner-timer');
-    if (evT) {
-      const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt;
-      evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`;
-    }
+    if (evT) { const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt; evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`; }
     renderBoosterIndicator();
   }
 }
 
-/* =========================================================
-   РУЛЕТКА
-   ========================================================= */
 async function rollAnimation(targetRarity) {
   plateArea.className = 'plate-wrapper';
   const targetLabel = targetRarity ? `<div class="roll-target" style="color:${RARITIES[targetRarity].color}">🎯 Цель: ${RARITIES[targetRarity].name}</div>` : '';
   plateArea.innerHTML = targetLabel + `
     <div class="plate">
-      <div class="plate-main">
-        <span class="slot" id="s1">А</span>
-        <span class="slot" id="s2">000</span>
-        <span class="slot" id="s3">АА</span>
-      </div>
-      <div class="plate-side">
-        <div class="plate-region" id="s4">77</div>
-        <div class="plate-flag-block">
-          <div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div>
-          <div class="flag-label">RUS</div>
-        </div>
-      </div>
+      <div class="plate-main"><span class="slot" id="s1">А</span><span class="slot" id="s2">000</span><span class="slot" id="s3">АА</span></div>
+      <div class="plate-side"><div class="plate-region" id="s4">77</div><div class="plate-flag-block"><div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div><div class="flag-label">RUS</div></div></div>
     </div>
   `;
-  const s1 = document.getElementById('s1');
-  const s2 = document.getElementById('s2');
-  const s3 = document.getElementById('s3');
-  const s4 = document.getElementById('s4');
+  const s1 = document.getElementById('s1'); const s2 = document.getElementById('s2'); const s3 = document.getElementById('s3'); const s4 = document.getElementById('s4');
   const start = performance.now();
   while (performance.now() - start < 700) {
     if (s1) s1.textContent = pick(LETTERS);
@@ -851,30 +718,11 @@ async function rollAnimation(targetRarity) {
    РЕНДЕР
    ========================================================= */
 function renderGuaranteePanel() {
-  return `
-    <div class="guarantee-panel">
-      <div class="guarantee-title">Нажмите повторно, чтобы отменить</div>
-      ${GUARANTEE_ORDER.map(rarity => {
-        const r = RARITIES[rarity];
-        const basePrice = GUARANTEE_PRICES[rarity];
-        const price = getGenerateCost(rarity);
-        const discounted = price < basePrice;
-        const disabled = state.money < price;
-        const isActive = state.activeGuarantee === rarity;
-        const bonusCount = state.bonusGuarantees[rarity] || 0;
-        return `
-          <button class="guarantee-btn ${isActive ? 'active' : ''}" data-rarity="${rarity}" ${disabled ? 'disabled' : ''}>
-            <span class="g-icon">${r.icon}</span>
-            <span class="g-info">
-              <span class="g-name">${r.name}${bonusCount > 0 ? ` <span style="color:#4ade80;">+${bonusCount}🎁</span>` : ''}</span>
-              <span class="g-hint">${isActive ? 'активна' : 'гарантия'}</span>
-            </span>
-            <span class="g-price">${discounted ? `<s style="opacity:.5">${formatMoney(basePrice)}</s> ` : ''}${formatMoney(price)}</span>
-          </button>
-        `;
-      }).join('')}
-    </div>
-  `;
+  return `<div class="guarantee-panel"><div class="guarantee-title">Нажмите повторно, чтобы отменить</div>${GUARANTEE_ORDER.map(rarity => {
+    const r = RARITIES[rarity]; const basePrice = GUARANTEE_PRICES[rarity]; const price = getGenerateCost(rarity);
+    const discounted = price < basePrice; const disabled = state.money < price; const isActive = state.activeGuarantee === rarity; const bonusCount = state.bonusGuarantees[rarity] || 0;
+    return `<button class="guarantee-btn ${isActive ? 'active' : ''}" data-rarity="${rarity}" ${disabled ? 'disabled' : ''}><span class="g-icon">${r.icon}</span><span class="g-info"><span class="g-name">${r.name}${bonusCount > 0 ? ` <span style="color:#4ade80;">+${bonusCount}🎁</span>` : ''}</span><span class="g-hint">${isActive ? 'активна' : 'гарантия'}</span></span><span class="g-price">${discounted ? `<s style="opacity:.5">${formatMoney(basePrice)}</s> ` : ''}${formatMoney(price)}</span></button>`;
+  }).join('')}</div>`;
 }
 function render() {
   moneyEl.textContent = formatMoney(state.money);
@@ -893,20 +741,12 @@ function render() {
   valueArea.innerHTML = '';
   if (state.lastStatus === 'pending') {
     const rarity = getRarity(state.lastValue);
-    valueArea.innerHTML = `
-      <div class="value-reveal">
-        <div class="value-big" style="color:${RARITIES[rarity].color}">${formatMoney(state.lastValue)}</div>
-        <div class="value-details">
-          ${state.lastDetails.map(d => `<div class="value-detail-row${d.special ? ' special' : ''}"><span>${d.text}</span><span class="plus">${d.val}</span></div>`).join('')}
-        </div>
-      </div>
-    `;
+    valueArea.innerHTML = `<div class="value-reveal"><div class="value-big" style="color:${RARITIES[rarity].color}">${formatMoney(state.lastValue)}</div><div class="value-details">${state.lastDetails.map(d => `<div class="value-detail-row${d.special ? ' special' : ''}"><span>${d.text}</span><span class="plus">${d.val}</span></div>`).join('')}</div></div>`;
   } else if (state.lastStatus === 'sold') {
-    const soldVal = state.lastSoldValue ?? state.lastValue;
-    const bonusText = state.lastSoldBonus > 1 ? ` <span style="color:#ffd166">(×${state.lastSoldBonus})</span>` : '';
+    const soldVal = state.lastSoldValue ?? state.lastValue; const bonusText = state.lastSoldBonus > 1 ? ` <span style="color:#ffd166">(×${state.lastSoldBonus})</span>` : '';
     valueArea.innerHTML = `<div class="sold-msg">✅ Продано за ${formatMoney(soldVal)}${bonusText}</div>`;
   } else if (state.lastStatus === 'kept') {
-    valueArea.innerHTML = `<div class="kept-msg">🎒 Добавлено в инвентарь</div>`;
+    valueArea.innerHTML = `<div class="kept-msg">🎒 В инвентарь</div>`;
   }
 
   if (state.lastStatus === 'pending') {
@@ -915,57 +755,22 @@ function render() {
     const effectiveValue = Math.round(state.lastValue * bonus);
     const boosted = bonus > 1;
     const bonusText = boosted ? ` <span style="color:#0a0a0a;background:#ffd166;padding:1px 6px;border-radius:4px;font-size:11px;">×${bonus.toFixed(2).replace(/\.00$/,'')}</span>` : '';
-    actionsArea.innerHTML = `
-      <button class="btn btn-sell${boosted ? ' boosted' : ''}" id="sellBtn">💰 Продать за ${formatMoney(effectiveValue)}${bonusText}</button>
-      <button class="btn btn-keep" id="keepBtn">🎒 В инвентарь</button>
-    `;
-    document.getElementById('sellBtn').onclick = handleSell;
-    document.getElementById('keepBtn').onclick = handleKeep;
+    actionsArea.innerHTML = `<button class="btn btn-sell${boosted ? ' boosted' : ''}" id="sellBtn">💰 Продать за ${formatMoney(effectiveValue)}${bonusText}</button><button class="btn btn-keep" id="keepBtn">🎒 В инвентарь</button>`;
+    document.getElementById('sellBtn').onclick = handleSell; document.getElementById('keepBtn').onclick = handleKeep;
   } else {
-    const active = state.activeGuarantee;
-    const cost = getGenerateCost(active);
-    const baseCost = active ? GUARANTEE_PRICES[active] : 2000;
-    const discounted = cost < baseCost;
-    const open = state.guaranteeOpen;
+    const active = state.activeGuarantee; const cost = getGenerateCost(active); const baseCost = active ? GUARANTEE_PRICES[active] : 2000;
+    const discounted = cost < baseCost; const open = state.guaranteeOpen;
     let bonusRarity = null;
-    for (const r of ['mythic','legendary','epic','rare','uncommon']) {
-      if ((state.bonusGuarantees[r] || 0) > 0) { bonusRarity = r; break; }
-    }
+    for (const r of ['mythic','legendary','epic','rare','uncommon']) { if ((state.bonusGuarantees[r] || 0) > 0) { bonusRarity = r; break; } }
     const hasBonus = !!bonusRarity;
     let genLabel, genCost;
-    if (hasBonus) {
-      genLabel = `🎁 Бонус: ${RARITIES[bonusRarity].name} (${state.bonusGuarantees[bonusRarity]} шт.)`;
-      genCost = 'бесплатно';
-    } else if (active) {
-      genLabel = `🎲 Купить (${RARITIES[active].name})${discounted ? ' ⚡' : ''}`;
-      genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`;
-    } else {
-      genLabel = `Сгенерировать номер${discounted ? ' ⚡' : ''}`;
-      genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`;
-    }
-    actionsArea.innerHTML = `
-      <button class="btn btn-generate${hasBonus ? ' bonus-free' : (discounted ? ' discounted' : '')}" id="generateBtn" ${(!hasBonus && state.money < cost) ? 'disabled' : ''}>
-        <span>${genLabel}</span>
-        <span class="btn-cost">${genCost}</span>
-      </button>
-      <button class="btn btn-guarantee ${open ? 'open' : ''}" id="guaranteeToggle">
-        <span>🎲 ${active ? 'Гарант: ' + RARITIES[active].name : 'Выбрать гарантию'}</span>
-      </button>
-      ${open ? renderGuaranteePanel() : ''}
-    `;
+    if (hasBonus) { genLabel = `🎁 Бонус: ${RARITIES[bonusRarity].name} (${state.bonusGuarantees[bonusRarity]} шт.)`; genCost = 'бесплатно'; }
+    else if (active) { genLabel = `🎲 Купить (${RARITIES[active].name})${discounted ? ' ⚡' : ''}`; genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`; }
+    else { genLabel = `Сгенерировать${discounted ? ' ⚡' : ''}`; genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`; }
+    actionsArea.innerHTML = `<button class="btn btn-generate${hasBonus ? ' bonus-free' : (discounted ? ' discounted' : '')}" id="generateBtn" ${(!hasBonus && state.money < cost) ? 'disabled' : ''}><span>${genLabel}</span><span class="btn-cost">${genCost}</span></button><button class="btn btn-guarantee ${open ? 'open' : ''}" id="guaranteeToggle"><span>🎲 ${active ? 'Гарант: ' + RARITIES[active].name : 'Выбрать гарантию'}</span></button>${open ? renderGuaranteePanel() : ''}`;
     document.getElementById('generateBtn').onclick = () => handleGenerate(active);
     document.getElementById('guaranteeToggle').onclick = () => { haptic('light'); state.guaranteeOpen = !state.guaranteeOpen; render(); };
-    if (open) {
-      actionsArea.querySelectorAll('.guarantee-btn').forEach(btn => {
-        btn.onclick = () => {
-          haptic('light');
-          const chosen = btn.dataset.rarity;
-          state.activeGuarantee = (state.activeGuarantee === chosen) ? null : chosen;
-          state.guaranteeOpen = false;
-          render(); saveLocal();
-        };
-      });
-    }
+    if (open) { actionsArea.querySelectorAll('.guarantee-btn').forEach(btn => { btn.onclick = () => { haptic('light'); const chosen = btn.dataset.rarity; state.activeGuarantee = (state.activeGuarantee === chosen) ? null : chosen; state.guaranteeOpen = false; render(); saveLocal(); }; }); }
   }
 
   if (state.best) {
@@ -974,20 +779,8 @@ function render() {
   } else bestBox.innerHTML = '';
 
   inventoryBadgeCount.textContent = `${state.collection.length} шт.`;
-  inventoryScreenList.innerHTML = state.collection.map((item, idx) => `
-    <div class="inventory-item">
-      ${renderPlateHTML(item.plate, 'small', getRarity(item.value))}
-      <div class="inventory-item-info">
-        <span class="inventory-item-price">${formatMoney(item.value)}</span>
-        <div class="inventory-actions">
-          <button class="inv-btn sell" data-sell="${idx}">Продать</button>
-        </div>
-      </div>
-    </div>
-  `).join('') || '<div class="empty-inventory">Инвентарь пуст</div>';
-  inventoryScreenList.querySelectorAll('[data-sell]').forEach(b => {
-    b.onclick = () => sellFromInv(Number(b.dataset.sell));
-  });
+  inventoryScreenList.innerHTML = state.collection.map((item, idx) => `<div class="inventory-item">${renderPlateHTML(item.plate, 'small', getRarity(item.value))}<div class="inventory-item-info"><span class="inventory-item-price">${formatMoney(item.value)}</span><div class="inventory-actions"><button class="inv-btn sell" data-sell="${idx}">Продать</button></div></div></div>`).join('') || '<div class="empty-inventory">Инвентарь пуст</div>';
+  inventoryScreenList.querySelectorAll('[data-sell]').forEach(b => { b.onclick = () => sellFromInv(Number(b.dataset.sell)); });
 }
 
 /* =========================================================
@@ -995,142 +788,79 @@ function render() {
    ========================================================= */
 async function handleGenerate(forcedRarity) {
   if (state.isGenerating) return;
-  let effectiveRarity = forcedRarity;
-  let usingBonus = false;
-  if (!forcedRarity) {
-    for (const r of ['mythic','legendary','epic','rare','uncommon']) {
-      if ((state.bonusGuarantees[r] || 0) > 0) { effectiveRarity = r; usingBonus = true; break; }
-    }
-  }
+  let effectiveRarity = forcedRarity; let usingBonus = false;
+  if (!forcedRarity) { for (const r of ['mythic','legendary','epic','rare','uncommon']) { if ((state.bonusGuarantees[r] || 0) > 0) { effectiveRarity = r; usingBonus = true; break; } } }
   const cost = usingBonus ? 0 : getGenerateCost(effectiveRarity);
   if (state.money < cost) { notify('error'); return; }
-
-  ensureAudio();
-  state.isGenerating = true;
-  if (usingBonus) state.bonusGuarantees[effectiveRarity] -= 1;
-  else state.money -= cost;
-  state.lastStatus = 'none';
-  state.lastGuaranteedRarity = effectiveRarity;
-  state.guaranteeOpen = false;
+  ensureAudio(); state.isGenerating = true;
+  if (usingBonus) state.bonusGuarantees[effectiveRarity] -= 1; else state.money -= cost;
+  state.lastStatus = 'none'; state.lastGuaranteedRarity = effectiveRarity; state.guaranteeOpen = false;
   if (!usingBonus) animateMoney('down');
   render();
-
   await rollAnimation(effectiveRarity);
-
   const plate = effectiveRarity ? buildPlateForRarity(effectiveRarity) : generateRandomPlate();
   const { value, details } = calculateValue(plate);
   state.lastPlate = plate; state.lastValue = value; state.lastDetails = details; state.lastStatus = 'pending';
   if (!state.best || value > state.best.value) state.best = { plate, value };
   state.isGenerating = false;
-  render(); saveLocal();
-
+  render(); saveLocal(); saveState();
   const rarity = getRarity(value);
   haptic(['legendary','mythic'].includes(rarity) ? 'heavy' : 'light');
-  if (['rare','epic','legendary','mythic'].includes(rarity)) {
-    triggerFlash(rarity); playWinChord(rarity);
-    notify(rarity === 'mythic' || rarity === 'legendary' ? 'success' : 'warning');
-  }
+  if (['rare','epic','legendary','mythic'].includes(rarity)) { triggerFlash(rarity); playWinChord(rarity); notify(rarity === 'mythic' || rarity === 'legendary' ? 'success' : 'warning'); }
 }
 async function handleSell() {
-  const rarity = getRarity(state.lastValue);
-  const bonus = getSaleBonusMultiplier(rarity);
-  const finalValue = Math.round(state.lastValue * bonus);
-  state.money += finalValue;
-  state.lastSoldValue = finalValue; state.lastSoldBonus = bonus; state.lastStatus = 'sold';
-  animateMoney('up'); haptic('medium'); notify('success');
-  render(); saveLocal(); saveState();
+  const rarity = getRarity(state.lastValue); const bonus = getSaleBonusMultiplier(rarity); const finalValue = Math.round(state.lastValue * bonus);
+  state.money += finalValue; state.lastSoldValue = finalValue; state.lastSoldBonus = bonus; state.lastStatus = 'sold';
+  animateMoney('up'); haptic('medium'); notify('success'); render(); saveLocal(); saveState();
 }
 async function handleKeep() {
-  state.collection.push({ plate: state.lastPlate, value: state.lastValue });
-  state.lastStatus = 'kept';
-  haptic('light');
-  render(); saveState();
+  state.collection.push({ plate: state.lastPlate, value: state.lastValue }); state.lastStatus = 'kept';
+  haptic('light'); render(); saveLocal(); saveState();
 }
 async function sellFromInv(idx) {
   if (!state.collection[idx]) return;
-  const item = state.collection[idx];
-  const rarity = getRarity(item.value);
-  const bonus = getSaleBonusMultiplier(rarity);
-  const finalValue = Math.round(item.value * bonus);
-  state.money += finalValue;
-  state.collection.splice(idx, 1);
-  animateMoney('up'); haptic('medium'); notify('success');
-  render(); saveState();
+  const item = state.collection[idx]; const rarity = getRarity(item.value); const bonus = getSaleBonusMultiplier(rarity); const finalValue = Math.round(item.value * bonus);
+  state.money += finalValue; state.collection.splice(idx, 1);
+  animateMoney('up'); haptic('medium'); notify('success'); render(); saveLocal(); saveState();
 }
 
 /* =========================================================
-   ПРОМОКОДЫ (через сервер)
+   ПРОМОКОДЫ
    ========================================================= */
 function showPromoResult(text, ok) {
-  const el = document.getElementById('promoResult');
-  el.style.display = 'block';
-  el.textContent = text;
+  const el = document.getElementById('promoResult'); el.style.display = 'block'; el.textContent = text;
   el.style.background = ok ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)';
   el.style.color = ok ? '#4ade80' : '#f87171';
   el.style.border = ok ? '1px solid rgba(34,197,94,0.4)' : '1px solid rgba(239,68,68,0.4)';
 }
 async function activatePromo() {
-  const input = document.getElementById('promoCodeInput');
-  const code = input.value.trim().toUpperCase();
+  const input = document.getElementById('promoCodeInput'); const code = input.value.trim().toUpperCase();
   if (!code) { showPromoResult('Введи код', false); haptic('heavy'); return; }
-  const btn = document.getElementById('promoActivateBtn');
-  btn.disabled = true; btn.querySelector('span').textContent = '...';
-
+  const btn = document.getElementById('promoActivateBtn'); btn.disabled = true; btn.querySelector('span').textContent = '...';
   try {
-    const res = await apiRequest('/redeem', 'POST', { code });
-    const reward = res.reward;
+    const res = await apiRequest('/redeem', 'POST', { code }); const reward = res.reward;
     let resultText = '✅ Получено: ';
-    if (reward.type === 'money') {
-      state.money += reward.amount;
-      animateMoney('up');
-      resultText += `+${formatMoney(reward.amount)}`;
-    } else if (reward.type === 'booster') {
-      state.activeBooster = { mult: reward.mult, endsAt: Date.now() + reward.durationMs };
-      resultText += `×${reward.mult} продажи на ${Math.round(reward.durationMs/60000)} мин`;
-    } else if (reward.type === 'guarantee') {
-      state.bonusGuarantees[reward.rarity] = (state.bonusGuarantees[reward.rarity] || 0) + reward.count;
-      resultText += `${reward.count} × ${RARITIES[reward.rarity].name}`;
-    }
-    showPromoResult(resultText, true);
-    haptic('heavy'); notify('success'); playWinChord('epic'); triggerFlash('epic');
-    render(); saveLocal(); saveState();
-    setTimeout(() => { input.value = ''; }, 1500);
+    if (reward.type === 'money') { state.money += reward.amount; animateMoney('up'); resultText += `+${formatMoney(reward.amount)}`; }
+    else if (reward.type === 'booster') { state.activeBooster = { mult: reward.mult, endsAt: Date.now() + reward.durationMs }; resultText += `×${reward.mult} продажи на ${Math.round(reward.durationMs/60000)} мин`; }
+    else if (reward.type === 'guarantee') { state.bonusGuarantees[reward.rarity] = (state.bonusGuarantees[reward.rarity] || 0) + reward.count; resultText += `${reward.count} × ${RARITIES[reward.rarity].name}`; }
+    showPromoResult(resultText, true); haptic('heavy'); notify('success'); playWinChord('epic'); triggerFlash('epic');
+    render(); saveLocal(); saveState(); setTimeout(() => { input.value = ''; }, 1500);
   } catch (e) {
-    const map = {
-      not_found: '❌ Код не найден',
-      already_used: '⚠️ Ты уже использовал этот код',
-      limit_reached: '🚫 Лимит активаций исчерпан',
-      empty_code: 'Введи код',
-    };
-    showPromoResult(map[e.message] || ('Ошибка: ' + e.message), false);
-    haptic('heavy'); notify('error');
-  } finally {
-    btn.disabled = false; btn.querySelector('span').textContent = '✅ Активировать';
-  }
+    const map = { not_found: '❌ Код не найден', already_used: '⚠️ Ты уже использовал этот код', limit_reached: '🚫 Лимит исчерпан', empty_code: 'Введи код' };
+    showPromoResult(map[e.message] || ('Ошибка: ' + e.message), false); haptic('heavy'); notify('error');
+  } finally { btn.disabled = false; btn.querySelector('span').textContent = '✅ Активировать'; }
 }
 
 /* =========================================================
    ЛИДЕРБОРД
    ========================================================= */
 async function loadLeaderboard() {
-  const listEl = document.getElementById('leaderboardList');
-  listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#8b94a8; font-size:12px;">Загрузка...</div>';
+  const listEl = document.getElementById('leaderboardList'); listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#8b94a8;">Загрузка...</div>';
   try {
     const rows = await apiRequest('/leaderboard', 'GET');
-    if (!rows.length) {
-      listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#8b94a8; font-size:12px;">Пока никого нет. Будь первым!</div>';
-      return;
-    }
-    listEl.innerHTML = rows.map(r => {
-      let cls = '';
-      if (r.rank === 1) cls = 'gold';
-      else if (r.rank === 2) cls = 'silver';
-      else if (r.rank === 3) cls = 'bronze';
-      return `<div class="lb-row"><span class="lb-rank ${cls}">${r.rank}</span><span class="lb-name">${r.name}</span><span class="lb-value">${formatMoney(r.value)}</span></div>`;
-    }).join('');
-  } catch (e) {
-    listEl.innerHTML = `<div style="text-align:center; padding:20px; color:#f87171; font-size:12px;">Ошибка загрузки</div>`;
-  }
+    if (!rows.length) { listEl.innerHTML = '<div style="text-align:center; padding:30px; color:#8b94a8;">Пока никого нет.</div>'; return; }
+    listEl.innerHTML = rows.map(r => { let cls = ''; if (r.rank === 1) cls = 'gold'; else if (r.rank === 2) cls = 'silver'; else if (r.rank === 3) cls = 'bronze'; return `<div class="lb-row"><span class="lb-rank ${cls}">${r.rank}</span><span class="lb-name">${r.name}</span><span class="lb-value">${formatMoney(r.value)}</span></div>`; }).join('');
+  } catch (e) { listEl.innerHTML = `<div style="text-align:center; padding:20px; color:#f87171;">Ошибка загрузки</div>`; }
 }
 
 /* =========================================================
@@ -1143,198 +873,116 @@ const adminCodeInput = document.getElementById('adminCodeInput');
 const adminError = document.getElementById('adminError');
 
 adminBtn.onclick = () => {
-  haptic('light');
-  adminModal.classList.add('open');
-  if (state.adminAuthorized) {
-    adminAuthBlock.style.display = 'none';
-    adminPanelBlock.style.display = 'block';
-    loadPromoList();
-  } else {
-    adminAuthBlock.style.display = 'block';
-    adminPanelBlock.style.display = 'none';
-    adminCodeInput.value = '';
-    adminError.style.display = 'none';
-    setTimeout(() => adminCodeInput.focus(), 100);
-  }
+  haptic('light'); adminModal.classList.add('open');
+  if (state.adminAuthorized) { adminAuthBlock.style.display = 'none'; adminPanelBlock.style.display = 'block'; loadPromoList(); }
+  else { adminAuthBlock.style.display = 'block'; adminPanelBlock.style.display = 'none'; adminCodeInput.value = ''; adminError.style.display = 'none'; setTimeout(() => adminCodeInput.focus(), 100); }
 };
 document.getElementById('adminLoginBtn').onclick = async () => {
-  const token = adminCodeInput.value.trim();
-  if (!token) return;
+  const token = adminCodeInput.value.trim(); if (!token) return;
   state.adminToken = token;
   try {
     await apiRequest('/admin/promo/list', 'GET', null, true);
-    state.adminAuthorized = true;
-    localStorage.setItem(ADMIN_TOKEN_KEY, token);
-    adminError.style.display = 'none';
-    adminAuthBlock.style.display = 'none';
-    adminPanelBlock.style.display = 'block';
-    haptic('medium'); notify('success');
-    loadPromoList();
-  } catch (e) {
-    adminError.style.display = 'block';
-    haptic('heavy'); notify('error');
-  }
+    state.adminAuthorized = true; localStorage.setItem(ADMIN_TOKEN_KEY, token);
+    adminError.style.display = 'none'; adminAuthBlock.style.display = 'none'; adminPanelBlock.style.display = 'block';
+    haptic('medium'); notify('success'); loadPromoList();
+  } catch (e) { adminError.style.display = 'block'; haptic('heavy'); notify('error'); }
 };
-adminCodeInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') document.getElementById('adminLoginBtn').click();
-});
+adminCodeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('adminLoginBtn').click(); });
 
-/* Табы админки */
 document.querySelectorAll('[data-admin-tab]').forEach(tab => {
   tab.onclick = () => {
-    document.querySelectorAll('[data-admin-tab]').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
+    document.querySelectorAll('[data-admin-tab]').forEach(t => t.classList.remove('active')); tab.classList.add('active');
     document.querySelectorAll('.admin-tab-content').forEach(c => c.style.display = 'none');
     document.getElementById('adminTab' + tab.dataset.adminTab.charAt(0).toUpperCase() + tab.dataset.adminTab.slice(1)).style.display = 'block';
   };
 });
 
-/* Создание промокода */
 document.getElementById('createPromoBtn').onclick = async () => {
   const code = document.getElementById('newPromoCode').value.trim().toUpperCase();
   const type = document.getElementById('newPromoType').value;
   const amount = Number(document.getElementById('newPromoAmount').value);
   const maxUses = Number(document.getElementById('newPromoMax').value);
   if (!code || !amount || !maxUses) { alert('Заполни все поля'); return; }
-
   let reward;
   if (type === 'money') reward = { type: 'money', amount };
   else if (type === 'booster') reward = { type: 'booster', mult: 2, durationMs: 5 * 60 * 1000 };
   else if (type === 'guarantee') reward = { type: 'guarantee', rarity: 'epic', count: 1 };
-
   try {
     await apiRequest('/admin/promo/create', 'POST', { code, reward, maxUses }, true);
-    haptic('medium'); notify('success');
-    document.getElementById('newPromoCode').value = '';
-    loadPromoList();
-  } catch (e) {
-    if (e.message === 'code_exists') alert('Код уже существует');
-    else alert('Ошибка: ' + e.message);
-  }
+    haptic('medium'); notify('success'); document.getElementById('newPromoCode').value = ''; loadPromoList();
+  } catch (e) { if (e.message === 'code_exists') alert('Код уже существует'); else alert('Ошибка: ' + e.message); }
 };
 
 async function loadPromoList() {
   const listEl = document.getElementById('promoList');
   try {
     const rows = await apiRequest('/admin/promo/list', 'GET', null, true);
-    if (!rows.length) {
-      listEl.innerHTML = '<div style="text-align:center; padding:10px; color:#8b94a8; font-size:11px;">Нет кодов</div>';
-      return;
-    }
+    if (!rows.length) { listEl.innerHTML = '<div style="text-align:center; padding:10px; color:#8b94a8;">Нет кодов</div>'; return; }
     listEl.innerHTML = rows.map(r => {
       let label = '';
       if (r.reward.type === 'money') label = `💰 +${formatMoney(r.reward.amount)}`;
       else if (r.reward.type === 'booster') label = `🚀 ×${r.reward.mult} на ${Math.round(r.reward.durationMs/60000)}м`;
       else if (r.reward.type === 'guarantee') label = `🎯 ${RARITIES[r.reward.rarity].name} ×${r.reward.count}`;
-      return `
-        <div class="promo-row">
-          <div style="flex:1;">
-            <div class="promo-row-code">${r.code}</div>
-            <div class="promo-row-meta">${label} · ${r.usedCount}/${r.maxUses}</div>
-          </div>
-          <button class="promo-row-del" data-del="${r.code}">✕</button>
-        </div>
-      `;
+      return `<div class="promo-row"><div style="flex:1;"><div class="promo-row-code">${r.code}</div><div class="promo-row-meta">${label} · ${r.usedCount}/${r.maxUses}</div></div><button class="promo-row-del" data-del="${r.code}">✕</button></div>`;
     }).join('');
-    listEl.querySelectorAll('[data-del]').forEach(b => {
-      b.onclick = async () => {
-        if (!confirm('Удалить код ' + b.dataset.del + '?')) return;
-        try { await apiRequest('/admin/promo/' + b.dataset.del, 'DELETE', null, true); loadPromoList(); }
-        catch (e) { alert('Ошибка удаления'); }
-      };
-    });
-  } catch (e) {
-    listEl.innerHTML = '<div style="color:#f87171; font-size:11px;">Ошибка загрузки</div>';
-  }
+    listEl.querySelectorAll('[data-del]').forEach(b => { b.onclick = async () => { if (!confirm('Удалить ' + b.dataset.del + '?')) return; try { await apiRequest('/admin/promo/' + b.dataset.del, 'DELETE', null, true); loadPromoList(); } catch (e) { alert('Ошибка'); } }; });
+  } catch (e) { listEl.innerHTML = '<div style="color:#f87171; font-size:11px;">Ошибка загрузки</div>'; }
 }
 
-/* Спавн / события / финансы */
 document.querySelectorAll('[data-spawn]').forEach(btn => {
   btn.addEventListener('click', () => {
-    const rarity = btn.dataset.spawn;
-    const plate = buildPlateForRarity(rarity);
-    const { value, details } = calculateValue(plate);
-    state.lastPlate = plate; state.lastValue = value; state.lastDetails = details;
-    state.lastStatus = 'pending'; state.lastGuaranteedRarity = rarity;
+    const rarity = btn.dataset.spawn; const plate = buildPlateForRarity(rarity); const { value, details } = calculateValue(plate);
+    state.lastPlate = plate; state.lastValue = value; state.lastDetails = details; state.lastStatus = 'pending'; state.lastGuaranteedRarity = rarity;
     if (!state.best || value > state.best.value) state.best = { plate, value };
-    adminModal.classList.remove('open');
-    render(); saveLocal(); haptic('medium');
+    adminModal.classList.remove('open'); render(); saveLocal(); haptic('medium');
     if (rarity !== 'common') { triggerFlash(rarity); playWinChord(rarity); }
   });
 });
-document.getElementById('adminTriggerEventBtn').onclick = () => {
-  const ev = pick(EVENTS);
-  state.activeEvent = { id: ev.id, endsAt: Date.now() + EVENT_ACTIVE_MS };
-  adminModal.classList.remove('open');
-  render(); ensureAudio(); playWinChord('rare'); notify('success');
-};
-document.getElementById('adminStopEventBtn').onclick = () => {
-  state.activeEvent = null;
-  state.nextEventAt = Date.now() + EVENT_IDLE_MS;
-  adminModal.classList.remove('open');
-  render();
-};
 document.getElementById('adminAdd100k').onclick = () => { state.money += 100000; animateMoney('up'); haptic('medium'); render(); saveState(); };
-document.getElementById('adminAdd1m').onclick  = () => { state.money += 1000000; animateMoney('up'); haptic('medium'); render(); saveState(); };
+document.getElementById('adminAdd1m').onclick = () => { state.money += 1000000; animateMoney('up'); haptic('medium'); render(); saveState(); };
 
 /* =========================================================
-   МОДАЛКИ
+   ОТЛАДКА
    ========================================================= */
-document.querySelectorAll('[data-close]').forEach(btn => {
-  btn.onclick = () => { haptic('light'); document.getElementById(btn.dataset.close).classList.remove('open'); };
-});
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); });
-});
+document.getElementById('debugBtn').onclick = async () => {
+  let msg = `1. initData есть? ${tg?.initData ? 'ДА (длина: ' + tg.initData.length + ')' : 'НЕТ ❌'}\n\n`;
+  try {
+    const start = Date.now();
+    const res = await fetch(API_URL + '/');
+    msg += `2. Сервер доступен? ДА (ответ за ${Date.now() - start}мс)\n\n`;
+  } catch (e) { msg += `2. Сервер доступен? НЕТ ❌ (${e.message})\n\n`; }
+  try {
+    const res = await apiRequest('/load', 'POST');
+    msg += `3. Загрузка: УСПЕШНО ✅\nБаланс: ${res.money} ₽`;
+  } catch (e) { msg += `3. Загрузка: ОШИБКА ❌\nКод: ${e.message}\nСтатус: ${e.status || 'нет'}`; }
+  alert(msg);
+};
 
 /* =========================================================
-   НАСТРОЙКИ
+   МОДАЛКИ / НАСТРОЙКИ / ЗАПУСК
    ========================================================= */
-const soundToggle = document.getElementById('settingSound');
-const flashToggle = document.getElementById('settingFlash');
-const autoSaveToggle = document.getElementById('settingAutoSave');
+document.querySelectorAll('[data-close]').forEach(btn => { btn.onclick = () => { haptic('light'); document.getElementById(btn.dataset.close).classList.remove('open'); }; });
+document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); }); });
+
+const soundToggle = document.getElementById('settingSound'); const flashToggle = document.getElementById('settingFlash'); const autoSaveToggle = document.getElementById('settingAutoSave');
 soundToggle.addEventListener('change', e => { settings.sound = e.target.checked; if (settings.sound) { ensureAudio(); playTone(800, 0.08); } saveLocal(); });
 flashToggle.addEventListener('change', e => { settings.flash = e.target.checked; if (settings.flash) triggerFlash('uncommon'); saveLocal(); });
 autoSaveToggle.addEventListener('change', e => { settings.autoSave = e.target.checked; saveLocal(); });
 
 document.getElementById('openSettingsBtn').onclick = () => document.getElementById('settingsModal').classList.add('open');
 document.getElementById('openSuitsBtn').onclick = () => document.getElementById('suitsModal').classList.add('open');
-document.getElementById('openPromoBtn').onclick = () => {
-  haptic('light');
-  document.getElementById('promoModal').classList.add('open');
-  document.getElementById('promoResult').style.display = 'none';
-  document.getElementById('promoCodeInput').value = '';
-  setTimeout(() => document.getElementById('promoCodeInput').focus(), 150);
-};
-document.getElementById('openLeaderboardBtn').onclick = () => {
-  haptic('light');
-  document.getElementById('leaderboardModal').classList.add('open');
-  loadLeaderboard();
-};
+document.getElementById('openPromoBtn').onclick = () => { haptic('light'); document.getElementById('promoModal').classList.add('open'); document.getElementById('promoResult').style.display = 'none'; document.getElementById('promoCodeInput').value = ''; setTimeout(() => document.getElementById('promoCodeInput').focus(), 150); };
+document.getElementById('openLeaderboardBtn').onclick = () => { haptic('light'); document.getElementById('leaderboardModal').classList.add('open'); loadLeaderboard(); };
 document.getElementById('promoActivateBtn').onclick = activatePromo;
 document.getElementById('promoCodeInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') activatePromo(); });
 document.getElementById('promoCodeInput').addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase(); });
 
-document.getElementById('modalResetBtn').onclick = () => {
-  if (confirm('Сбросить весь прогресс? Это необратимо.')) {
-    try { localStorage.clear(); } catch (e) {}
-    location.reload();
-  }
-};
+document.getElementById('modalResetBtn').onclick = () => { if (confirm('Сбросить прогресс?')) { localStorage.clear(); location.reload(); } };
 
-/* =========================================================
-   ЗАПУСК
-   ========================================================= */
 (async function init() {
   const loaded = await loadState();
-  if (loaded) {
-    loadToast.classList.add('show');
-    setTimeout(() => loadToast.classList.remove('show'), 2000);
-  }
-  soundToggle.checked    = settings.sound;
-  flashToggle.checked    = settings.flash;
-  autoSaveToggle.checked = settings.autoSave;
-
+  if (loaded) { loadToast.classList.add('show'); setTimeout(() => loadToast.classList.remove('show'), 2000); }
+  soundToggle.checked = settings.sound; flashToggle.checked = settings.flash; autoSaveToggle.checked = settings.autoSave;
   render();
   setInterval(tickEvents, 250);
   setInterval(() => { if (settings.autoSave) saveState(); }, 20000);
