@@ -254,10 +254,6 @@
         <div class="menu-item-icon" style="background:linear-gradient(135deg, #ffd166, #f59e0b); color:#fff;">🏆</div>
         <span class="menu-item-label">Топ</span>
       </button>
-      <button class="menu-item-card" id="debugBtn">
-        <div class="menu-item-icon" style="background:#ef4444; color:#fff;">🐞</div>
-        <span class="menu-item-label">Отладка</span>
-      </button>
     </div>
   </div>
   <div class="bottom-nav">
@@ -267,8 +263,7 @@
   </div>
 </div>
 
-<!-- Модалки (настройки, масти, промокод, топ, админка) -->
-<!-- (Они остались без изменений, я их пропустил для краткости, но в твоем файле они должны быть) -->
+<!-- Модалки -->
 <div class="modal-overlay" id="settingsModal">
   <div class="modal-content">
     <div class="modal-header"><span class="modal-title">⚙️ Настройки</span><button class="modal-close" data-close="settingsModal">✕</button></div>
@@ -940,23 +935,6 @@ document.querySelectorAll('[data-spawn]').forEach(btn => {
 });
 document.getElementById('adminAdd100k').onclick = () => { state.money += 100000; animateMoney('up'); haptic('medium'); render(); saveState(); };
 document.getElementById('adminAdd1m').onclick = () => { state.money += 1000000; animateMoney('up'); haptic('medium'); render(); saveState(); };
-
-/* =========================================================
-   ОТЛАДКА
-   ========================================================= */
-document.getElementById('debugBtn').onclick = async () => {
-  let msg = `1. initData есть? ${tg?.initData ? 'ДА (длина: ' + tg.initData.length + ')' : 'НЕТ ❌'}\n\n`;
-  try {
-    const start = Date.now();
-    const res = await fetch(API_URL + '/');
-    msg += `2. Сервер доступен? ДА (ответ за ${Date.now() - start}мс)\n\n`;
-  } catch (e) { msg += `2. Сервер доступен? НЕТ ❌ (${e.message})\n\n`; }
-  try {
-    const res = await apiRequest('/load', 'POST');
-    msg += `3. Загрузка: УСПЕШНО ✅\nБаланс: ${res.money} ₽`;
-  } catch (e) { msg += `3. Загрузка: ОШИБКА ❌\nКод: ${e.message}\nСтатус: ${e.status || 'нет'}`; }
-  alert(msg);
-};
 
 /* =========================================================
    МОДАЛКИ / НАСТРОЙКИ / ЗАПУСК
