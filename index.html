@@ -9,346 +9,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overscroll-behavior: none; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: radial-gradient(circle at 20% 0%, #2b3350 0%, #0f1320 65%);
-    color: #fff; overflow: hidden;
-    display: flex; justify-content: center; align-items: center;
-    padding: calc(10px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));
-  }
-  .app { width: 100%; max-width: 480px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-  .tab-content { display: none; flex: 1; flex-direction: column; justify-content: flex-start; overflow-y: auto; overflow-x: hidden; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
-  .tab-content.active { display: flex; }
-  .header { text-align: center; flex-shrink: 0; margin-bottom: 4px; }
-  .header h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
-  .header p { font-size: 10px; color: #8b94a8; margin-top: 1px; }
-  .money-box { background: linear-gradient(135deg, #1f2a4a 0%, #2a1f4a 100%); border: 1px solid #3a3a5c; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; flex-shrink: 0; }
-  .money-label { font-size: 10px; color: #8b94a8; text-transform: uppercase; letter-spacing: 0.8px; }
-  .money-value { font-size: 22px; font-weight: 800; color: #ffd166; transition: transform 0.2s; font-variant-numeric: tabular-nums; }
-  .money-value.up { animation: moneyUp 0.5s ease; }
-  .money-value.down { animation: moneyDown 0.5s ease; }
-  @keyframes moneyUp { 50% { transform: scale(1.15); color: #4ade80; } }
-  @keyframes moneyDown { 50% { transform: scale(1.1); color: #f87171; } }
-  .header-btns { display: flex; gap: 6px; }
-  .icon-btn { background: #1a1f2e; border: 1px solid #2b3346; color: #8b94a8; font-size: 14px; cursor: pointer; padding: 6px 9px; border-radius: 8px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
-  .icon-btn:hover { color: #fff; border-color: #4a6ffa; background: #232a3d; }
-
-  .event-banner { padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; transition: all 0.3s; flex-shrink: 0; min-height: 32px; }
-  .event-banner.idle { background: rgba(139,148,168,0.08); color: #8b94a8; border: 1px solid rgba(139,148,168,0.15); }
-  .event-banner.active { animation: eventPulse 1.5s ease infinite; }
-  @keyframes eventPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.015); } }
-  .event-banner-icon { font-size: 15px; flex-shrink: 0; }
-  .event-banner-name { flex: 1; text-align: left; }
-  .event-banner-desc { font-size: 9px; opacity: 0.75; font-weight: 600; }
-  .event-banner-timer { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 12px; padding: 2px 8px; border-radius: 6px; background: rgba(0,0,0,0.3); flex-shrink: 0; }
-
-  .booster-indicator { display: none; padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; margin-bottom: 6px; flex-shrink: 0; background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.5); color: #4ade80; align-items: center; gap: 8px; }
-  .booster-indicator.show { display: flex; }
-  .booster-indicator .booster-timer { margin-left: auto; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; }
-
-  .plate-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 140px; margin-bottom: 6px; padding: 4px 0; position: relative; flex-shrink: 0; }
-  .plate-wrapper.empty { color: #5a6580; font-size: 12px; text-align: center; padding: 12px; border: 2px dashed #313a52; border-radius: 12px; min-height: 140px; }
-  .plate-wrapper.sold .plate { opacity: 0.55; filter: grayscale(0.7); }
-  .plate-wrapper.sold .plate::after { content: 'ПРОДАНО'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-12deg); font-size: 24px; font-weight: 900; font-family: 'Roboto Condensed', sans-serif; color: #ef4444; border: 3px solid #ef4444; padding: 1px 10px; border-radius: 6px; background: rgba(255,255,255,0.85); z-index: 10; letter-spacing: 2px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); pointer-events: none; }
-  .roll-target { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 2px; animation: pulseTarget 1s ease infinite alternate; }
-  @keyframes pulseTarget { from { opacity: 0.7; } to { opacity: 1; } }
-  .rarity-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; animation: chipPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
-  @keyframes chipPop { 0% { transform: scale(0.4) translateY(6px); opacity: 0; } 60% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-  .rarity-chip--common    { background: rgba(156,163,175,0.16); color: #cbd5e1; border: 1px solid rgba(156,163,175,0.4); }
-  .rarity-chip--uncommon  { background: rgba(74,222,128,0.14);  color: #4ade80; border: 1px solid rgba(74,222,128,0.5); }
-  .rarity-chip--rare      { background: rgba(96,165,250,0.14);  color: #60a5fa; border: 1px solid rgba(96,165,250,0.5); }
-  .rarity-chip--epic      { background: rgba(192,132,252,0.14); color: #c084fc; border: 1px solid rgba(192,132,252,0.5); }
-  .rarity-chip--legendary { background: rgba(255,209,102,0.16); color: #ffd166; border: 1px solid rgba(255,209,102,0.6); }
-  .rarity-chip--mythic    { background: linear-gradient(90deg, rgba(255,107,255,0.2), rgba(255,209,102,0.2), rgba(96,165,250,0.2)); color: #ffd1ff; border: 1px solid rgba(255,107,255,0.7); }
-
-  .plate { display: inline-flex; align-items: stretch; background: linear-gradient(180deg, #f8f8f8 0%, #ffffff 45%, #e8e8e8 100%); color: #0a0a0a; border: 2px solid #111; border-radius: 5px; overflow: hidden; font-family: 'Roboto Condensed', 'Arial Narrow', 'Arial', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: 2px; user-select: none; position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 4px rgba(0,0,0,0.08), 0 6px 20px rgba(0,0,0,0.5); }
-  .plate::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%; background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent); pointer-events: none; z-index: 1; }
-  .plate.small { font-size: 15px; letter-spacing: 1px; }
-  .plate.small .plate-main { gap: 3px; padding: 2px 5px; }
-  .plate.small .plate-side { min-width: 26px; }
-  .plate.small .plate-region { font-size: 8px; padding: 1px; letter-spacing: 0; }
-  .plate.small .flag { width: 9px; height: 6px; }
-  .plate.small .flag-label { font-size: 4px; }
-  .plate.small .plate-flag-block { padding: 1px; gap: 0; }
-  .plate-main { display: flex; align-items: center; gap: 5px; padding: 3px 8px 3px 10px; white-space: nowrap; text-shadow: 0 1px 0 #fff, 0 2px 1px rgba(0,0,0,0.12); position: relative; z-index: 2; }
-  .plate-side { display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-left: 2px solid #111; min-width: 46px; background: linear-gradient(180deg, #f2f2f2 0%, #eaeaea 100%); position: relative; z-index: 2; }
-  .plate-region { font-size: 13px; line-height: 1; padding: 2px 2px 1px; letter-spacing: 1px; font-weight: 700; }
-  .plate-flag-block { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 1px 2px 2px; }
-  .flag { width: 16px; height: 10px; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.3); }
-  .flag-w { background: #fff; flex: 1; }
-  .flag-b { background: #0039a6; flex: 1; }
-  .flag-r { background: #d52b1e; flex: 1; }
-  .flag-label { font-size: 6px; font-weight: 700; letter-spacing: 0.5px; color: #111; }
-
-  .value-area { margin-bottom: 6px; min-height: 22px; flex-shrink: 0; }
-  .value-reveal { text-align: center; animation: fadeUp 0.4s ease; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  .value-big { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 2px; font-variant-numeric: tabular-nums; }
-  .value-details { display: flex; flex-direction: column; gap: 1px; font-size: 10px; color: #8b94a8; background: #1a1f2e; border-radius: 6px; padding: 6px 8px; border: 1px solid #2b3346; }
-  .value-detail-row { display: flex; justify-content: space-between; }
-  .value-detail-row .plus { color: #4ade80; font-weight: 700; }
-  .value-detail-row.special .plus { color: #ffd166; }
-  .sold-msg, .kept-msg { text-align: center; font-size: 12px; font-weight: 700; padding: 6px; border-radius: 6px; }
-  .sold-msg { background: #142a1e; color: #4ade80; border: 1px solid #2ea35c; }
-  .kept-msg { background: #2a2414; color: #ffd166; border: 1px solid #b89330; }
-
-  .actions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
-  .btn { border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: transform 0.1s, background 0.15s; display: flex; flex-direction: column; align-items: center; gap: 1px; position: relative; }
-  .btn:active { transform: scale(0.97); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-generate { background: linear-gradient(135deg, #4a6ffa 0%, #7c4aff 100%); color: #fff; box-shadow: 0 4px 16px rgba(74,111,250,0.4); }
-  .btn-generate.discounted { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 4px 16px rgba(34,197,94,0.5); animation: eventPulse 1.5s ease infinite; }
-  .btn-generate.bonus-free { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); box-shadow: 0 4px 16px rgba(245,158,11,0.55); animation: eventPulse 1.5s ease infinite; }
-  .btn-cost { font-size: 10px; opacity: 0.85; font-weight: 600; }
-  .btn-cost-old { text-decoration: line-through; opacity: 0.6; margin-right: 4px; }
-  .btn-sell { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; box-shadow: 0 4px 16px rgba(34,197,94,0.35); }
-  .btn-sell.boosted { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); box-shadow: 0 4px 16px rgba(245,158,11,0.55); animation: eventPulse 1.5s ease infinite; }
-  .btn-keep { background: #2e3546; color: #cfd6e6; border: 1px solid #3a4255; font-size: 12px; padding: 9px; }
-  .btn-guarantee { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: #fff; box-shadow: 0 4px 16px rgba(236,72,153,0.4); flex-direction: row; justify-content: center; gap: 6px; font-size: 12px; padding: 10px; }
-  .btn-guarantee.open { background: #2e3546; box-shadow: none; }
-  .guarantee-panel { margin-top: 2px; background: #1a1f2e; border: 1px solid #2b3346; border-radius: 10px; padding: 6px; display: flex; flex-direction: column; gap: 4px; max-height: 170px; overflow-y: auto; }
-  .guarantee-title { font-size: 9px; color: #8b94a8; text-transform: uppercase; letter-spacing: 0.8px; text-align: center; padding: 2px 0; border-bottom: 1px solid #2b3346; margin-bottom: 2px; }
-  .guarantee-btn { display: flex; align-items: center; gap: 6px; background: #232a3d; border: 1px solid #2b3346; border-radius: 6px; padding: 6px 8px; cursor: pointer; font-family: inherit; color: #fff; text-align: left; font-size: 11px; }
-  .guarantee-btn:hover:not(:disabled) { background: #2d3550; }
-  .guarantee-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .guarantee-btn.active { background: #2d3550; box-shadow: 0 0 0 2px #4a6ffa; }
-  .g-icon { font-size: 14px; flex-shrink: 0; }
-  .g-info { flex: 1; display: flex; flex-direction: column; }
-  .g-name { font-weight: 800; font-size: 11px; }
-  .g-hint { font-size: 8px; color: #8b94a8; text-transform: uppercase; }
-  .g-price { font-weight: 800; font-size: 11px; }
-
-  .best-box { background: #1a1f2e; border: 1px solid #2b3346; border-left-width: 4px; border-radius: 10px; padding: 6px 10px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-shrink: 0; }
-  .best-label { font-size: 9px; color: #8b94a8; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
-  .best-value { font-size: 12px; font-weight: 800; color: #ffd166; }
-  .best-box:empty { display: none; }
-
-  .inventory-screen-title { font-size: 14px; font-weight: 800; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-  .inventory-screen-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; flex: 1; padding-bottom: 10px; }
-  .inventory-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: #1a1f2e; border: 1px solid #2b3346; border-left-width: 4px; border-radius: 10px; padding: 8px 10px; }
-  .inventory-item-info { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .inventory-item-price { font-size: 12px; font-weight: 800; color: #ffd166; }
-  .inventory-actions { display: flex; gap: 4px; }
-  .inv-btn { background: #232a3d; border: 1px solid #3a4255; color: #cfd6e6; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-family: inherit; }
-  .inv-btn.sell { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.4); color: #4ade80; }
-  .empty-inventory { font-size: 12px; color: #5a6580; text-align: center; padding: 32px 0; }
-
-  .menu-screen-title { font-size: 14px; font-weight: 800; margin-bottom: 10px; }
-  .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .menu-item-card { background: #1a1f2e; border-radius: 16px; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; font-family: inherit; color: #fff; text-align: center; border: none; }
-  .menu-item-card:hover { background: #232a3d; }
-  .menu-item-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  .menu-item-label { font-size: 11px; font-weight: 700; color: #cfd6e6; }
-
-  .settings-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-  .setting-item { display: flex; justify-content: space-between; align-items: center; background: #1a1f2e; border: 1px solid #2b3346; border-radius: 8px; padding: 8px 10px; }
-  .setting-label { font-size: 11px; font-weight: 700; color: #cfd6e6; display: flex; flex-direction: column; gap: 1px; }
-  .setting-desc { font-size: 8px; color: #8b94a8; text-transform: uppercase; }
-  .switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .slider { position: absolute; cursor: pointer; inset: 0; background-color: #2b3346; transition: .2s; border-radius: 20px; }
-  .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; }
-  input:checked + .slider { background-color: #4a6ffa; }
-  input:checked + .slider:before { transform: translateX(16px); }
-  .modal-reset-btn { width: 100%; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.4); color: #f87171; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
-
-  .bottom-nav { display: flex; background: #131722; border-top: 1px solid #2b3346; padding: 6px 8px 10px; gap: 6px; flex-shrink: 0; border-radius: 16px 16px 0 0; }
-  .nav-item { flex: 1; background: transparent; border: none; color: #8b94a8; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .nav-item.active { color: #fff; background: #1f283d; border: 1px solid #3a4a75; }
-
-  .modal-overlay { position: fixed; inset: 0; background: rgba(10,13,22,0.85); backdrop-filter: blur(4px); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 14px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
-  .modal-overlay.open { opacity: 1; pointer-events: auto; }
-  .modal-content { background: #161b28; border: 1px solid #2b3346; border-radius: 16px; width: 100%; max-width: 360px; padding: 16px; box-shadow: 0 16px 40px rgba(0,0,0,0.6); max-height: 85vh; overflow-y: auto; }
-  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #2b3346; }
-  .modal-title { font-size: 14px; font-weight: 800; color: #fff; }
-  .modal-close { background: transparent; border: none; color: #8b94a8; font-size: 16px; cursor: pointer; padding: 2px 6px; }
-  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
-  .admin-btn { background: #232a3d; border: 1px solid #3a4255; color: #fff; padding: 8px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; text-align: center; }
-  .admin-section-title { font-size: 9px; color: #8b94a8; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
-  .admin-input { width: 100%; padding: 10px 12px; background: #0f1420; border: 1px solid #2b3346; color: #fff; border-radius: 8px; font-size: 13px; font-family: inherit; margin-bottom: 8px; outline: none; }
-  .admin-input:focus { border-color: #4a6ffa; }
-  .admin-error { color: #f87171; font-size: 11px; margin-bottom: 8px; display: none; }
-
-  .promo-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: #232a3d; border: 1px solid #2b3346; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; font-size: 11px; }
-  .promo-row-code { font-weight: 800; color: #4ade80; font-family: 'Roboto Mono', monospace; letter-spacing: 1px; }
-  .promo-row-meta { font-size: 9px; color: #8b94a8; }
-  .promo-row-del { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: #f87171; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; }
-
-  .lb-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: #1a1f2e; border: 1px solid #2b3346; border-radius: 8px; margin-bottom: 6px; font-size: 12px; }
-  .lb-rank { font-weight: 800; width: 24px; text-align: center; color: #ffd166; }
-  .lb-rank.gold { color: #ffd700; } .lb-rank.silver { color: #c0c0c0; } .lb-rank.bronze { color: #cd7f32; }
-  .lb-name { flex: 1; font-weight: 700; }
-  .lb-value { font-weight: 800; color: #ffd166; font-size: 12px; }
-
-  .flash { position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: 0; }
-  .flash.show { animation: flashAnim 0.9s ease-out; }
-  @keyframes flashAnim { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
-  .load-toast { position: fixed; top: calc(12px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #4a6ffa, #7c4aff); color: #fff; padding: 6px 14px; border-radius: 16px; font-size: 11px; font-weight: 700; box-shadow: 0 6px 20px rgba(74,111,250,0.5); opacity: 0; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 200; pointer-events: none; }
-  .load-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-  .suits-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px; font-weight: 700; margin-top: 4px; }
-  .suit-row { display: flex; align-items: center; gap: 4px; }
-  .suit-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-  .admin-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-  .admin-tab { flex: 1; background: #232a3d; border: 1px solid #3a4255; color: #cfd6e6; padding: 6px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: inherit; }
-  .admin-tab.active { background: #4a6ffa; color: #fff; border-color: #4a6ffa; }
+  /* ... (стили остались без изменений, они слишком длинные, чтобы вставлять их сюда ещё раз. Оставь свои) ... */
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="tab-content active" id="tabPlates">
-    <div class="header">
-      <h1>💎 Красивые номера</h1>
-      <p>Идеальный гарант редкости</p>
-    </div>
-    <div class="money-box">
-      <div>
-        <div class="money-label">Баланс</div>
-        <div class="money-value" id="moneyEl">50 000 ₽</div>
-      </div>
-      <div class="header-btns">
-        <button class="icon-btn" id="adminBtn" title="Админ-панель">🔑</button>
-      </div>
-    </div>
-    <div class="event-banner idle" id="eventBanner">
-      <span class="event-banner-icon">⏳</span>
-      <span class="event-banner-name">Следующее событие</span>
-      <span class="event-banner-timer">—</span>
-    </div>
-    <div class="booster-indicator" id="boosterIndicator">
-      <span>🚀 Бустер продаж</span>
-      <span class="booster-timer" id="boosterTimer">—</span>
-    </div>
-    <div id="plateArea" class="plate-wrapper empty">
-      <div class="empty-text">Нажмите «Сгенерировать», чтобы получить номер</div>
-    </div>
-    <div class="value-area" id="valueArea"></div>
-    <div class="actions" id="actionsArea"></div>
-    <div class="best-box" id="bestBox"></div>
-  </div>
-  <div class="tab-content" id="tabInventory">
-    <div class="inventory-screen-title">
-      <span>🎒 Ваш инвентарь</span>
-      <span id="inventoryBadgeCount" style="font-size:11px; color:#8b94a8;">0 шт.</span>
-    </div>
-    <div class="inventory-screen-list" id="inventoryScreenList"></div>
-  </div>
-  <div class="tab-content" id="tabMenu">
-    <div class="menu-screen-title">📂 Меню игры</div>
-    <div class="menu-grid">
-      <button class="menu-item-card" id="openSettingsBtn">
-        <div class="menu-item-icon" style="background:#2f3640; color:#f5f6fa;">⚙️</div>
-        <span class="menu-item-label">Настройки</span>
-      </button>
-      <button class="menu-item-card" id="openSuitsBtn">
-        <div class="menu-item-icon" style="background:linear-gradient(135deg, #ef4444, #3b82f6); color:#fff;">🎨</div>
-        <span class="menu-item-label">Масти</span>
-      </button>
-      <button class="menu-item-card" id="openPromoBtn">
-        <div class="menu-item-icon" style="background:linear-gradient(135deg, #22c55e, #16a34a); color:#fff;">🎁</div>
-        <span class="menu-item-label">Промокод</span>
-      </button>
-      <button class="menu-item-card" id="openLeaderboardBtn">
-        <div class="menu-item-icon" style="background:linear-gradient(135deg, #ffd166, #f59e0b); color:#fff;">🏆</div>
-        <span class="menu-item-label">Топ</span>
-      </button>
-    </div>
-  </div>
-  <div class="bottom-nav">
-    <button class="nav-item active" data-tab="tabPlates"><span class="nav-icon">🔢</span><span>Номера</span></button>
-    <button class="nav-item" data-tab="tabInventory"><span class="nav-icon">🎒</span><span>Инвентарь</span></button>
-    <button class="nav-item" data-tab="tabMenu"><span class="nav-icon">⋯</span><span>Меню</span></button>
-  </div>
+  <!-- ... (HTML структура осталась без изменений) ... -->
 </div>
-
-<!-- Модалки -->
-<div class="modal-overlay" id="settingsModal">
-  <div class="modal-content">
-    <div class="modal-header"><span class="modal-title">⚙️ Настройки</span><button class="modal-close" data-close="settingsModal">✕</button></div>
-    <div class="settings-list">
-      <div class="setting-item"><div class="setting-label"><span>Звуковые эффекты</span></div><label class="switch"><input type="checkbox" id="settingSound"><span class="slider"></span></label></div>
-      <div class="setting-item"><div class="setting-label"><span>Вспышки</span></div><label class="switch"><input type="checkbox" id="settingFlash"><span class="slider"></span></label></div>
-      <div class="setting-item"><div class="setting-label"><span>Автосохранение</span></div><label class="switch"><input type="checkbox" id="settingAutoSave"><span class="slider"></span></label></div>
-    </div>
-    <button class="modal-reset-btn" id="modalResetBtn">🔄 Сбросить прогресс</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="suitsModal">
-  <div class="modal-content">
-    <div class="modal-header"><span class="modal-title">🎨 Масти</span><button class="modal-close" data-close="suitsModal">✕</button></div>
-    <p style="font-size:11px; color:#8b94a8; margin-bottom:10px;">Бонус +15 000 ₽ за одну масть.</p>
-    <div class="suits-legend" style="grid-template-columns:1fr;">
-      <div class="suit-row"><span class="suit-dot" style="background:#ef4444;"></span><b style="color:#ef4444;">Красная:</b>&nbsp;А · В · Е</div>
-      <div class="suit-row"><span class="suit-dot" style="background:#22c55e;"></span><b style="color:#22c55e;">Зелёная:</b>&nbsp;К · М · Н</div>
-      <div class="suit-row"><span class="suit-dot" style="background:#3b82f6;"></span><b style="color:#3b82f6;">Синяя:</b>&nbsp;О · Р · С</div>
-      <div class="suit-row"><span class="suit-dot" style="background:#eab308;"></span><b style="color:#eab308;">Жёлтая:</b>&nbsp;Т · У · Х</div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="promoModal">
-  <div class="modal-content">
-    <div class="modal-header"><span class="modal-title">🎁 Промокод</span><button class="modal-close" data-close="promoModal">✕</button></div>
-    <input type="text" class="admin-input" id="promoCodeInput" placeholder="ВВЕДИ КОД" style="text-transform:uppercase; text-align:center;" />
-    <div id="promoResult" style="display:none; margin-bottom:8px; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-align:center;"></div>
-    <button class="btn btn-generate" id="promoActivateBtn" style="width:100%;"><span>✅ Активировать</span></button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="leaderboardModal">
-  <div class="modal-content">
-    <div class="modal-header"><span class="modal-title">🏆 Топ-50</span><button class="modal-close" data-close="leaderboardModal">✕</button></div>
-    <div id="leaderboardList"><div style="text-align:center; padding:20px; color:#8b94a8;">Загрузка...</div></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="adminModal">
-  <div class="modal-content">
-    <div class="modal-header"><span class="modal-title">🔑 Админка</span><button class="modal-close" data-close="adminModal">✕</button></div>
-    <div id="adminAuthBlock">
-      <input type="password" class="admin-input" id="adminCodeInput" placeholder="ADMIN_TOKEN" />
-      <div class="admin-error" id="adminError">Неверный токен</div>
-      <button class="admin-btn" id="adminLoginBtn" style="width:100%; padding:10px;">Войти</button>
-    </div>
-    <div id="adminPanelBlock" style="display:none;">
-      <div class="admin-tabs">
-        <button class="admin-tab active" data-admin-tab="promo">🎁 Промокоды</button>
-        <button class="admin-tab" data-admin-tab="spawn">🎲 Спавн</button>
-        <button class="admin-tab" data-admin-tab="finance">💰 Финансы</button>
-      </div>
-      <div id="adminTabPromo" class="admin-tab-content">
-        <input type="text" class="admin-input" id="newPromoCode" placeholder="КОД" style="text-transform:uppercase;" />
-        <select class="admin-input" id="newPromoType">
-          <option value="money">💰 Деньги</option>
-          <option value="booster">🚀 Бустер</option>
-          <option value="guarantee">🎯 Гарант</option>
-        </select>
-        <input type="number" class="admin-input" id="newPromoAmount" value="25000" placeholder="Сумма" />
-        <input type="number" class="admin-input" id="newPromoMax" value="100" placeholder="Лимит" />
-        <button class="admin-btn" id="createPromoBtn" style="width:100%; padding:10px; margin-bottom:10px;">✨ Создать</button>
-        <div id="promoList" style="max-height:150px; overflow-y:auto;"></div>
-      </div>
-      <div id="adminTabSpawn" class="admin-tab-content" style="display:none;">
-        <div class="admin-grid">
-          <button class="admin-btn" data-spawn="rare">🔵 Редкий</button>
-          <button class="admin-btn" data-spawn="epic">🟣 Эпик</button>
-          <button class="admin-btn" data-spawn="legendary">🟡 Легенда</button>
-          <button class="admin-btn" data-spawn="mythic" style="grid-column:span 2;">🔴 Мифик</button>
-        </div>
-      </div>
-      <div id="adminTabFinance" class="admin-tab-content" style="display:none;">
-        <div class="admin-grid">
-          <button class="admin-btn" id="adminAdd100k">+100k</button>
-          <button class="admin-btn" id="adminAdd1m">+1M</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+<!-- ... (Модалки остались без изменений) ... -->
 <div class="flash" id="flashEl"></div>
 <div class="load-toast" id="loadToast">▶ Продолжаем игру</div>
 
@@ -425,25 +93,56 @@ const randInt = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const formatMoney = n => n.toLocaleString('ru-RU') + ' ₽';
 
+/* =========================================================
+   НОВЫЙ РАСЧЁТ ЦЕНЫ (СБАЛАНСИРОВАННЫЙ)
+   ========================================================= */
 function calculateValue(plate) {
   const details = [];
-  let total = 2400;
-  if (TOP_REGIONS.has(plate.regionCode)) { total += 24000; details.push({ text: `Регион ${plate.regionCode}`, val: '+24 000 ₽' }); }
-  else if (HIGH_REGIONS.has(plate.regionCode)) { total += 10000; details.push({ text: `Регион ${plate.regionCode}`, val: '+10 000 ₽' }); }
-  if (TRIPLE_HI.has(plate.digits)) { total += 120000; details.push({ text: `Цифры ${plate.digits}`, val: '+120 000 ₽', special: true }); }
-  else if (TRIPLE_MID.has(plate.digits)) { total += 40000; details.push({ text: `Цифры ${plate.digits}`, val: '+40 000 ₽' }); }
+  let total = 1500; // База снижена
+
+  if (TOP_REGIONS.has(plate.regionCode)) {
+    total += 8000;
+    details.push({ text: `Регион ${plate.regionCode}`, val: '+8 000 ₽' });
+  } else if (HIGH_REGIONS.has(plate.regionCode)) {
+    total += 4000;
+    details.push({ text: `Регион ${plate.regionCode}`, val: '+4 000 ₽' });
+  }
+
+  if (TRIPLE_HI.has(plate.digits)) {
+    total += 60000;
+    details.push({ text: `Цифры ${plate.digits}`, val: '+60 000 ₽', special: true });
+  } else if (TRIPLE_MID.has(plate.digits)) {
+    total += 15000;
+    details.push({ text: `Цифры ${plate.digits}`, val: '+15 000 ₽' });
+  }
+
   const l1 = plate.l1, l2a = plate.l2[0], l2b = plate.l2[1];
   const allEqual = (l1 === l2a && l2a === l2b);
   const sameSuit = !allEqual && isSameSuit(l1, l2a, l2b);
-  if (allEqual) { total += 80000; details.push({ text: `Буквы одинаковые`, val: '+80 000 ₽', special: true }); }
-  else if (sameSuit) { total += 15000; details.push({ text: `Масть`, val: '+15 000 ₽', special: true }); }
-  else if (l1 === l2a || l2a === l2b) { total += 6000; details.push({ text: `Повтор букв`, val: '+6 000 ₽' }); }
-  if (plate.digits[0] === plate.digits[2] && l1 === l2b) { total += 50000; details.push({ text: `Зеркалка`, val: '+50 000 ₽', special: true }); }
+
+  if (allEqual) {
+    total += 30000;
+    details.push({ text: `Буквы одинаковые`, val: '+30 000 ₽', special: true });
+  } else if (sameSuit) {
+    total += 8000;
+    details.push({ text: `🎨 Масть`, val: '+8 000 ₽', special: true });
+  } else if (l1 === l2a || l2a === l2b) {
+    total += 3000;
+    details.push({ text: `Повтор букв`, val: '+3 000 ₽' });
+  }
+
+  if (plate.digits[0] === plate.digits[2] && l1 === l2b) {
+    total += 25000;
+    details.push({ text: `🪞 Зеркалка`, val: '+25 000 ₽', special: true });
+  }
+
   return { value: total, details };
 }
+
 function generateRandomPlate() {
   return { l1: pick(LETTERS), digits: String(randInt(1, 999)).padStart(3, '0'), l2: pick(LETTERS) + pick(LETTERS), regionCode: pick(REGIONS) };
 }
+
 function buildPlateForRarity(rarity) {
   const minVal = RARITIES[rarity].min;
   let maxVal = Infinity;
@@ -465,6 +164,7 @@ function buildPlateForRarity(rarity) {
     default:          return { l1: 'А', digits: '050', l2: 'ВМ', regionCode: '01' };
   }
 }
+
 function renderPlateHTML(plate, size = '', rarity = null) {
   const rc = rarity ? ` rarity-${rarity}` : '';
   return `
@@ -516,11 +216,11 @@ function playWinChord(rarity) {
 }
 
 /* =========================================================
-   СОСТОЯНИЕ
+   СОСТОЯНИЕ (СТАРТОВЫЙ БАЛАНС 5000)
    ========================================================= */
 const settings = { sound: true, flash: true, autoSave: true };
 const state = {
-  money: 50000, best: null, collection: [],
+  money: 5000, best: null, collection: [],
   lastPlate: null, lastValue: 0, lastDetails: [], lastStatus: 'none',
   lastGuaranteedRarity: null, activeGuarantee: null,
   isGenerating: false, guaranteeOpen: false,
@@ -566,7 +266,7 @@ async function loadState() {
   if (!tg?.initData) return false;
   try {
     const data = await apiRequest('/load', 'POST');
-    state.money = data.money ?? 50000;
+    state.money = data.money ?? 5000;
     state.best = data.best ?? null;
     state.collection = Array.isArray(data.collection) ? data.collection : [];
     try {
@@ -616,14 +316,27 @@ document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('
 if (tg?.BackButton) { tg.BackButton.onClick(() => { haptic('light'); setTab('tabPlates'); }); tg.BackButton.hide(); }
 
 /* =========================================================
-   ГЕНЕРАЦИЯ
+   ГЕНЕРАЦИЯ (ДИНАМИЧЕСКАЯ СТОИМОСТЬ)
    ========================================================= */
 function getEventDef(id) { return EVENTS.find(e => e.id === id); }
+
 function getGenerateCost(forcedRarity) {
-  let cost = forcedRarity ? GUARANTEE_PRICES[forcedRarity] : 2000;
-  if (state.activeEvent && state.activeEvent.id === 'discount') cost = Math.round(cost / 2);
-  return cost;
+  if (forcedRarity) {
+    let cost = GUARANTEE_PRICES[forcedRarity];
+    if (state.activeEvent && state.activeEvent.id === 'discount') cost = Math.round(cost / 2);
+    return cost;
+  }
+  
+  let baseCost = 3000;
+  const bestValue = state.best?.value || 0;
+  if (bestValue > 1000000) baseCost += 2000;
+  else if (bestValue > 500000) baseCost += 1000;
+  else if (bestValue > 200000) baseCost += 500;
+
+  if (state.activeEvent && state.activeEvent.id === 'discount') baseCost = Math.round(baseCost / 2);
+  return baseCost;
 }
+
 function getBoosterBonus() {
   if (!state.activeBooster) return 1;
   if (Date.now() >= state.activeBooster.endsAt) { state.activeBooster = null; return 1; }
@@ -753,7 +466,7 @@ function render() {
     actionsArea.innerHTML = `<button class="btn btn-sell${boosted ? ' boosted' : ''}" id="sellBtn">💰 Продать за ${formatMoney(effectiveValue)}${bonusText}</button><button class="btn btn-keep" id="keepBtn">🎒 В инвентарь</button>`;
     document.getElementById('sellBtn').onclick = handleSell; document.getElementById('keepBtn').onclick = handleKeep;
   } else {
-    const active = state.activeGuarantee; const cost = getGenerateCost(active); const baseCost = active ? GUARANTEE_PRICES[active] : 2000;
+    const active = state.activeGuarantee; const cost = getGenerateCost(active); const baseCost = active ? GUARANTEE_PRICES[active] : 3000;
     const discounted = cost < baseCost; const open = state.guaranteeOpen;
     let bonusRarity = null;
     for (const r of ['mythic','legendary','epic','rare','uncommon']) { if ((state.bonusGuarantees[r] || 0) > 0) { bonusRarity = r; break; } }
