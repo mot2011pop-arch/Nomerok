@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Красивые номера — Идеальный гарант</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="config.js"></script> <!-- ПОДКЛЮЧЕНИЕ КОНФИГА -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
@@ -367,27 +368,12 @@ function haptic(type = 'light') { try { tg?.HapticFeedback?.impactOccurred(type)
 function notify(type = 'success') { try { tg?.HapticFeedback?.notificationOccurred(type); } catch (e) {} }
 
 /* =========================================================
-   КОНФИГ
+   КОНФИГ (ОСТАЛЬНОЕ БЕРЁТСЯ ИЗ CONFIG.JS)
    ========================================================= */
 const API_URL = 'https://plates-backend-a2he.onrender.com';
 const SAVE_KEY = 'plates_game_v4';
 const ADMIN_TOKEN_KEY = 'plates_admin_token';
-const GAME_VERSION = '1.2.0'; // Версия обновлена из-за изменения цен
-
-// Все регионы РФ
-const ALL_REGIONS = [
-  '01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20',
-  '21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40',
-  '41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60',
-  '61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77','78','79',
-  '80','81','82','83','84','85','86','87','88','89','90','91','92','93','94','95','96','97','98','99',
-  '102','103','116','125','126','127','128','129','134','136','138','142','150','152','154','156',
-  '159','160','161','162','164','166','167','168','169','173','174','175','176','177','178','179',
-  '186','187','190','191','193','196','197','198','199','750','777','799','977','995','999'
-];
-
-const TOP_REGIONS  = new Set(['77','99','97','177','199','777','799']);
-const HIGH_REGIONS = new Set(['78','50','01','02','90','150','190','196','750']);
+const GAME_VERSION = '1.2.1'; // Обновил версию из-за выноса конфига
 
 const LETTERS = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
 const TRIPLE_HI    = new Set(['777','888','999']);
@@ -405,16 +391,7 @@ function isSameSuit(l1, l2a, l2b) {
   return !!g && g.letters.has(l2a) && g.letters.has(l2b);
 }
 
-const RARITIES = {
-  common:    { name: 'Обычный',     icon: '⚪', color: '#9ca3af', min: 0 },
-  uncommon:  { name: 'Необычный',   icon: '🟢', color: '#4ade80', min: 3000 },
-  rare:      { name: 'Редкий',      icon: '🔵', color: '#60a5fa', min: 10000 },
-  epic:      { name: 'Эпический',   icon: '🟣', color: '#c084fc', min: 30000 },
-  legendary: { name: 'Легендарный', icon: '🟡', color: '#ffd166', min: 80000 },
-  mythic:    { name: 'Мифический',  icon: '🔴', color: '#ff6bff', min: 110000 },
-};
-const GUARANTEE_PRICES = { uncommon: 5000, rare: 15000, epic: 45000, legendary: 90000, mythic: 120000 };
-const GUARANTEE_ORDER = ['uncommon','rare','epic','legendary','mythic'];
+// RARITIES, GUARANTEE_PRICES, GUARANTEE_ORDER, ALL_REGIONS, TOP_REGIONS, HIGH_REGIONS теперь в config.js
 
 const EVENT_IDLE_MS = 90000;
 const EVENT_ACTIVE_MS = 45000;
@@ -440,7 +417,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const formatMoney = n => n.toLocaleString('ru-RU') + ' ₽';
 
 /* =========================================================
-   НОВЫЙ РАСЧЁТ ЦЕНЫ (ДОРОГИЕ СТАЛИ ЕЩЁ ДОРОЖЕ)
+   РАСЧЁТ ЦЕНЫ
    ========================================================= */
 function calculateValue(plate) {
   const details = [];
