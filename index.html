@@ -36,8 +36,7 @@
   .icon-btn { background: #1a1f2e; border: 1px solid #2b3346; color: #8b94a8; font-size: 14px; cursor: pointer; padding: 6px 9px; border-radius: 8px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
   .icon-btn:hover { color: #fff; border-color: #4a6ffa; background: #232a3d; }
 
-  /* Новое меню управления */
-  .control-panel { display: flex; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
+  .control-panel { display: flex; gap: 6px; margin-bottom: 6px; flex-shrink: 0; position: relative; }
   .control-btn {
     flex: 1; background: #1a1f2e; border: 1px solid #2b3346; border-radius: 10px;
     padding: 8px 10px; color: #fff; font-family: inherit; cursor: pointer;
@@ -47,9 +46,7 @@
   .control-btn:hover { background: #232a3d; }
   .control-btn .icon { font-size: 14px; }
   .control-btn .arrow { font-size: 8px; opacity: 0.5; margin-left: auto; }
-  .control-btn.active-guarantee { border-color: #7c3aed; background: #231a3b; color: #c084fc; }
   
-  /* Выпадающее меню */
   .dropdown-menu {
     position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
     background: #1a1f2e; border: 1px solid #2b3346; border-radius: 10px;
@@ -65,7 +62,6 @@
   .dropdown-item:hover { background: #232a3d; color: #fff; }
   .dropdown-item.selected { background: rgba(74,111,250,0.15); color: #4a6ffa; }
 
-  /* Панель сгенерированных номеров */
   .multi-plate-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; margin-bottom: 6px; }
   .multi-plate-item { display: flex; justify-content: space-between; align-items: center; background: #1a1f2e; border: 1px solid #2b3346; border-left-width: 4px; border-radius: 8px; padding: 6px 10px; }
   .multi-plate-item .plate-info { display: flex; flex-direction: column; gap: 2px; }
@@ -237,7 +233,7 @@
   <div class="tab-content active" id="tabPlates">
     <div class="header">
       <h1>💎 Красивые номера</h1>
-      <p>Идеальный гарант редкости · v<span id="verEl">1.3.0</span></p>
+      <p>Идеальный гарант редкости · v<span id="verEl">1.3.1</span></p>
     </div>
     <div class="money-box">
       <div>
@@ -249,7 +245,6 @@
       </div>
     </div>
 
-    <!-- НОВОЕ МЕНЮ УПРАВЛЕНИЯ -->
     <div class="control-panel" style="position: relative;">
       <button class="control-btn" id="regionBtn">
         <span class="icon">🇷🇺</span>
@@ -420,12 +415,11 @@
 const API_URL = 'https://plates-backend-a2he.onrender.com';
 const SAVE_KEY = 'plates_game_v4';
 const ADMIN_TOKEN_KEY = 'plates_admin_token';
-const GAME_VERSION = '1.3.0'; // Обновленная версия
-
+const GAME_VERSION = '1.3.1';
 document.getElementById('verEl').textContent = GAME_VERSION;
 
 /* =========================================================
-   ЛОГИКА СОСТОЯНИЯ
+   ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ
    ========================================================= */
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#0f1320'); tg.setBackgroundColor('#0f1320'); } catch (e) {} }
@@ -433,6 +427,19 @@ function haptic(type = 'light') { try { tg?.HapticFeedback?.impactOccurred(type)
 function notify(type = 'success') { try { tg?.HapticFeedback?.notificationOccurred(type); } catch (e) {} }
 
 const settings = { sound: true, flash: true, autoSave: true };
+
+// Глобальные константы, которые нужны для state
+const EVENT_IDLE_MS = 90000;
+const EVENT_ACTIVE_MS = 45000;
+const EVENT_FIRST_DELAY_MS = 30000;
+const LETTER_GROUPS = [
+  { name: 'Красная', color: '#ef4444', letters: new Set(['А','В','Е']) },
+  { name: 'Зелёная', color: '#22c55e', letters: new Set(['К','М','Н']) },
+  { name: 'Синяя',   color: '#3b82f6', letters: new Set(['О','Р','С']) },
+  { name: 'Жёлтая',  color: '#eab308', letters: new Set(['Т','У','Х']) },
+];
+
+// Инициализация состояния
 const state = {
   money: 5000, best: null, collection: [], foundRegions: [],
   lastPlate: null, lastValue: 0, lastDetails: [], lastStatus: 'none',
@@ -443,14 +450,22 @@ const state = {
   bonusGuarantees: { uncommon: 0, rare: 0, epic: 0, legendary: 0, mythic: 0 },
   adminAuthorized: false,
   adminToken: localStorage.getItem(ADMIN_TOKEN_KEY) || '',
-  
-  // НОВЫЕ ПАРАМЕТРЫ ДЛЯ МЕНЮ
-  selectedRegion: null, // null = Все
-  selectedRarity: null, // null = Любая
-  selectedMultiplier: 1, // 1, 5, 10
-  multiPlates: [], // Массив сгенерированных номеров для пачки
-  activeMenu: null, // 'region' | 'rarity' | 'multiplier'
+  selectedRegion: null, selectedRarity: null, selectedMultiplier: 1,
+  multiPlates: [], activeMenu: null,
 };
+
+/* =========================================================
+   ОСТАЛЬНЫЕ ПЕРЕМЕННЫЕ (ИЗ CONFIG.JS И ЛОКАЛЬНЫЕ)
+   ========================================================= */
+const LETTERS = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
+const TRIPLE_HI = new Set(['777','888','999']);
+const TRIPLE_MID = new Set(['111','222','333','444','555','666']);
+const EVENTS = [
+  { id: 'discount',    icon: '⚡', name: 'Скидка',          desc: 'Генерация −50%', color: '#22c55e' },
+  { id: 'double_sale', icon: '🔥', name: 'Двойные продажи', desc: 'Продажи ×2',     color: '#ef4444' },
+  { id: 'value_boost', icon: '💎', name: 'Бонус к цене',    desc: 'Продажа +50%',   color: '#c084fc' },
+  { id: 'golden_hour', icon: '🌟', name: 'Золотой час',     desc: 'Эпик+ ×2',       color: '#ffd166' },
+];
 
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const randInt = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
@@ -691,7 +706,6 @@ function renderBoosterIndicator() {
 }
 
 function renderControlPanel() {
-  // Регион
   const regionLabel = document.getElementById('regionLabel');
   if (state.selectedRegion) {
     regionLabel.textContent = state.selectedRegion;
@@ -701,7 +715,6 @@ function renderControlPanel() {
     document.getElementById('regionBtn').style.borderColor = '#2b3346';
   }
 
-  // Редкость
   const rarityLabel = document.getElementById('rarityLabel');
   const rarityIcon = document.getElementById('rarityIcon');
   if (state.selectedRarity) {
@@ -716,7 +729,6 @@ function renderControlPanel() {
     document.getElementById('rarityBtn').style.color = '#fff';
   }
 
-  // Множитель
   document.getElementById('multiplierLabel').textContent = state.selectedMultiplier + 'x';
 }
 
@@ -727,7 +739,6 @@ function render() {
   renderControlPanel();
 
   if (state.multiPlates.length > 0) {
-    // Отрисовка списка сгенерированных номеров
     plateArea.className = 'plate-wrapper';
     plateArea.innerHTML = `
       <div style="width:100%; text-align:center; margin-bottom:8px; font-size:12px; font-weight:700;">Сгенерировано: ${state.multiPlates.length} шт.</div>
@@ -751,7 +762,6 @@ function render() {
 
   valueArea.innerHTML = '';
   if (state.multiPlates.length > 0) {
-    // Показываем только кнопку "Продать всё" или "Забрать всё"
     const totalValue = state.multiPlates.reduce((sum, item) => sum + item.value, 0);
     const avgBonus = state.multiPlates.length > 0 ? getSaleBonusMultiplier(getRarity(state.multiPlates[0].value)) : 1;
     const finalValue = Math.round(totalValue * avgBonus);
@@ -811,7 +821,6 @@ async function handleGenerate() {
   animateMoney('down');
   render();
 
-  // Показываем рулетку
   plateArea.className = 'plate-wrapper';
   plateArea.innerHTML = `<div class="plate"><div class="plate-main"><span class="slot" id="s1">А</span><span class="slot" id="s2">000</span><span class="slot" id="s3">АА</span></div><div class="plate-side"><div class="plate-region" id="s4">77</div><div class="plate-flag-block"><div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div><div class="flag-label">RUS</div></div></div></div>`;
   const s1 = document.getElementById('s1'), s2 = document.getElementById('s2'), s3 = document.getElementById('s3'), s4 = document.getElementById('s4');
@@ -826,7 +835,6 @@ async function handleGenerate() {
     await sleep(50);
   }
 
-  // Генерируем номера
   for (let i = 0; i < state.selectedMultiplier; i++) {
     const plate = state.selectedRarity ? buildPlateForRarity(state.selectedRarity) : generateRandomPlate();
     const { value, details } = calculateValue(plate);
@@ -838,7 +846,6 @@ async function handleGenerate() {
   saveLocal(); saveState();
   render();
   
-  // Звук самого редкого в пачке
   let maxRarity = 'common';
   state.multiPlates.forEach(p => {
     const r = getRarity(p.value);
@@ -899,7 +906,7 @@ async function sellFromInv(idx) {
 }
 
 /* =========================================================
-   МЕНЮ (ВЫПАДАЮЩИЕ СПИСКИ)
+   МЕНЮ
    ========================================================= */
 function closeMenus() {
   document.getElementById('regionMenu').classList.remove('open');
