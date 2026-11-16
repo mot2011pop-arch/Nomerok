@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Красивые номера — Идеальный гарант</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="config.js"></script> <!-- ПОДКЛЮЧЕНИЕ КОНФИГА -->
+<script src="config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
@@ -36,6 +36,41 @@
   .icon-btn { background: #1a1f2e; border: 1px solid #2b3346; color: #8b94a8; font-size: 14px; cursor: pointer; padding: 6px 9px; border-radius: 8px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
   .icon-btn:hover { color: #fff; border-color: #4a6ffa; background: #232a3d; }
 
+  /* Новое меню управления */
+  .control-panel { display: flex; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
+  .control-btn {
+    flex: 1; background: #1a1f2e; border: 1px solid #2b3346; border-radius: 10px;
+    padding: 8px 10px; color: #fff; font-family: inherit; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 11px; font-weight: 700; transition: all 0.15s;
+  }
+  .control-btn:hover { background: #232a3d; }
+  .control-btn .icon { font-size: 14px; }
+  .control-btn .arrow { font-size: 8px; opacity: 0.5; margin-left: auto; }
+  .control-btn.active-guarantee { border-color: #7c3aed; background: #231a3b; color: #c084fc; }
+  
+  /* Выпадающее меню */
+  .dropdown-menu {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+    background: #1a1f2e; border: 1px solid #2b3346; border-radius: 10px;
+    margin-top: 4px; max-height: 200px; overflow-y: auto; display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  }
+  .dropdown-menu.open { display: block; }
+  .dropdown-item {
+    padding: 10px 14px; font-size: 12px; font-weight: 700; color: #cfd6e6;
+    border-bottom: 1px solid #2b3346; cursor: pointer;
+  }
+  .dropdown-item:last-child { border-bottom: none; }
+  .dropdown-item:hover { background: #232a3d; color: #fff; }
+  .dropdown-item.selected { background: rgba(74,111,250,0.15); color: #4a6ffa; }
+
+  /* Панель сгенерированных номеров */
+  .multi-plate-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; margin-bottom: 6px; }
+  .multi-plate-item { display: flex; justify-content: space-between; align-items: center; background: #1a1f2e; border: 1px solid #2b3346; border-left-width: 4px; border-radius: 8px; padding: 6px 10px; }
+  .multi-plate-item .plate-info { display: flex; flex-direction: column; gap: 2px; }
+  .multi-plate-item .price { font-size: 12px; font-weight: 800; color: #ffd166; }
+
   .event-banner { padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; transition: all 0.3s; flex-shrink: 0; min-height: 32px; }
   .event-banner.idle { background: rgba(139,148,168,0.08); color: #8b94a8; border: 1px solid rgba(139,148,168,0.15); }
   .event-banner.active { animation: eventPulse 1.5s ease infinite; }
@@ -49,8 +84,8 @@
   .booster-indicator.show { display: flex; }
   .booster-indicator .booster-timer { margin-left: auto; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 6px; font-variant-numeric: tabular-nums; }
 
-  .plate-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 140px; margin-bottom: 6px; padding: 4px 0; position: relative; flex-shrink: 0; }
-  .plate-wrapper.empty { color: #5a6580; font-size: 12px; text-align: center; padding: 12px; border: 2px dashed #313a52; border-radius: 12px; min-height: 140px; }
+  .plate-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 120px; margin-bottom: 6px; padding: 4px 0; position: relative; flex-shrink: 0; }
+  .plate-wrapper.empty { color: #5a6580; font-size: 12px; text-align: center; padding: 12px; border: 2px dashed #313a52; border-radius: 12px; min-height: 120px; }
   .plate-wrapper.sold .plate { opacity: 0.55; filter: grayscale(0.7); }
   .plate-wrapper.sold .plate::after { content: 'ПРОДАНО'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-12deg); font-size: 24px; font-weight: 900; font-family: 'Roboto Condensed', sans-serif; color: #ef4444; border: 3px solid #ef4444; padding: 1px 10px; border-radius: 6px; background: rgba(255,255,255,0.85); z-index: 10; letter-spacing: 2px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); pointer-events: none; }
   .roll-target { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 2px; animation: pulseTarget 1s ease infinite alternate; }
@@ -202,7 +237,7 @@
   <div class="tab-content active" id="tabPlates">
     <div class="header">
       <h1>💎 Красивые номера</h1>
-      <p>Идеальный гарант редкости</p>
+      <p>Идеальный гарант редкости · v<span id="verEl">1.3.0</span></p>
     </div>
     <div class="money-box">
       <div>
@@ -213,6 +248,29 @@
         <button class="icon-btn" id="adminBtn" title="Админ-панель">🔑</button>
       </div>
     </div>
+
+    <!-- НОВОЕ МЕНЮ УПРАВЛЕНИЯ -->
+    <div class="control-panel" style="position: relative;">
+      <button class="control-btn" id="regionBtn">
+        <span class="icon">🇷🇺</span>
+        <span id="regionLabel">Все</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="dropdown-menu" id="regionMenu"></div>
+
+      <button class="control-btn" id="rarityBtn">
+        <span class="icon" id="rarityIcon">🎲</span>
+        <span id="rarityLabel">Любая</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="dropdown-menu" id="rarityMenu"></div>
+
+      <button class="control-btn" id="multiplierBtn" style="flex: 0 0 auto; min-width: 60px;">
+        <span id="multiplierLabel">1x</span>
+      </button>
+      <div class="dropdown-menu" id="multiplierMenu" style="left: auto; right: 0; width: 80px;"></div>
+    </div>
+
     <div class="event-banner idle" id="eventBanner">
       <span class="event-banner-icon">⏳</span>
       <span class="event-banner-name">Следующее событие</span>
@@ -222,6 +280,7 @@
       <span>🚀 Бустер продаж</span>
       <span class="booster-timer" id="boosterTimer">—</span>
     </div>
+    
     <div id="plateArea" class="plate-wrapper empty">
       <div class="empty-text">Нажмите «Сгенерировать», чтобы получить номер</div>
     </div>
@@ -356,114 +415,172 @@
 
 <script>
 /* =========================================================
-   TELEGRAM MINI APP
-   ========================================================= */
-const tg = window.Telegram?.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  try { tg.setHeaderColor('#0f1320'); tg.setBackgroundColor('#0f1320'); } catch (e) {}
-}
-function haptic(type = 'light') { try { tg?.HapticFeedback?.impactOccurred(type); } catch (e) {} }
-function notify(type = 'success') { try { tg?.HapticFeedback?.notificationOccurred(type); } catch (e) {} }
-
-/* =========================================================
-   КОНФИГ (ОСТАЛЬНОЕ БЕРЁТСЯ ИЗ CONFIG.JS)
+   КОНФИГ
    ========================================================= */
 const API_URL = 'https://plates-backend-a2he.onrender.com';
 const SAVE_KEY = 'plates_game_v4';
 const ADMIN_TOKEN_KEY = 'plates_admin_token';
-const GAME_VERSION = '1.2.1'; // Обновил версию из-за выноса конфига
+const GAME_VERSION = '1.3.0'; // Обновленная версия
 
-const LETTERS = ['А','В','Е','К','М','Н','О','Р','С','Т','У','Х'];
-const TRIPLE_HI    = new Set(['777','888','999']);
-const TRIPLE_MID   = new Set(['111','222','333','444','555','666']);
+document.getElementById('verEl').textContent = GAME_VERSION;
 
-const LETTER_GROUPS = [
-  { name: 'Красная', color: '#ef4444', letters: new Set(['А','В','Е']) },
-  { name: 'Зелёная', color: '#22c55e', letters: new Set(['К','М','Н']) },
-  { name: 'Синяя',   color: '#3b82f6', letters: new Set(['О','Р','С']) },
-  { name: 'Жёлтая',  color: '#eab308', letters: new Set(['Т','У','Х']) },
-];
-function getLetterGroup(l) { return LETTER_GROUPS.find(g => g.letters.has(l)); }
-function isSameSuit(l1, l2a, l2b) {
-  const g = getLetterGroup(l1);
-  return !!g && g.letters.has(l2a) && g.letters.has(l2b);
-}
+/* =========================================================
+   ЛОГИКА СОСТОЯНИЯ
+   ========================================================= */
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); try { tg.setHeaderColor('#0f1320'); tg.setBackgroundColor('#0f1320'); } catch (e) {} }
+function haptic(type = 'light') { try { tg?.HapticFeedback?.impactOccurred(type); } catch (e) {} }
+function notify(type = 'success') { try { tg?.HapticFeedback?.notificationOccurred(type); } catch (e) {} }
 
-// RARITIES, GUARANTEE_PRICES, GUARANTEE_ORDER, ALL_REGIONS, TOP_REGIONS, HIGH_REGIONS теперь в config.js
+const settings = { sound: true, flash: true, autoSave: true };
+const state = {
+  money: 5000, best: null, collection: [], foundRegions: [],
+  lastPlate: null, lastValue: 0, lastDetails: [], lastStatus: 'none',
+  lastGuaranteedRarity: null, activeGuarantee: null,
+  isGenerating: false, guaranteeOpen: false,
+  activeEvent: null, nextEventAt: Date.now() + EVENT_FIRST_DELAY_MS,
+  activeBooster: null,
+  bonusGuarantees: { uncommon: 0, rare: 0, epic: 0, legendary: 0, mythic: 0 },
+  adminAuthorized: false,
+  adminToken: localStorage.getItem(ADMIN_TOKEN_KEY) || '',
+  
+  // НОВЫЕ ПАРАМЕТРЫ ДЛЯ МЕНЮ
+  selectedRegion: null, // null = Все
+  selectedRarity: null, // null = Любая
+  selectedMultiplier: 1, // 1, 5, 10
+  multiPlates: [], // Массив сгенерированных номеров для пачки
+  activeMenu: null, // 'region' | 'rarity' | 'multiplier'
+};
 
-const EVENT_IDLE_MS = 90000;
-const EVENT_ACTIVE_MS = 45000;
-const EVENT_FIRST_DELAY_MS = 30000;
-const EVENTS = [
-  { id: 'discount',    icon: '⚡', name: 'Скидка',          desc: 'Генерация −50%', color: '#22c55e' },
-  { id: 'double_sale', icon: '🔥', name: 'Двойные продажи', desc: 'Продажи ×2',     color: '#ef4444' },
-  { id: 'value_boost', icon: '💎', name: 'Бонус к цене',    desc: 'Продажа +50%',   color: '#c084fc' },
-  { id: 'golden_hour', icon: '🌟', name: 'Золотой час',     desc: 'Эпик+ ×2',       color: '#ffd166' },
-];
-
-function getRarity(value) {
-  if (value >= RARITIES.mythic.min)    return 'mythic';
-  if (value >= RARITIES.legendary.min) return 'legendary';
-  if (value >= RARITIES.epic.min)      return 'epic';
-  if (value >= RARITIES.rare.min)      return 'rare';
-  if (value >= RARITIES.uncommon.min)  return 'uncommon';
-  return 'common';
-}
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const randInt = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const formatMoney = n => n.toLocaleString('ru-RU') + ' ₽';
 
+function getLetterGroup(l) { return LETTER_GROUPS.find(g => g.letters.has(l)); }
+function isSameSuit(l1, l2a, l2b) { const g = getLetterGroup(l1); return !!g && g.letters.has(l2a) && g.letters.has(l2b); }
+function getRarity(value) {
+  if (value >= RARITIES.mythic.min) return 'mythic';
+  if (value >= RARITIES.legendary.min) return 'legendary';
+  if (value >= RARITIES.epic.min) return 'epic';
+  if (value >= RARITIES.rare.min) return 'rare';
+  if (value >= RARITIES.uncommon.min) return 'uncommon';
+  return 'common';
+}
+
 /* =========================================================
-   РАСЧЁТ ЦЕНЫ
+   ЗВУК
+   ========================================================= */
+let audioCtx = null;
+function ensureAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (audioCtx?.state === 'suspended') audioCtx.resume().catch(()=>{}); }
+function playTone(freq, duration) {
+  if (!settings.sound || !audioCtx) return;
+  const t = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const g = audioCtx.createGain();
+  osc.frequency.value = freq; g.gain.setValueAtTime(0.05, t); g.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.connect(g); g.connect(audioCtx.destination); osc.start(t); osc.stop(t + duration);
+}
+function playWinChord(rarity) {
+  const chords = { uncommon: [523], rare: [523, 659], epic: [523, 659, 784], legendary: [523, 659, 784, 1047], mythic: [523, 659, 784, 1047, 1319] };
+  const notes = chords[rarity]; if (!notes) return;
+  notes.forEach((f, i) => setTimeout(() => playTone(f, 0.22), i * 80));
+}
+
+/* =========================================================
+   API
+   ========================================================= */
+async function apiRequest(path, method = 'GET', body = null, useAdmin = false) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (tg?.initData) headers['x-init-data'] = tg.initData;
+  if (useAdmin) headers['x-admin-token'] = state.adminToken;
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API_URL + path, opts);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) { const err = new Error(data.error || 'request_failed'); err.status = res.status; err.data = data; throw err; }
+  return data;
+}
+async function saveState() {
+  if (!settings.autoSave || !tg?.initData) return;
+  try { await apiRequest('/save', 'POST', { money: state.money, best: state.best, collection: state.collection.slice(-50) }); } catch (e) {}
+}
+async function loadState() {
+  if (!tg?.initData) return false;
+  try {
+    const data = await apiRequest('/load', 'POST');
+    state.money = data.money ?? 5000; state.best = data.best ?? null;
+    state.collection = Array.isArray(data.collection) ? data.collection : [];
+    state.foundRegions = [...new Set(state.collection.map(item => item.plate.regionCode))];
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (raw) {
+        const local = JSON.parse(raw);
+        if (local.settings) { settings.sound = local.settings.sound ?? true; settings.flash = local.settings.flash ?? true; settings.autoSave = local.settings.autoSave ?? true; }
+        state.activeBooster = local.activeBooster ?? null;
+        if (state.activeBooster && Date.now() >= state.activeBooster.endsAt) state.activeBooster = null;
+        state.bonusGuarantees = local.bonusGuarantees ?? state.bonusGuarantees;
+        state.activeGuarantee = local.activeGuarantee ?? null;
+      }
+    } catch (e) {}
+    return true;
+  } catch (e) { return false; }
+}
+function saveLocal() {
+  const data = { settings, activeBooster: state.activeBooster, bonusGuarantees: state.bonusGuarantees, activeGuarantee: state.activeGuarantee };
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+/* =========================================================
+   DOM ЭЛЕМЕНТЫ
+   ========================================================= */
+const moneyEl = document.getElementById('moneyEl');
+const plateArea = document.getElementById('plateArea');
+const valueArea = document.getElementById('valueArea');
+const actionsArea = document.getElementById('actionsArea');
+const bestBox = document.getElementById('bestBox');
+const inventoryScreenList = document.getElementById('inventoryScreenList');
+const inventoryBadgeCount = document.getElementById('inventoryBadgeCount');
+const flashEl = document.getElementById('flashEl');
+const loadToast = document.getElementById('loadToast');
+const adminBtn = document.getElementById('adminBtn');
+
+function animateMoney(dir) { moneyEl.classList.remove('up','down'); void moneyEl.offsetWidth; moneyEl.classList.add(dir); setTimeout(() => moneyEl.classList.remove(dir), 500); }
+function triggerFlash(rarity) { if (!settings.flash) return; flashEl.style.background = `radial-gradient(circle, ${RARITIES[rarity].color}aa 0%, transparent 70%)`; flashEl.classList.add('show'); setTimeout(() => flashEl.classList.remove('show'), 900); }
+
+/* =========================================================
+   НАВИГАЦИЯ
+   ========================================================= */
+let currentTab = 'tabPlates';
+function setTab(tabId) {
+  currentTab = tabId;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.tab === tabId));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === tabId));
+  if (tg?.BackButton) { if (tabId === 'tabPlates') tg.BackButton.hide(); else tg.BackButton.show(); }
+}
+document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => { haptic('light'); setTab(item.dataset.tab); }); });
+if (tg?.BackButton) { tg.BackButton.onClick(() => { haptic('light'); setTab('tabPlates'); }); tg.BackButton.hide(); }
+
+/* =========================================================
+   ГЕНЕРАЦИЯ И ЦЕНЫ
    ========================================================= */
 function calculateValue(plate) {
   const details = [];
   let total = 1500;
-
-  if (TOP_REGIONS.has(plate.regionCode)) {
-    total += 40000;
-    details.push({ text: `Регион ${plate.regionCode} — ТОП`, val: '+40 000 ₽', special: true });
-  } else if (HIGH_REGIONS.has(plate.regionCode)) {
-    total += 15000;
-    details.push({ text: `Регион ${plate.regionCode} — престижный`, val: '+15 000 ₽' });
-  }
-
-  if (TRIPLE_HI.has(plate.digits)) {
-    total += 250000;
-    details.push({ text: `Цифры ${plate.digits}`, val: '+250 000 ₽', special: true });
-  } else if (TRIPLE_MID.has(plate.digits)) {
-    total += 60000;
-    details.push({ text: `Цифры ${plate.digits}`, val: '+60 000 ₽', special: true });
-  }
-
+  if (TOP_REGIONS.has(plate.regionCode)) { total += 40000; details.push({ text: `Регион ${plate.regionCode} — ТОП`, val: '+40 000 ₽', special: true }); }
+  else if (HIGH_REGIONS.has(plate.regionCode)) { total += 15000; details.push({ text: `Регион ${plate.regionCode} — престижный`, val: '+15 000 ₽' }); }
+  if (TRIPLE_HI.has(plate.digits)) { total += 250000; details.push({ text: `Цифры ${plate.digits}`, val: '+250 000 ₽', special: true }); }
+  else if (TRIPLE_MID.has(plate.digits)) { total += 60000; details.push({ text: `Цифры ${plate.digits}`, val: '+60 000 ₽', special: true }); }
   const l1 = plate.l1, l2a = plate.l2[0], l2b = plate.l2[1];
   const allEqual = (l1 === l2a && l2a === l2b);
   const sameSuit = !allEqual && isSameSuit(l1, l2a, l2b);
-
-  if (allEqual) {
-    total += 150000;
-    details.push({ text: `Буквы одинаковые`, val: '+150 000 ₽', special: true });
-  } else if (sameSuit) {
-    total += 25000;
-    details.push({ text: `🎨 Масть`, val: '+25 000 ₽', special: true });
-  } else if (l1 === l2a || l2a === l2b) {
-    total += 3000;
-    details.push({ text: `Повтор букв`, val: '+3 000 ₽' });
-  }
-
-  if (plate.digits[0] === plate.digits[2] && l1 === l2b) {
-    total += 100000;
-    details.push({ text: `🪞 Зеркалка`, val: '+100 000 ₽', special: true });
-  }
-
+  if (allEqual) { total += 150000; details.push({ text: `Буквы одинаковые`, val: '+150 000 ₽', special: true }); }
+  else if (sameSuit) { total += 25000; details.push({ text: `🎨 Масть`, val: '+25 000 ₽', special: true }); }
+  else if (l1 === l2a || l2a === l2b) { total += 3000; details.push({ text: `Повтор букв`, val: '+3 000 ₽' }); }
+  if (plate.digits[0] === plate.digits[2] && l1 === l2b) { total += 100000; details.push({ text: `🪞 Зеркалка`, val: '+100 000 ₽', special: true }); }
   return { value: total, details };
 }
-
 function generateRandomPlate() {
-  return { l1: pick(LETTERS), digits: String(randInt(1, 999)).padStart(3, '0'), l2: pick(LETTERS) + pick(LETTERS), regionCode: pick(ALL_REGIONS) };
+  const region = state.selectedRegion || pick(ALL_REGIONS);
+  return { l1: pick(LETTERS), digits: String(randInt(1, 999)).padStart(3, '0'), l2: pick(LETTERS) + pick(LETTERS), regionCode: region };
 }
 function buildPlateForRarity(rarity) {
   const minVal = RARITIES[rarity].min;
@@ -478,12 +595,12 @@ function buildPlateForRarity(rarity) {
     if (v >= minVal && v <= maxVal) return p;
   }
   switch (rarity) {
-    case 'mythic':    return { l1: 'Х', digits: '777', l2: 'ХХ', regionCode: '777' };
-    case 'legendary': return { l1: 'А', digits: '111', l2: 'ВЕ', regionCode: '77' };
-    case 'epic':      return { l1: 'А', digits: '111', l2: 'ВМ', regionCode: '77' };
-    case 'rare':      return { l1: 'А', digits: '050', l2: 'ВМ', regionCode: '77' };
-    case 'uncommon':  return { l1: 'А', digits: '050', l2: 'АК', regionCode: '01' };
-    default:          return { l1: 'А', digits: '050', l2: 'ВМ', regionCode: '01' };
+    case 'mythic': return { l1: 'Х', digits: '777', l2: 'ХХ', regionCode: state.selectedRegion || '777' };
+    case 'legendary': return { l1: 'А', digits: '111', l2: 'ВЕ', regionCode: state.selectedRegion || '77' };
+    case 'epic': return { l1: 'А', digits: '111', l2: 'ВМ', regionCode: state.selectedRegion || '77' };
+    case 'rare': return { l1: 'А', digits: '050', l2: 'ВМ', regionCode: state.selectedRegion || '77' };
+    case 'uncommon': return { l1: 'А', digits: '050', l2: 'АК', regionCode: state.selectedRegion || '01' };
+    default: return { l1: 'А', digits: '050', l2: 'ВМ', regionCode: state.selectedRegion || '01' };
   }
 }
 
@@ -511,136 +628,6 @@ function renderRarityChip(rarity, isGuaranteed = false) {
   return `<div class="rarity-chip rarity-chip--${rarity}"><span>${isGuaranteed ? '🎯' : r.icon}</span><span>${r.name}${isGuaranteed ? ' · гарантия' : ''}</span></div>`;
 }
 
-/* =========================================================
-   ЗВУК
-   ========================================================= */
-let audioCtx = null;
-function ensureAudio() {
-  if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
-  if (audioCtx?.state === 'suspended') audioCtx.resume().catch(()=>{});
-}
-function playTone(freq, duration) {
-  if (!settings.sound || !audioCtx) return;
-  const t = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  osc.frequency.value = freq;
-  g.gain.setValueAtTime(0.05, t);
-  g.gain.exponentialRampToValueAtTime(0.001, t + duration);
-  osc.connect(g); g.connect(audioCtx.destination);
-  osc.start(t); osc.stop(t + duration);
-}
-function playWinChord(rarity) {
-  const chords = { uncommon: [523], rare: [523, 659], epic: [523, 659, 784], legendary: [523, 659, 784, 1047], mythic: [523, 659, 784, 1047, 1319] };
-  const notes = chords[rarity];
-  if (!notes) return;
-  notes.forEach((f, i) => setTimeout(() => playTone(f, 0.22), i * 80));
-}
-
-/* =========================================================
-   СОСТОЯНИЕ
-   ========================================================= */
-const settings = { sound: true, flash: true, autoSave: true };
-const state = {
-  money: 5000, best: null, collection: [], foundRegions: [],
-  lastPlate: null, lastValue: 0, lastDetails: [], lastStatus: 'none',
-  lastGuaranteedRarity: null, activeGuarantee: null,
-  isGenerating: false, guaranteeOpen: false,
-  activeEvent: null, nextEventAt: Date.now() + EVENT_FIRST_DELAY_MS,
-  activeBooster: null,
-  bonusGuarantees: { uncommon: 0, rare: 0, epic: 0, legendary: 0, mythic: 0 },
-  adminAuthorized: false,
-  adminToken: localStorage.getItem(ADMIN_TOKEN_KEY) || '',
-};
-
-/* =========================================================
-   API
-   ========================================================= */
-async function apiRequest(path, method = 'GET', body = null, useAdmin = false) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (tg?.initData) headers['x-init-data'] = tg.initData;
-  if (useAdmin) headers['x-admin-token'] = state.adminToken;
-  const opts = { method, headers };
-  if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(API_URL + path, opts);
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const err = new Error(data.error || 'request_failed');
-    err.status = res.status; err.data = data;
-    throw err;
-  }
-  return data;
-}
-
-/* =========================================================
-   СОХРАНЕНИЕ
-   ========================================================= */
-function getSaveData() {
-  return { money: state.money, best: state.best, collection: state.collection.slice(-50) };
-}
-async function saveState() {
-  if (!settings.autoSave) return;
-  if (!tg?.initData) return;
-  try { await apiRequest('/save', 'POST', getSaveData()); console.log('✅ Progress saved'); }
-  catch (e) { console.warn('❌ Save error:', e.message); }
-}
-async function loadState() {
-  if (!tg?.initData) return false;
-  try {
-    const data = await apiRequest('/load', 'POST');
-    state.money = data.money ?? 5000;
-    state.best = data.best ?? null;
-    state.collection = Array.isArray(data.collection) ? data.collection : [];
-    state.foundRegions = [...new Set(state.collection.map(item => item.plate.regionCode))];
-    try {
-      const raw = localStorage.getItem(SAVE_KEY);
-      if (raw) {
-        const local = JSON.parse(raw);
-        if (local.settings) { settings.sound = local.settings.sound ?? true; settings.flash = local.settings.flash ?? true; settings.autoSave = local.settings.autoSave ?? true; }
-        state.activeBooster = local.activeBooster ?? null;
-        if (state.activeBooster && Date.now() >= state.activeBooster.endsAt) state.activeBooster = null;
-        state.bonusGuarantees = local.bonusGuarantees ?? state.bonusGuarantees;
-        state.activeGuarantee = local.activeGuarantee ?? null;
-      }
-    } catch (e) {}
-    return true;
-  } catch (e) { console.warn('Load error:', e); return false; }
-}
-function saveLocal() {
-  const data = { settings, activeBooster: state.activeBooster, bonusGuarantees: state.bonusGuarantees, activeGuarantee: state.activeGuarantee };
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); } catch (e) {}
-}
-
-/* =========================================================
-   DOM
-   ========================================================= */
-const moneyEl = document.getElementById('moneyEl');
-const plateArea = document.getElementById('plateArea');
-const valueArea = document.getElementById('valueArea');
-const actionsArea = document.getElementById('actionsArea');
-const bestBox = document.getElementById('bestBox');
-const inventoryScreenList = document.getElementById('inventoryScreenList');
-const inventoryBadgeCount = document.getElementById('inventoryBadgeCount');
-const flashEl = document.getElementById('flashEl');
-const loadToast = document.getElementById('loadToast');
-const adminBtn = document.getElementById('adminBtn');
-
-function animateMoney(dir) { moneyEl.classList.remove('up','down'); void moneyEl.offsetWidth; moneyEl.classList.add(dir); setTimeout(() => moneyEl.classList.remove(dir), 500); }
-function triggerFlash(rarity) { if (!settings.flash) return; flashEl.style.background = `radial-gradient(circle, ${RARITIES[rarity].color}aa 0%, transparent 70%)`; flashEl.classList.add('show'); setTimeout(() => flashEl.classList.remove('show'), 900); }
-
-let currentTab = 'tabPlates';
-function setTab(tabId) {
-  currentTab = tabId;
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.tab === tabId));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === tabId));
-  if (tg?.BackButton) { if (tabId === 'tabPlates') tg.BackButton.hide(); else tg.BackButton.show(); }
-}
-document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => { haptic('light'); setTab(item.dataset.tab); }); });
-if (tg?.BackButton) { tg.BackButton.onClick(() => { haptic('light'); setTab('tabPlates'); }); tg.BackButton.hide(); }
-
-/* =========================================================
-   ГЕНЕРАЦИЯ
-   ========================================================= */
 function getEventDef(id) { return EVENTS.find(e => e.id === id); }
 function getGenerateCost(forcedRarity) {
   if (forcedRarity) {
@@ -671,6 +658,10 @@ function getSaleBonusMultiplier(rarity) {
   }
   return mult * getBoosterBonus();
 }
+
+/* =========================================================
+   ОТРИСОВКА
+   ========================================================= */
 function renderEventBanner() {
   const el = document.getElementById('eventBanner');
   if (!el) return;
@@ -698,65 +689,58 @@ function renderBoosterIndicator() {
     el.innerHTML = `<span>🚀 Бустер продаж ×${state.activeBooster.mult}</span><span class="booster-timer">${left}с</span>`;
   } else { el.classList.remove('show'); }
 }
-function tickEvents() {
-  const now = Date.now();
-  if (state.isGenerating) {
-    const evT = document.querySelector('.event-banner-timer');
-    if (evT) { const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt; evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`; }
-    renderBoosterIndicator(); return;
+
+function renderControlPanel() {
+  // Регион
+  const regionLabel = document.getElementById('regionLabel');
+  if (state.selectedRegion) {
+    regionLabel.textContent = state.selectedRegion;
+    document.getElementById('regionBtn').style.borderColor = '#4a6ffa';
+  } else {
+    regionLabel.textContent = 'Все';
+    document.getElementById('regionBtn').style.borderColor = '#2b3346';
   }
-  let changed = false;
-  if (state.activeEvent) { if (now >= state.activeEvent.endsAt) { state.activeEvent = null; state.nextEventAt = now + EVENT_IDLE_MS; changed = true; } }
-  else if (now >= state.nextEventAt) {
-    const ev = pick(EVENTS);
-    state.activeEvent = { id: ev.id, endsAt: now + EVENT_ACTIVE_MS }; changed = true;
-    ensureAudio(); playWinChord('rare'); triggerFlash('epic'); notify('success');
+
+  // Редкость
+  const rarityLabel = document.getElementById('rarityLabel');
+  const rarityIcon = document.getElementById('rarityIcon');
+  if (state.selectedRarity) {
+    rarityLabel.textContent = RARITIES[state.selectedRarity].name;
+    rarityIcon.textContent = RARITIES[state.selectedRarity].icon;
+    document.getElementById('rarityBtn').style.borderColor = RARITIES[state.selectedRarity].color;
+    document.getElementById('rarityBtn').style.color = RARITIES[state.selectedRarity].color;
+  } else {
+    rarityLabel.textContent = 'Любая';
+    rarityIcon.textContent = '🎲';
+    document.getElementById('rarityBtn').style.borderColor = '#2b3346';
+    document.getElementById('rarityBtn').style.color = '#fff';
   }
-  if (changed) render();
-  else {
-    const evT = document.querySelector('.event-banner-timer');
-    if (evT) { const target = state.activeEvent ? state.activeEvent.endsAt : state.nextEventAt; evT.textContent = `${Math.max(0, Math.ceil((target - now)/1000))}с`; }
-    renderBoosterIndicator();
-  }
+
+  // Множитель
+  document.getElementById('multiplierLabel').textContent = state.selectedMultiplier + 'x';
 }
 
-async function rollAnimation(targetRarity) {
-  plateArea.className = 'plate-wrapper';
-  const targetLabel = targetRarity ? `<div class="roll-target" style="color:${RARITIES[targetRarity].color}">🎯 Цель: ${RARITIES[targetRarity].name}</div>` : '';
-  plateArea.innerHTML = targetLabel + `
-    <div class="plate">
-      <div class="plate-main"><span class="slot" id="s1">А</span><span class="slot" id="s2">000</span><span class="slot" id="s3">АА</span></div>
-      <div class="plate-side"><div class="plate-region" id="s4">77</div><div class="plate-flag-block"><div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div><div class="flag-label">RUS</div></div></div>
-    </div>
-  `;
-  const s1 = document.getElementById('s1'); const s2 = document.getElementById('s2'); const s3 = document.getElementById('s3'); const s4 = document.getElementById('s4');
-  const start = performance.now();
-  while (performance.now() - start < 700) {
-    if (s1) s1.textContent = pick(LETTERS);
-    if (s2) s2.textContent = String(randInt(1,999)).padStart(3,'0');
-    if (s3) s3.textContent = pick(LETTERS) + pick(LETTERS);
-    if (s4) s4.textContent = pick(ALL_REGIONS);
-    playTone(900 + Math.random()*300, 0.03);
-    await sleep(50);
-  }
-}
-
-/* =========================================================
-   РЕНДЕР
-   ========================================================= */
-function renderGuaranteePanel() {
-  return `<div class="guarantee-panel"><div class="guarantee-title">Нажмите повторно, чтобы отменить</div>${GUARANTEE_ORDER.map(rarity => {
-    const r = RARITIES[rarity]; const basePrice = GUARANTEE_PRICES[rarity]; const price = getGenerateCost(rarity);
-    const discounted = price < basePrice; const disabled = state.money < price; const isActive = state.activeGuarantee === rarity; const bonusCount = state.bonusGuarantees[rarity] || 0;
-    return `<button class="guarantee-btn ${isActive ? 'active' : ''}" data-rarity="${rarity}" ${disabled ? 'disabled' : ''}><span class="g-icon">${r.icon}</span><span class="g-info"><span class="g-name">${r.name}${bonusCount > 0 ? ` <span style="color:#4ade80;">+${bonusCount}🎁</span>` : ''}</span><span class="g-hint">${isActive ? 'активна' : 'гарантия'}</span></span><span class="g-price">${discounted ? `<s style="opacity:.5">${formatMoney(basePrice)}</s> ` : ''}${formatMoney(price)}</span></button>`;
-  }).join('')}</div>`;
-}
 function render() {
   moneyEl.textContent = formatMoney(state.money);
   renderEventBanner();
   renderBoosterIndicator();
+  renderControlPanel();
 
-  if (state.lastPlate && state.lastStatus !== 'none') {
+  if (state.multiPlates.length > 0) {
+    // Отрисовка списка сгенерированных номеров
+    plateArea.className = 'plate-wrapper';
+    plateArea.innerHTML = `
+      <div style="width:100%; text-align:center; margin-bottom:8px; font-size:12px; font-weight:700;">Сгенерировано: ${state.multiPlates.length} шт.</div>
+      <div class="multi-plate-list" id="multiPlateList">
+        ${state.multiPlates.map((item, i) => `
+          <div class="multi-plate-item">
+            ${renderPlateHTML(item.plate, 'small', getRarity(item.value))}
+            <div class="plate-info"><span class="price">${formatMoney(item.value)}</span></div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } else if (state.lastPlate && state.lastStatus !== 'none') {
     const rarity = getRarity(state.lastValue);
     plateArea.className = 'plate-wrapper' + (state.lastStatus === 'sold' ? ' sold' : '');
     plateArea.innerHTML = `${renderRarityChip(rarity, state.lastGuaranteedRarity === rarity)}${renderPlateHTML(state.lastPlate, '', rarity)}`;
@@ -766,18 +750,18 @@ function render() {
   }
 
   valueArea.innerHTML = '';
-  if (state.lastStatus === 'pending') {
-    const rarity = getRarity(state.lastValue);
-    const isNewRegion = state.foundRegions && !state.foundRegions.includes(state.lastPlate.regionCode);
-    valueArea.innerHTML = `<div class="value-reveal"><div class="value-big" style="color:${RARITIES[rarity].color}">${formatMoney(state.lastValue)}</div><div class="value-details">${state.lastDetails.map(d => `<div class="value-detail-row${d.special ? ' special' : ''}"><span>${d.text}</span><span class="plus">${d.val}</span></div>`).join('')}${isNewRegion ? `<div class="value-detail-row special" style="color:#ffd166; font-weight:700; margin-top:4px; border-top:1px dashed rgba(255,209,102,0.3); padding-top:4px;"><span>📍 Новый регион!</span><span class="plus">+5 000 ₽</span></div>` : ''}</div></div>`;
-  } else if (state.lastStatus === 'sold') {
-    const soldVal = state.lastSoldValue ?? state.lastValue; const bonusText = state.lastSoldBonus > 1 ? ` <span style="color:#ffd166">(×${state.lastSoldBonus})</span>` : '';
-    valueArea.innerHTML = `<div class="sold-msg">✅ Продано за ${formatMoney(soldVal)}${bonusText}</div>`;
-  } else if (state.lastStatus === 'kept') {
-    valueArea.innerHTML = `<div class="kept-msg">🎒 В инвентарь</div>`;
-  }
-
-  if (state.lastStatus === 'pending') {
+  if (state.multiPlates.length > 0) {
+    // Показываем только кнопку "Продать всё" или "Забрать всё"
+    const totalValue = state.multiPlates.reduce((sum, item) => sum + item.value, 0);
+    const avgBonus = state.multiPlates.length > 0 ? getSaleBonusMultiplier(getRarity(state.multiPlates[0].value)) : 1;
+    const finalValue = Math.round(totalValue * avgBonus);
+    actionsArea.innerHTML = `
+      <button class="btn btn-sell" id="sellAllBtn" style="background:linear-gradient(135deg, #4a6ffa, #7c4aff)">💰 Продать всё за ${formatMoney(finalValue)}</button>
+      <button class="btn btn-keep" id="keepAllBtn">🎒 Забрать в инвентарь</button>
+    `;
+    document.getElementById('sellAllBtn').onclick = handleSellAll;
+    document.getElementById('keepAllBtn').onclick = handleKeepAll;
+  } else if (state.lastStatus === 'pending') {
     const rarity = getRarity(state.lastValue);
     const bonus = getSaleBonusMultiplier(rarity);
     let effectiveValue = Math.round(state.lastValue * bonus);
@@ -785,21 +769,19 @@ function render() {
     const boosted = bonus > 1;
     const bonusText = boosted ? ` <span style="color:#0a0a0a;background:#ffd166;padding:1px 6px;border-radius:4px;font-size:11px;">×${bonus.toFixed(2).replace(/\.00$/,'')}</span>` : '';
     actionsArea.innerHTML = `<button class="btn btn-sell${boosted ? ' boosted' : ''}" id="sellBtn">💰 Продать за ${formatMoney(effectiveValue)}${bonusText}</button><button class="btn btn-keep" id="keepBtn">🎒 В инвентарь</button>`;
-    document.getElementById('sellBtn').onclick = () => handleSell(effectiveValue); document.getElementById('keepBtn').onclick = handleKeep;
+    document.getElementById('sellBtn').onclick = () => handleSell(effectiveValue);
+    document.getElementById('keepBtn').onclick = handleKeep;
   } else {
-    const active = state.activeGuarantee; const cost = getGenerateCost(active); const baseCost = active ? GUARANTEE_PRICES[active] : 3000;
-    const discounted = cost < baseCost; const open = state.guaranteeOpen;
-    let bonusRarity = null;
-    for (const r of ['mythic','legendary','epic','rare','uncommon']) { if ((state.bonusGuarantees[r] || 0) > 0) { bonusRarity = r; break; } }
-    const hasBonus = !!bonusRarity;
-    let genLabel, genCost;
-    if (hasBonus) { genLabel = `🎁 Бонус: ${RARITIES[bonusRarity].name} (${state.bonusGuarantees[bonusRarity]} шт.)`; genCost = 'бесплатно'; }
-    else if (active) { genLabel = `🎲 Купить (${RARITIES[active].name})${discounted ? ' ⚡' : ''}`; genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`; }
-    else { genLabel = `Сгенерировать${discounted ? ' ⚡' : ''}`; genCost = `${discounted ? `<span class="btn-cost-old">${formatMoney(baseCost)}</span>` : ''}−${formatMoney(cost)}`; }
-    actionsArea.innerHTML = `<button class="btn btn-generate${hasBonus ? ' bonus-free' : (discounted ? ' discounted' : '')}" id="generateBtn" ${(!hasBonus && state.money < cost) ? 'disabled' : ''}><span>${genLabel}</span><span class="btn-cost">${genCost}</span></button><button class="btn btn-guarantee ${open ? 'open' : ''}" id="guaranteeToggle"><span>🎲 ${active ? 'Гарант: ' + RARITIES[active].name : 'Выбрать гарантию'}</span></button>${open ? renderGuaranteePanel() : ''}`;
-    document.getElementById('generateBtn').onclick = () => handleGenerate(active);
-    document.getElementById('guaranteeToggle').onclick = () => { haptic('light'); state.guaranteeOpen = !state.guaranteeOpen; render(); };
-    if (open) { actionsArea.querySelectorAll('.guarantee-btn').forEach(btn => { btn.onclick = () => { haptic('light'); const chosen = btn.dataset.rarity; state.activeGuarantee = (state.activeGuarantee === chosen) ? null : chosen; state.guaranteeOpen = false; render(); saveLocal(); }; }); }
+    const costOne = getGenerateCost(state.selectedRarity);
+    const totalCost = costOne * state.selectedMultiplier;
+    const canAfford = state.money >= totalCost;
+    actionsArea.innerHTML = `
+      <button class="btn btn-generate" id="generateBtn" ${!canAfford ? 'disabled' : ''}>
+        <span>🎲 Сгенерировать ${state.selectedMultiplier > 1 ? '×' + state.selectedMultiplier : ''}</span>
+        <span class="btn-cost">−${formatMoney(totalCost)}</span>
+      </button>
+    `;
+    document.getElementById('generateBtn').onclick = () => handleGenerate();
   }
 
   if (state.best) {
@@ -815,28 +797,83 @@ function render() {
 /* =========================================================
    ДЕЙСТВИЯ
    ========================================================= */
-async function handleGenerate(forcedRarity) {
+async function handleGenerate() {
   if (state.isGenerating) return;
-  let effectiveRarity = forcedRarity; let usingBonus = false;
-  if (!forcedRarity) { for (const r of ['mythic','legendary','epic','rare','uncommon']) { if ((state.bonusGuarantees[r] || 0) > 0) { effectiveRarity = r; usingBonus = true; break; } } }
-  const cost = usingBonus ? 0 : getGenerateCost(effectiveRarity);
-  if (state.money < cost) { notify('error'); return; }
-  ensureAudio(); state.isGenerating = true;
-  if (usingBonus) state.bonusGuarantees[effectiveRarity] -= 1; else state.money -= cost;
-  state.lastStatus = 'none'; state.lastGuaranteedRarity = effectiveRarity; state.guaranteeOpen = false;
-  if (!usingBonus) animateMoney('down');
+  const costOne = getGenerateCost(state.selectedRarity);
+  const totalCost = costOne * state.selectedMultiplier;
+  if (state.money < totalCost) { notify('error'); return; }
+  
+  ensureAudio();
+  state.isGenerating = true;
+  state.money -= totalCost;
+  state.lastStatus = 'none';
+  state.multiPlates = [];
+  animateMoney('down');
   render();
-  await rollAnimation(effectiveRarity);
-  const plate = effectiveRarity ? buildPlateForRarity(effectiveRarity) : generateRandomPlate();
-  const { value, details } = calculateValue(plate);
-  state.lastPlate = plate; state.lastValue = value; state.lastDetails = details; state.lastStatus = 'pending';
-  if (!state.best || value > state.best.value) state.best = { plate, value };
+
+  // Показываем рулетку
+  plateArea.className = 'plate-wrapper';
+  plateArea.innerHTML = `<div class="plate"><div class="plate-main"><span class="slot" id="s1">А</span><span class="slot" id="s2">000</span><span class="slot" id="s3">АА</span></div><div class="plate-side"><div class="plate-region" id="s4">77</div><div class="plate-flag-block"><div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div><div class="flag-label">RUS</div></div></div></div>`;
+  const s1 = document.getElementById('s1'), s2 = document.getElementById('s2'), s3 = document.getElementById('s3'), s4 = document.getElementById('s4');
+  
+  const start = performance.now();
+  while (performance.now() - start < 700) {
+    if (s1) s1.textContent = pick(LETTERS);
+    if (s2) s2.textContent = String(randInt(1,999)).padStart(3,'0');
+    if (s3) s3.textContent = pick(LETTERS) + pick(LETTERS);
+    if (s4) s4.textContent = state.selectedRegion || pick(ALL_REGIONS);
+    playTone(900 + Math.random()*300, 0.03);
+    await sleep(50);
+  }
+
+  // Генерируем номера
+  for (let i = 0; i < state.selectedMultiplier; i++) {
+    const plate = state.selectedRarity ? buildPlateForRarity(state.selectedRarity) : generateRandomPlate();
+    const { value, details } = calculateValue(plate);
+    state.multiPlates.push({ plate, value });
+    if (!state.best || value > state.best.value) state.best = { plate, value };
+  }
+  
   state.isGenerating = false;
-  render(); saveLocal(); saveState();
-  const rarity = getRarity(value);
-  haptic(['legendary','mythic'].includes(rarity) ? 'heavy' : 'light');
-  if (['rare','epic','legendary','mythic'].includes(rarity)) { triggerFlash(rarity); playWinChord(rarity); notify(rarity === 'mythic' || rarity === 'legendary' ? 'success' : 'warning'); }
+  saveLocal(); saveState();
+  render();
+  
+  // Звук самого редкого в пачке
+  let maxRarity = 'common';
+  state.multiPlates.forEach(p => {
+    const r = getRarity(p.value);
+    if (RARITIES[r].min > RARITIES[maxRarity].min) maxRarity = r;
+  });
+  haptic(['legendary','mythic'].includes(maxRarity) ? 'heavy' : 'light');
+  if (['rare','epic','legendary','mythic'].includes(maxRarity)) { triggerFlash(maxRarity); playWinChord(maxRarity); }
 }
+
+async function handleSellAll() {
+  const totalValue = state.multiPlates.reduce((sum, item) => sum + item.value, 0);
+  const avgBonus = state.multiPlates.length > 0 ? getSaleBonusMultiplier(getRarity(state.multiPlates[0].value)) : 1;
+  const finalValue = Math.round(totalValue * avgBonus);
+  
+  state.money += finalValue;
+  state.lastSoldValue = finalValue; state.lastSoldBonus = avgBonus;
+  state.lastStatus = 'sold';
+  state.multiPlates = [];
+  
+  animateMoney('up'); haptic('medium'); notify('success'); render(); saveLocal(); saveState();
+}
+
+async function handleKeepAll() {
+  state.multiPlates.forEach(item => {
+    state.collection.push(item);
+    if (state.foundRegions && !state.foundRegions.includes(item.plate.regionCode)) {
+      state.foundRegions.push(item.plate.regionCode);
+    }
+  });
+  state.foundRegions = [...new Set(state.foundRegions)];
+  state.multiPlates = [];
+  state.lastStatus = 'kept';
+  haptic('light'); render(); saveLocal(); saveState();
+}
+
 async function handleSell(effectiveValue) {
   const rarity = getRarity(state.lastValue); const bonus = getSaleBonusMultiplier(rarity); const isNewRegion = state.foundRegions && !state.foundRegions.includes(state.lastPlate.regionCode);
   const finalValue = effectiveValue || Math.round(state.lastValue * bonus);
@@ -844,11 +881,13 @@ async function handleSell(effectiveValue) {
   if (isNewRegion) { state.foundRegions.push(state.lastPlate.regionCode); state.foundRegions = [...new Set(state.foundRegions)]; }
   animateMoney('up'); haptic('medium'); notify('success'); render(); saveLocal(); saveState();
 }
+
 async function handleKeep() {
   state.collection.push({ plate: state.lastPlate, value: state.lastValue }); state.lastStatus = 'kept';
   if (state.foundRegions && !state.foundRegions.includes(state.lastPlate.regionCode)) { state.foundRegions.push(state.lastPlate.regionCode); state.foundRegions = [...new Set(state.foundRegions)]; }
   haptic('light'); render(); saveLocal(); saveState();
 }
+
 async function sellFromInv(idx) {
   if (!state.collection[idx]) return;
   const item = state.collection[idx]; const rarity = getRarity(item.value); const bonus = getSaleBonusMultiplier(rarity);
@@ -858,6 +897,62 @@ async function sellFromInv(idx) {
   if (item.plate.regionCode) { state.foundRegions.push(item.plate.regionCode); state.foundRegions = [...new Set(state.foundRegions)]; }
   animateMoney('up'); haptic('medium'); notify('success'); render(); saveLocal(); saveState();
 }
+
+/* =========================================================
+   МЕНЮ (ВЫПАДАЮЩИЕ СПИСКИ)
+   ========================================================= */
+function closeMenus() {
+  document.getElementById('regionMenu').classList.remove('open');
+  document.getElementById('rarityMenu').classList.remove('open');
+  document.getElementById('multiplierMenu').classList.remove('open');
+  state.activeMenu = null;
+}
+
+document.getElementById('regionBtn').onclick = (e) => {
+  e.stopPropagation();
+  const menu = document.getElementById('regionMenu');
+  if (menu.classList.contains('open')) { closeMenus(); return; }
+  closeMenus();
+  state.activeMenu = 'region';
+  menu.innerHTML = `<div class="dropdown-item ${!state.selectedRegion ? 'selected' : ''}" data-val="">Все регионы</div>` +
+    ALL_REGIONS.sort().map(r => `<div class="dropdown-item ${state.selectedRegion === r ? 'selected' : ''}" data-val="${r}">Регион ${r}</div>`).join('');
+  menu.classList.add('open');
+};
+
+document.getElementById('rarityBtn').onclick = (e) => {
+  e.stopPropagation();
+  const menu = document.getElementById('rarityMenu');
+  if (menu.classList.contains('open')) { closeMenus(); return; }
+  closeMenus();
+  state.activeMenu = 'rarity';
+  menu.innerHTML = `<div class="dropdown-item ${!state.selectedRarity ? 'selected' : ''}" data-val="">Любая</div>` +
+    GUARANTEE_ORDER.map(r => `<div class="dropdown-item ${state.selectedRarity === r ? 'selected' : ''}" data-val="${r}" style="color:${RARITIES[r].color}">${RARITIES[r].icon} ${RARITIES[r].name} (${formatMoney(getGenerateCost(r))})</div>`).join('');
+  menu.classList.add('open');
+};
+
+document.getElementById('multiplierBtn').onclick = (e) => {
+  e.stopPropagation();
+  const menu = document.getElementById('multiplierMenu');
+  if (menu.classList.contains('open')) { closeMenus(); return; }
+  closeMenus();
+  state.activeMenu = 'multiplier';
+  menu.innerHTML = [1, 5, 10].map(m => `<div class="dropdown-item ${state.selectedMultiplier === m ? 'selected' : ''}" data-val="${m}">${m}x</div>`).join('');
+  menu.classList.add('open');
+};
+
+document.body.addEventListener('click', (e) => {
+  const item = e.target.closest('.dropdown-item');
+  if (item) {
+    const val = item.dataset.val;
+    if (state.activeMenu === 'region') state.selectedRegion = val || null;
+    else if (state.activeMenu === 'rarity') state.selectedRarity = val || null;
+    else if (state.activeMenu === 'multiplier') state.selectedMultiplier = Number(val);
+    closeMenus();
+    render();
+  } else if (!e.target.closest('.control-btn')) {
+    closeMenus();
+  }
+});
 
 /* =========================================================
    ПРОМОКОДЫ
@@ -977,12 +1072,11 @@ document.getElementById('adminAdd100k').onclick = () => { state.money += 100000;
 document.getElementById('adminAdd1m').onclick = () => { state.money += 1000000; animateMoney('up'); haptic('medium'); render(); saveState(); };
 
 /* =========================================================
-   ВЕРСИЯ / МОДАЛКИ / НАСТРОЙКИ / ЗАПУСК
+   МОДАЛКИ / НАСТРОЙКИ / ЗАПУСК
    ========================================================= */
 document.querySelectorAll('[data-close]').forEach(btn => { btn.onclick = () => { haptic('light'); document.getElementById(btn.dataset.close).classList.remove('open'); }; });
 document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('open'); }); });
 
-// Отображение версии
 const headerEl = document.querySelector('.header p');
 if (headerEl) {
   headerEl.innerHTML = `Идеальный гарант редкости · <span style="opacity:0.6; font-size:9px;">v${GAME_VERSION}</span>`;
@@ -1012,7 +1106,18 @@ document.getElementById('modalResetBtn').onclick = () => { if (confirm('Сбро
   if (loaded) { loadToast.classList.add('show'); setTimeout(() => loadToast.classList.remove('show'), 2000); }
   soundToggle.checked = settings.sound; flashToggle.checked = settings.flash; autoSaveToggle.checked = settings.autoSave;
   render();
-  setInterval(tickEvents, 250);
+  setInterval(() => { // Обновляем только таймеры
+    if (state.isGenerating || state.multiPlates.length > 0) return;
+    const now = Date.now();
+    let changed = false;
+    if (state.activeEvent && now >= state.activeEvent.endsAt) { state.activeEvent = null; state.nextEventAt = now + EVENT_IDLE_MS; changed = true; }
+    else if (!state.activeEvent && now >= state.nextEventAt) { const ev = pick(EVENTS); state.activeEvent = { id: ev.id, endsAt: now + EVENT_ACTIVE_MS }; changed = true; ensureAudio(); playWinChord('rare'); triggerFlash('epic'); }
+    if (changed) render();
+    else {
+      renderEventBanner();
+      renderBoosterIndicator();
+    }
+  }, 250);
   setInterval(() => { if (settings.autoSave) saveState(); }, 20000);
   window.addEventListener('pagehide', saveState);
   window.addEventListener('beforeunload', saveState);
