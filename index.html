@@ -372,7 +372,7 @@ function notify(type = 'success') { try { tg?.HapticFeedback?.notificationOccurr
 const API_URL = 'https://plates-backend-a2he.onrender.com';
 const SAVE_KEY = 'plates_game_v4';
 const ADMIN_TOKEN_KEY = 'plates_admin_token';
-const GAME_VERSION = '1.1.0'; // Обновил версию из-за добавления регионов
+const GAME_VERSION = '1.2.0'; // Версия обновлена из-за изменения цен
 
 // Все регионы РФ
 const ALL_REGIONS = [
@@ -439,24 +439,48 @@ const randInt = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const formatMoney = n => n.toLocaleString('ru-RU') + ' ₽';
 
+/* =========================================================
+   НОВЫЙ РАСЧЁТ ЦЕНЫ (ДОРОГИЕ СТАЛИ ЕЩЁ ДОРОЖЕ)
+   ========================================================= */
 function calculateValue(plate) {
   const details = [];
   let total = 1500;
-  if (TOP_REGIONS.has(plate.regionCode)) { total += 12000; details.push({ text: `Регион ${plate.regionCode} — ТОП`, val: '+12 000 ₽' }); }
-  else if (HIGH_REGIONS.has(plate.regionCode)) { total += 6000; details.push({ text: `Регион ${plate.regionCode} — престижный`, val: '+6 000 ₽' }); }
 
-  if (TRIPLE_HI.has(plate.digits)) { total += 60000; details.push({ text: `Цифры ${plate.digits}`, val: '+60 000 ₽', special: true }); }
-  else if (TRIPLE_MID.has(plate.digits)) { total += 15000; details.push({ text: `Цифры ${plate.digits}`, val: '+15 000 ₽' }); }
+  if (TOP_REGIONS.has(plate.regionCode)) {
+    total += 40000;
+    details.push({ text: `Регион ${plate.regionCode} — ТОП`, val: '+40 000 ₽', special: true });
+  } else if (HIGH_REGIONS.has(plate.regionCode)) {
+    total += 15000;
+    details.push({ text: `Регион ${plate.regionCode} — престижный`, val: '+15 000 ₽' });
+  }
+
+  if (TRIPLE_HI.has(plate.digits)) {
+    total += 250000;
+    details.push({ text: `Цифры ${plate.digits}`, val: '+250 000 ₽', special: true });
+  } else if (TRIPLE_MID.has(plate.digits)) {
+    total += 60000;
+    details.push({ text: `Цифры ${plate.digits}`, val: '+60 000 ₽', special: true });
+  }
 
   const l1 = plate.l1, l2a = plate.l2[0], l2b = plate.l2[1];
   const allEqual = (l1 === l2a && l2a === l2b);
   const sameSuit = !allEqual && isSameSuit(l1, l2a, l2b);
 
-  if (allEqual) { total += 30000; details.push({ text: `Буквы одинаковые`, val: '+30 000 ₽', special: true }); }
-  else if (sameSuit) { total += 8000; details.push({ text: `🎨 Масть`, val: '+8 000 ₽', special: true }); }
-  else if (l1 === l2a || l2a === l2b) { total += 3000; details.push({ text: `Повтор букв`, val: '+3 000 ₽' }); }
+  if (allEqual) {
+    total += 150000;
+    details.push({ text: `Буквы одинаковые`, val: '+150 000 ₽', special: true });
+  } else if (sameSuit) {
+    total += 25000;
+    details.push({ text: `🎨 Масть`, val: '+25 000 ₽', special: true });
+  } else if (l1 === l2a || l2a === l2b) {
+    total += 3000;
+    details.push({ text: `Повтор букв`, val: '+3 000 ₽' });
+  }
 
-  if (plate.digits[0] === plate.digits[2] && l1 === l2b) { total += 25000; details.push({ text: `🪞 Зеркалка`, val: '+25 000 ₽', special: true }); }
+  if (plate.digits[0] === plate.digits[2] && l1 === l2b) {
+    total += 100000;
+    details.push({ text: `🪞 Зеркалка`, val: '+100 000 ₽', special: true });
+  }
 
   return { value: total, details };
 }
@@ -590,10 +614,7 @@ async function loadState() {
     state.money = data.money ?? 5000;
     state.best = data.best ?? null;
     state.collection = Array.isArray(data.collection) ? data.collection : [];
-
-    // Восстанавливаем найденные регионы из коллекции
     state.foundRegions = [...new Set(state.collection.map(item => item.plate.regionCode))];
-
     try {
       const raw = localStorage.getItem(SAVE_KEY);
       if (raw) {
