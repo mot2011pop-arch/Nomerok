@@ -236,7 +236,7 @@
   <div class="tab-content active" id="tabPlates">
     <div class="header">
       <h1>💎 Красивые номера</h1>
-      <p>Идеальный гарант редкости · v<span id="verEl">1.3.2</span></p>
+      <p>Идеальный гарант редкости · v<span id="verEl">1.4.0</span></p>
     </div>
     <div class="money-box">
       <div>
@@ -418,7 +418,7 @@
 const API_URL = 'https://plates-backend-a2he.onrender.com';
 const SAVE_KEY = 'plates_game_v4';
 const ADMIN_TOKEN_KEY = 'plates_admin_token';
-const GAME_VERSION = '1.3.2';
+const GAME_VERSION = '1.4.0';
 document.getElementById('verEl').textContent = GAME_VERSION;
 
 /* =========================================================
@@ -431,7 +431,6 @@ function notify(type = 'success') { try { tg?.HapticFeedback?.notificationOccurr
 
 const settings = { sound: true, flash: true, autoSave: true };
 
-// Глобальные константы, которые нужны для state
 const EVENT_IDLE_MS = 90000;
 const EVENT_ACTIVE_MS = 45000;
 const EVENT_FIRST_DELAY_MS = 30000;
@@ -442,9 +441,9 @@ const LETTER_GROUPS = [
   { name: 'Жёлтая',  color: '#eab308', letters: new Set(['Т','У','Х']) },
 ];
 
-// Инициализация состояния
 const state = {
   money: 5000, best: null, collection: [], foundRegions: [],
+  occupiedPlates: [], // Массив занятых номеров
   lastPlate: null, lastValue: 0, lastDetails: [], lastStatus: 'none',
   lastGuaranteedRarity: null, activeGuarantee: null,
   isGenerating: false, guaranteeOpen: false,
@@ -486,6 +485,11 @@ function getRarity(value) {
   return 'common';
 }
 
+// Функция для создания "отпечатка" номера (должна совпадать с серверной)
+function getPlateKey(plate) {
+  return `${plate.l1}${plate.digits}${plate.l2}${plate.regionCode}`;
+}
+
 /* =========================================================
    ЗВУК
    ========================================================= */
@@ -525,8 +529,10 @@ async function loadState() {
   if (!tg?.initData) return false;
   try {
     const data = await apiRequest('/load', 'POST');
-    state.money = data.money ?? 5000; state.best = data.best ?? null;
+    state.money = data.money ?? 5000; 
+    state.best = data.best ?? null;
     state.collection = Array.isArray(data.collection) ? data.collection : [];
+    state.occupiedPlates = Array.isArray(data.occupiedPlates) ? data.occupiedPlates : []; // Получаем занятые номера
     state.foundRegions = [...new Set(state.collection.map(item => item.plate.regionCode))];
     try {
       const raw = localStorage.getItem(SAVE_KEY);
@@ -742,7 +748,6 @@ function render() {
   renderControlPanel();
 
   if (state.multiPlates.length > 0) {
-    // Рендер списка при мульти-генерации
     plateArea.className = 'plate-wrapper';
     plateArea.innerHTML = `
       <div style="width:100%; text-align:center; margin-bottom:8px; font-size:12px; font-weight:700;">Сгенерировано: ${state.multiPlates.length} шт.</div>
@@ -771,7 +776,6 @@ function render() {
 
   valueArea.innerHTML = '';
   
-  // Детали для одиночного номера
   if (state.multiPlates.length === 0 && state.lastStatus === 'pending') {
     const rarity = getRarity(state.lastValue);
     const isNewRegion = state.foundRegions && !state.foundRegions.includes(state.lastPlate.regionCode);
@@ -787,7 +791,6 @@ function render() {
   }
 
   if (state.multiPlates.length > 0) {
-    // Если есть пачка номеров, показываем кнопки для пачки
     const totalValue = state.multiPlates.reduce((sum, item) => sum + item.value, 0);
     const avgBonus = state.multiPlates.length > 0 ? getSaleBonusMultiplier(getRarity(state.multiPlates[0].value)) : 1;
     const finalValue = Math.round(totalValue * avgBonus);
@@ -798,7 +801,6 @@ function render() {
     document.getElementById('sellAllBtn').onclick = handleSellAll;
     document.getElementById('keepAllBtn').onclick = handleKeepAll;
   } else if (state.lastStatus === 'pending') {
-    // Кнопки для одиночного номера
     const rarity = getRarity(state.lastValue);
     const bonus = getSaleBonusMultiplier(rarity);
     let effectiveValue = Math.round(state.lastValue * bonus);
@@ -809,7 +811,6 @@ function render() {
     document.getElementById('sellBtn').onclick = () => handleSell(effectiveValue);
     document.getElementById('keepBtn').onclick = handleKeep;
   } else {
-    // Кнопка генерации
     const costOne = getGenerateCost(state.selectedRarity);
     const totalCost = costOne * state.selectedMultiplier;
     const canAfford = state.money >= totalCost;
@@ -849,7 +850,6 @@ async function handleGenerate() {
   animateMoney('down');
   render();
 
-  // Рулетка
   plateArea.className = 'plate-wrapper';
   plateArea.innerHTML = `<div class="plate"><div class="plate-main"><span class="slot" id="s1">А</span><span class="slot" id="s2">000</span><span class="slot" id="s3">АА</span></div><div class="plate-side"><div class="plate-region" id="s4">77</div><div class="plate-flag-block"><div class="flag"><div class="flag-w"></div><div class="flag-b"></div><div class="flag-r"></div></div><div class="flag-label">RUS</div></div></div></div>`;
   const s1 = document.getElementById('s1'), s2 = document.getElementById('s2'), s3 = document.getElementById('s3'), s4 = document.getElementById('s4');
@@ -864,9 +864,23 @@ async function handleGenerate() {
     await sleep(50);
   }
 
-  // Генерация пачки
+  // Генерация с проверкой уникальности
   for (let i = 0; i < state.selectedMultiplier; i++) {
-    const plate = state.selectedRarity ? buildPlateForRarity(state.selectedRarity) : generateRandomPlate();
+    let plate;
+    let isUnique = false;
+    let attempts = 0;
+    
+    // Пытаемся сгенерировать уникальный номер (до 20 попыток)
+    while (!isUnique && attempts < 20) {
+      plate = state.selectedRarity ? buildPlateForRarity(state.selectedRarity) : generateRandomPlate();
+      const plateKey = getPlateKey(plate);
+      if (!state.occupiedPlates.includes(plateKey)) {
+        isUnique = true;
+      }
+      attempts++;
+    }
+    
+    // Если не удалось найти уникальный (например, все заняты), берем последний сгенерированный
     const { value, details } = calculateValue(plate);
     state.multiPlates.push({ plate, value, details });
     if (!state.best || value > state.best.value) state.best = { plate, value };
